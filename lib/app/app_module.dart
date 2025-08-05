@@ -1,0 +1,35 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_shaders/app/app_controller.dart';
+import 'package:flutter_shaders/app/app_view.dart';
+
+class AppModule extends StatefulWidget {
+  const AppModule({super.key});
+
+  @override
+  State<AppModule> createState() => _AppModuleState();
+}
+
+class _AppModuleState extends State<AppModule> {
+  late final AppController controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = AppController();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppView(
+      controller: controller,
+    );
+  }
+}
