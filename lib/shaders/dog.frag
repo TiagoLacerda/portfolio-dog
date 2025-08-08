@@ -12,6 +12,7 @@ uniform float u_width;
 uniform float u_height;
 uniform float u_epsilon;
 uniform float u_tau;
+uniform float u_phi;
 
 uniform sampler2D u_blurred_s;
 uniform sampler2D u_blurred_l;
@@ -32,7 +33,7 @@ void main() {
 
   float value = luminance(l - u_tau * s);
 
-  vec4 color = value >= u_epsilon ? vec4(1.0) : vec4(0.0);
+  vec4 color = value >= u_epsilon ? vec4(1.0) : vec4(vec3(1.0 + tanh(u_phi * (value - u_epsilon))), 1.0);
 
   fragColor = color;
 }
