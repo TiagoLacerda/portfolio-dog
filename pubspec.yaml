@@ -62,7 +62,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   shaders:
-    - lib/shaders/shader.frag
+    - lib/shaders/gaussian_blur.frag
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
