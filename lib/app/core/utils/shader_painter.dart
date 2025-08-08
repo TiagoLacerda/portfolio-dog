@@ -11,6 +11,7 @@ class ShaderPainter extends CustomPainter {
   final double sigma;
   final double k;
   final double epsilon;
+  final double tau;
   final List<double> weightsS;
   final List<double> weightsL;
 
@@ -22,6 +23,7 @@ class ShaderPainter extends CustomPainter {
     required this.sigma,
     required this.k,
     required this.epsilon,
+    required this.tau,
   }) : weightsS = computeWeights(radius, sigma * k),
        weightsL = computeWeights(radius, sigma);
 
@@ -119,6 +121,7 @@ class ShaderPainter extends CustomPainter {
     dog.setFloat(0, size.width);
     dog.setFloat(1, size.height);
     dog.setFloat(2, epsilon);
+    dog.setFloat(3, tau);
     dog.setImageSampler(0, small);
     dog.setImageSampler(1, large);
 

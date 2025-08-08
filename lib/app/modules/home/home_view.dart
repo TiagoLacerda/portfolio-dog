@@ -177,7 +177,8 @@ class _HomeViewState extends State<HomeView> {
   int radius = 5;
   double sigma = 1.4;
   double k = 0.5;
-  double epsilon = 0.5;
+  double epsilon = 0.01;
+  double tau = 1.0;
 
   Widget buildSlider(
     BuildContext context, {
@@ -290,7 +291,14 @@ class _HomeViewState extends State<HomeView> {
                   context,
                   label: 'ε',
                   value: epsilon,
+                  max: 0.02,
                   onChanged: (value) => setState(() => epsilon = value),
+                ),
+                buildSlider(
+                  context,
+                  label: '𝜏',
+                  value: tau,
+                  onChanged: (value) => setState(() => tau = value),
                 ),
                 Expanded(
                   child: ColoredBox(
@@ -310,6 +318,7 @@ class _HomeViewState extends State<HomeView> {
                           sigma: sigma,
                           k: k,
                           epsilon: epsilon,
+                          tau: tau,
                         ),
                       ),
                     ),

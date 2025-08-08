@@ -11,6 +11,7 @@ precision mediump float;
 uniform float u_width;
 uniform float u_height;
 uniform float u_epsilon;
+uniform float u_tau;
 
 uniform sampler2D u_blurred_s;
 uniform sampler2D u_blurred_l;
@@ -29,7 +30,7 @@ void main() {
   vec4 s = texture(u_blurred_s, coordinates);
   vec4 l = texture(u_blurred_l, coordinates);
 
-  float value = luminance(l - s);
+  float value = luminance(l - u_tau * s);
 
   vec4 color = value >= u_epsilon ? vec4(1.0) : vec4(0.0);
 
