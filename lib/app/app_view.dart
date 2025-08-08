@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shaders/app/app_controller.dart';
 import 'package:flutter_shaders/app/core/theme/app_theme.dart';
-import 'package:flutter_shaders/app/core/utils/shader_painter.dart';
+import 'package:flutter_shaders/app/core/utils/gaussian_shader_painter.dart';
 
 class AppView extends StatefulWidget {
   final AppController controller;
@@ -13,9 +13,8 @@ class AppView extends StatefulWidget {
 }
 
 class _AppViewState extends State<AppView> {
-  double r = 0.0;
-  double g = 0.0;
-  double b = 0.0;
+  var _radius = 0;
+  var _sigma = 4.0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,80 +25,20 @@ class _AppViewState extends State<AppView> {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         home: Scaffold(
-          body: SafeArea(
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 100.0,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          'r: $r',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Slider(
-                        value: r,
-                        onChanged: (value) => setState(() => r = value),
-                        activeColor: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 100.0,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          'g: $g',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Slider(
-                        value: g,
-                        onChanged: (value) => setState(() => g = value),
-                        activeColor: Colors.green,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 100.0,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          'b: $b',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Slider(
-                        value: b,
-                        onChanged: (value) => setState(() => b = value),
-                        activeColor: Colors.blue,
-                      ),
-                    ),
-                  ],
-                ),
                 ElevatedButton(
                   onPressed: widget.controller.loadImage,
-                  child: Text(
-                    'Load image',
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: widget.controller.loadShader,
-                  child: Text(
-                    'Load shader',
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.image_search_outlined),
+                      const SizedBox(width: 16.0),
+                      Text('Load image'),
+                    ],
                   ),
                 ),
                 if (widget.controller.image == null) ...[
@@ -107,23 +46,44 @@ class _AppViewState extends State<AppView> {
                     'No image currently loaded...',
                     textAlign: TextAlign.center,
                   ),
-                ],
-                if (widget.controller.program == null) ...[
-                  Text(
-                    'No shader program loaded...',
-                    textAlign: TextAlign.center,
+                ] else ...[
+                  Row(
+                    children: [
+                      Text(_radius.toStringAsFixed(2)),
+                      Slider(
+                        value: _radius.toDouble(),
+                        min: 0,
+                        max: 31,
+                        divisions: 31,
+                        onChanged: (value) =>
+                            setState(() => _radius = value.toInt()),
+                      ),
+                    ],
                   ),
-                ],
-                if (widget.controller.image != null &&
-                    widget.controller.program != null) ...[
-                  CustomPaint(
-                    size: Size(800, 600),
-                    painter: ShaderPainter(
-                      shader: widget.controller.program!.fragmentShader(),
-                      image: widget.controller.image!,
-                      r: r,
-                      g: g,
-                      b: b,
+                  Row(
+                    children: [
+                      Text(_sigma.toStringAsFixed(2)),
+                      Slider(
+                        value: _sigma,
+                        min: 0.0,
+                        max: 31.0,
+                        onChanged: (value) => setState(() => _sigma = value),
+                      ),
+                    ],
+                  ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: CustomPaint(
+                      size: Size(
+                        widget.controller.image!.width.toDouble(),
+                        widget.controller.image!.height.toDouble(),
+                      ),
+                      painter: GaussianShaderPainter(
+                        shader: widget.controller.program!.fragmentShader(),
+                        image: widget.controller.image!,
+                        radius: _radius,
+                        sigma: _sigma,
+                      ),
                     ),
                   ),
                 ],
