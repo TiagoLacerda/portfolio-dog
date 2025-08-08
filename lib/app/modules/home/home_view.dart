@@ -174,9 +174,10 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   int maxRadius = 31;
-  int radius = 0;
-  double sigma = 0.0;
+  int radius = 5;
+  double sigma = 1.4;
   double k = 0.5;
+  double epsilon = 0.5;
 
   Widget buildSlider(
     BuildContext context, {
@@ -276,7 +277,7 @@ class _HomeViewState extends State<HomeView> {
                   context,
                   label: 'Sigma',
                   value: sigma,
-                  max: 100.0,
+                  max: 20.0,
                   onChanged: (value) => setState(() => sigma = value),
                 ),
                 buildSlider(
@@ -284,6 +285,12 @@ class _HomeViewState extends State<HomeView> {
                   label: 'k',
                   value: k,
                   onChanged: (value) => setState(() => k = value),
+                ),
+                buildSlider(
+                  context,
+                  label: 'ε',
+                  value: epsilon,
+                  onChanged: (value) => setState(() => epsilon = value),
                 ),
                 Expanded(
                   child: ColoredBox(
@@ -302,6 +309,7 @@ class _HomeViewState extends State<HomeView> {
                           radius: radius,
                           sigma: sigma,
                           k: k,
+                          epsilon: epsilon,
                         ),
                       ),
                     ),
