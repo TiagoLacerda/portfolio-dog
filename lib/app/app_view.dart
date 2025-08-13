@@ -16,6 +16,7 @@ class AppView extends StatelessWidget {
         title: 'Flutter Shaders',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
         home: HomeModule(),
       ),
     );

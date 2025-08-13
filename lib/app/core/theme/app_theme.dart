@@ -32,4 +32,6 @@ abstract class AppTheme {
   }
 
   static ThemeData get light => _themeData(Brightness.light, AppColors.light);
+
+  static ThemeData get dark => _themeData(Brightness.dark, AppColors.dark);
 }

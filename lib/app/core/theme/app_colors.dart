@@ -22,4 +22,12 @@ class AppColors {
     surfaceHigh: const Color(0xFFFFFFFF),
     error: Colors.redAccent,
   );
+
+  static AppColors dark = AppColors(
+    text: Colors.white.withValues(alpha: 0.8),
+    primary: Colors.greenAccent,
+    surface: const Color(0xFF0F0F0F),
+    surfaceHigh: const Color(0xFF1F1F1F),
+    error: Colors.redAccent,
+  );
 }
