@@ -6,6 +6,11 @@ import 'package:flutter_shaders/app/core/adapters/webgl/shader_pipeline.dart';
 import 'package:web/web.dart' as web;
 
 class MyShaderPipeline extends ShaderPipeline {
+  MyShaderPipeline({
+    super.width,
+    super.height,
+  });
+
   late web.WebGLProgram grayscale;
   late web.WebGLProgram sobel;
   late web.WebGLProgram blur;

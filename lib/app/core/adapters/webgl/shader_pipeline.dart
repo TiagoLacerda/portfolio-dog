@@ -5,7 +5,7 @@ import 'dart:ui_web' as ui_web;
 import 'package:web/web.dart' as web;
 
 abstract class ShaderPipeline {
-  web.HTMLCanvasElement canvas;
+  final web.HTMLCanvasElement canvas;
   late web.WebGL2RenderingContext gl;
 
   ShaderPipeline({
@@ -19,6 +19,8 @@ abstract class ShaderPipeline {
       'webgl-canvas',
       (_) => canvas,
     );
+
+    log('Canvas is ${canvas.width}x${canvas.height}');
 
     final context = canvas.getContext('webgl2') as web.WebGL2RenderingContext?;
 

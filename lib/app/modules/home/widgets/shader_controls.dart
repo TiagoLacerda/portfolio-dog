@@ -30,7 +30,10 @@ class ShaderControlsState extends State<ShaderControls> {
   void initState() {
     super.initState();
 
-    var p = MyShaderPipeline();
+    var p = MyShaderPipeline(
+      width: 325,
+      height: 288,
+    );
     p.initialize().then((_) {
       pipeline = p;
       draw();

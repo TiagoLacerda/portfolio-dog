@@ -24,8 +24,8 @@ class HomeView extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.fitHeight,
                   child: SizedBox(
-                    width: 800,
-                    height: 600,
+                    width: 325,
+                    height: 288,
                     child: ColoredBox(
                       color: Colors.black,
                       child: HtmlElementView(viewType: 'webgl-canvas'),
