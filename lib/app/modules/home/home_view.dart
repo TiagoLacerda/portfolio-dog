@@ -26,9 +26,13 @@ class HomeView extends StatelessWidget {
                   child: SizedBox(
                     width: 325,
                     height: 288,
-                    child: ColoredBox(
-                      color: Colors.black,
-                      child: HtmlElementView(viewType: 'webgl-canvas'),
+                    child: InteractiveViewer(
+                      child: ColoredBox(
+                        color: Colors.black,
+                        child: HtmlElementView(
+                          viewType: 'webgl-canvas',
+                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -6,7 +6,7 @@ import 'dart:ui_web' as ui_web;
 import 'package:web/web.dart' as web;
 
 abstract class ShaderPipeline {
-  final web.HTMLCanvasElement canvas;
+  late final web.HTMLCanvasElement canvas;
   late web.WebGL2RenderingContext gl;
 
   ShaderPipeline({
@@ -15,7 +15,8 @@ abstract class ShaderPipeline {
   }) : canvas = web.HTMLCanvasElement()
          ..width = width
          ..height = height
-         ..style.border = '1px solid black' {
+         ..style.border = '1px solid black'
+         ..style.imageRendering = 'pixelated' {
     ui_web.platformViewRegistry.registerViewFactory(
       'webgl-canvas',
       (_) => canvas,
