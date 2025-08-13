@@ -15,7 +15,8 @@ class MyShaderPipeline extends ShaderPipeline {
   late web.WebGLProgram sobel;
   late web.WebGLProgram blur;
   late web.WebGLProgram flow;
-  late web.WebGLProgram fdog;
+  late web.WebGLProgram orthogonalDog;
+  late web.WebGLProgram tangentBlur;
   late web.WebGLProgram dither;
   late web.WebGLTexture texture0;
   late web.WebGLTexture texture1;
@@ -23,6 +24,7 @@ class MyShaderPipeline extends ShaderPipeline {
   late web.WebGLTexture texture3;
   late web.WebGLTexture texture4;
   late web.WebGLTexture texture5;
+  late web.WebGLTexture texture6;
   late web.WebGLFramebuffer framebuffer;
 
   /// Load and compile shaders and textures, intermediate frame buffer and fullscreen quad VBO.
@@ -32,22 +34,25 @@ class MyShaderPipeline extends ShaderPipeline {
     final sobelSource = await rootBundle.loadString('shaders/sobel.frag');
     final blurSource = await rootBundle.loadString('shaders/blur.frag');
     final flowSource = await rootBundle.loadString('shaders/flow.frag');
-    final fdogSource = await rootBundle.loadString('shaders/fdog.frag');
+    final orthogonalDogSource = await rootBundle.loadString('shaders/orthogonal_dog.frag');
+    final tangentBlurSource = await rootBundle.loadString('shaders/tangent_blur.frag');
     final ditherSource = await rootBundle.loadString('shaders/dither.frag');
 
     grayscale = ShaderPipeline.loadShaderProgram(gl, vertSource, grayscaleSource);
     sobel = ShaderPipeline.loadShaderProgram(gl, vertSource, sobelSource);
     blur = ShaderPipeline.loadShaderProgram(gl, vertSource, blurSource);
     flow = ShaderPipeline.loadShaderProgram(gl, vertSource, flowSource);
-    fdog = ShaderPipeline.loadShaderProgram(gl, vertSource, fdogSource);
+    orthogonalDog = ShaderPipeline.loadShaderProgram(gl, vertSource, orthogonalDogSource);
+    tangentBlur = ShaderPipeline.loadShaderProgram(gl, vertSource, tangentBlurSource);
     dither = ShaderPipeline.loadShaderProgram(gl, vertSource, ditherSource);
 
-    texture0 = (await ShaderPipeline.createTexture(gl, 'web/assets/images/lalaland.jpg'))!;
-    texture1 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!;
-    texture2 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!;
-    texture3 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!;
-    texture4 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!;
-    texture5 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!;
+    texture0 = (await ShaderPipeline.createTexture(gl, 'web/assets/images/lalaland.jpg'))!; // Raw
+    texture1 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Grayscale
+    texture2 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Tensor
+    texture3 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Blurred tensor
+    texture4 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Eigenvectors
+    texture5 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Orthogonal-blurred
+    texture6 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Tangent-blurred
 
     // Fullscreen quad
     final vertices = [-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0];
@@ -231,7 +236,7 @@ class MyShaderPipeline extends ShaderPipeline {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Flow-based Difference of Gaussians
+    // Flow-Orthogonal Difference of Gaussians
 
     // gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
     gl.framebufferTexture2D(
@@ -246,57 +251,87 @@ class MyShaderPipeline extends ShaderPipeline {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
-    gl.useProgram(fdog);
+    gl.useProgram(orthogonalDog);
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture0);
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture1);
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE2);
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
     gl.uniform2f(
-      gl.getUniformLocation(fdog, 'u_resolution'),
+      gl.getUniformLocation(orthogonalDog, 'u_resolution'),
       canvas.width,
       canvas.height,
     );
     gl.uniform1f(
-      gl.getUniformLocation(fdog, 'u_radius'),
+      gl.getUniformLocation(orthogonalDog, 'u_radius'),
       radius.toDouble(),
     );
     gl.uniform1f(
-      gl.getUniformLocation(fdog, 'u_sigma_e'),
+      gl.getUniformLocation(orthogonalDog, 'u_sigma_e'),
       sigmaE,
     );
     gl.uniform1f(
-      gl.getUniformLocation(fdog, 'u_sigma_m'),
-      sigmaM,
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(fdog, 'u_k'),
+      gl.getUniformLocation(orthogonalDog, 'u_k'),
       k,
     );
     gl.uniform1f(
-      gl.getUniformLocation(fdog, 'u_tau'),
+      gl.getUniformLocation(orthogonalDog, 'u_tau'),
       tau,
     );
     gl.uniform1f(
-      gl.getUniformLocation(fdog, 'u_epsilon'),
+      gl.getUniformLocation(orthogonalDog, 'u_epsilon'),
       epsilon,
     );
     gl.uniform1f(
-      gl.getUniformLocation(fdog, 'u_phi'),
+      gl.getUniformLocation(orthogonalDog, 'u_phi'),
       phi,
     );
     gl.uniform1i(
-      gl.getUniformLocation(fdog, 'u_texture'),
+      gl.getUniformLocation(orthogonalDog, 'u_sampler'),
       0,
     );
     gl.uniform1i(
-      gl.getUniformLocation(fdog, 'u_grayscale'),
+      gl.getUniformLocation(orthogonalDog, 'u_flow'),
       1,
     );
+
+    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+
+    // Flow-Orthogonal Tangent blur
+
+    // gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
+    gl.framebufferTexture2D(
+      web.WebGL2RenderingContext.FRAMEBUFFER,
+      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      texture6,
+      0,
+    );
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
+
+    gl.useProgram(tangentBlur);
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture5);
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
+    gl.uniform2f(
+      gl.getUniformLocation(tangentBlur, 'u_resolution'),
+      canvas.width,
+      canvas.height,
+    );
+    gl.uniform1f(
+      gl.getUniformLocation(tangentBlur, 'u_sigma_m'),
+      sigmaM,
+    );
     gl.uniform1i(
-      gl.getUniformLocation(fdog, 'u_flow'),
-      2,
+      gl.getUniformLocation(tangentBlur, 'u_sampler'),
+      0,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(orthogonalDog, 'u_flow'),
+      1,
     );
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
@@ -311,7 +346,7 @@ class MyShaderPipeline extends ShaderPipeline {
 
     gl.useProgram(dither);
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture5);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture6);
     gl.uniform2f(
       gl.getUniformLocation(dither, 'u_resolution'),
       canvas.width,
