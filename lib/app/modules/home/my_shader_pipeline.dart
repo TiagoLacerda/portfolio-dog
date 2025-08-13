@@ -18,6 +18,7 @@ class MyShaderPipeline extends ShaderPipeline {
   late web.WebGLProgram orthogonalDog;
   late web.WebGLProgram tangentBlur;
   late web.WebGLProgram dither;
+  late web.WebGLProgram colorMapping;
   late web.WebGLTexture texture0;
   late web.WebGLTexture texture1;
   late web.WebGLTexture texture2;
@@ -25,7 +26,15 @@ class MyShaderPipeline extends ShaderPipeline {
   late web.WebGLTexture texture4;
   late web.WebGLTexture texture5;
   late web.WebGLTexture texture6;
+  late web.WebGLTexture texture7;
+  late web.WebGLTexture colorMap;
   late web.WebGLFramebuffer framebuffer;
+
+  List<Color> colors = [];
+
+  int color2int(Color color) {
+    return (color.toARGB32() & 0x00FFFFFF);
+  }
 
   /// Load and compile shaders and textures, intermediate frame buffer and fullscreen quad VBO.
   Future<void> initialize() async {
@@ -37,6 +46,7 @@ class MyShaderPipeline extends ShaderPipeline {
     final orthogonalDogSource = await rootBundle.loadString('shaders/orthogonal_dog.frag');
     final tangentBlurSource = await rootBundle.loadString('shaders/tangent_blur.frag');
     final ditherSource = await rootBundle.loadString('shaders/dither.frag');
+    final colorMappingSource = await rootBundle.loadString('shaders/color_mapping.frag');
 
     grayscale = ShaderPipeline.loadShaderProgram(gl, vertSource, grayscaleSource);
     sobel = ShaderPipeline.loadShaderProgram(gl, vertSource, sobelSource);
@@ -45,6 +55,7 @@ class MyShaderPipeline extends ShaderPipeline {
     orthogonalDog = ShaderPipeline.loadShaderProgram(gl, vertSource, orthogonalDogSource);
     tangentBlur = ShaderPipeline.loadShaderProgram(gl, vertSource, tangentBlurSource);
     dither = ShaderPipeline.loadShaderProgram(gl, vertSource, ditherSource);
+    colorMapping = ShaderPipeline.loadShaderProgram(gl, vertSource, colorMappingSource);
 
     texture0 = (await ShaderPipeline.createTexture(gl, 'web/assets/images/lalaland.jpg'))!; // Raw
     texture1 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Grayscale
@@ -53,6 +64,20 @@ class MyShaderPipeline extends ShaderPipeline {
     texture4 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Eigenvectors
     texture5 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Orthogonal-blurred
     texture6 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Tangent-blurred
+    texture7 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Color-mapped
+
+    colors = [
+      Color(0xFF0E3738),
+      Color(0xFF1B3F5D),
+      Color(0xFF3B4479),
+      Color(0xFF694A7E),
+      Color(0xFF9C556E),
+      Color(0xFFBF6A5C),
+      Color(0xFFC78C56),
+      Color(0xFFB5B96A),
+    ];
+
+    colorMap = ShaderPipeline.createPaletteTexture(gl, colors.map((c) => color2int(c)).toList());
 
     // Fullscreen quad
     final vertices = [-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0];
@@ -336,6 +361,46 @@ class MyShaderPipeline extends ShaderPipeline {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
+    // Color-mapping
+
+    // gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
+    gl.framebufferTexture2D(
+      web.WebGL2RenderingContext.FRAMEBUFFER,
+      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      texture7,
+      0,
+    );
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
+
+    gl.useProgram(colorMapping);
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture6);
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
+    gl.uniform2f(
+      gl.getUniformLocation(colorMapping, 'u_resolution'),
+      canvas.width,
+      canvas.height,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(colorMapping, 'u_n'),
+      colors.length,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(colorMapping, 'u_sampler'),
+      0,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(colorMapping, 'u_colors'),
+      1,
+    );
+
+    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+
     // Dither
 
     gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
@@ -346,7 +411,7 @@ class MyShaderPipeline extends ShaderPipeline {
 
     gl.useProgram(dither);
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture6);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture7);
     gl.uniform2f(
       gl.getUniformLocation(dither, 'u_resolution'),
       canvas.width,

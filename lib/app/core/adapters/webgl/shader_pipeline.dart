@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:js_interop';
+import 'dart:typed_data';
 import 'dart:ui_web' as ui_web;
 
 import 'package:web/web.dart' as web;
@@ -29,6 +30,60 @@ abstract class ShaderPipeline {
     }
 
     gl = context;
+  }
+
+  static web.WebGLTexture createPaletteTexture(
+    web.WebGL2RenderingContext gl,
+    List<int> colors,
+  ) {
+    final tex = gl.createTexture();
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, tex);
+
+    // Convert to RGB byte data
+    final data = Uint8List(colors.length * 3);
+    for (var i = 0; i < colors.length; i++) {
+      final c = colors[i];
+      data[i * 3 + 0] = (c >> 16) & 0xFF; // R
+      data[i * 3 + 1] = (c >> 8) & 0xFF; // G
+      data[i * 3 + 2] = c & 0xFF; // B
+    }
+
+    // Upload as a 1xN texture
+    gl.texImage2D(
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      0,
+      web.WebGL2RenderingContext.RGB,
+      colors.length.toJS,
+      1.toJS,
+      0.toJS,
+      web.WebGL2RenderingContext.RGB,
+      web.WebGL2RenderingContext.UNSIGNED_BYTE,
+      data.toJS,
+    );
+
+    // Simple filtering
+    gl.texParameteri(
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      web.WebGL2RenderingContext.TEXTURE_MIN_FILTER,
+      web.WebGL2RenderingContext.NEAREST,
+    );
+    gl.texParameteri(
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      web.WebGL2RenderingContext.TEXTURE_MAG_FILTER,
+      web.WebGL2RenderingContext.NEAREST,
+    );
+    gl.texParameteri(
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      web.WebGL2RenderingContext.TEXTURE_WRAP_S,
+      web.WebGL2RenderingContext.CLAMP_TO_EDGE,
+    );
+    gl.texParameteri(
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      web.WebGL2RenderingContext.TEXTURE_WRAP_T,
+      web.WebGL2RenderingContext.CLAMP_TO_EDGE,
+    );
+
+    return tex!;
   }
 
   /// Create a WebGL texture, either empty or from an image;
