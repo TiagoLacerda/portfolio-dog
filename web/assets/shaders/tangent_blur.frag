@@ -4,7 +4,7 @@ precision mediump float;
 out vec4 outColor;
 
 uniform vec2 u_resolution;
-uniform float u_sigma_m;
+uniform float u_sigma;
 
 uniform sampler2D u_sampler;
 uniform sampler2D u_flow;
@@ -14,8 +14,8 @@ float gaussian(float x, float sigma) {
 }
 
 // Gaussian-blur along the tangent flow field
-float LIC(
-    sampler2D grayscale,
+vec3 LIC(
+    sampler2D sampler,
     sampler2D flow,
     vec2 resolution,
     vec2 uv,
@@ -25,7 +25,7 @@ float LIC(
     float weight = gaussian(0.0f, sigma);
     float total = weight;
 
-    float value = texture(grayscale, uv).r * weight;
+    vec3 value = texture(sampler, uv).rgb * weight;
 
     // Travel forward along the flow line
     vec2 st = uv;
@@ -41,7 +41,7 @@ float LIC(
             st -= tangent;
         }
         weight = gaussian(float(i), sigma);
-        value += texture(grayscale, st).r * weight;
+        value += texture(sampler, st).rgb * weight;
         total += weight;
     }
 
@@ -59,7 +59,7 @@ float LIC(
             st += tangent;
         }
         weight = gaussian(float(i), sigma);
-        value += texture(grayscale, st).r * weight;
+        value += texture(sampler, st).rgb * weight;
         total += weight;
     }
 
@@ -68,6 +68,7 @@ float LIC(
 
 void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
-    float tang = LIC(u_sampler, u_flow, u_resolution, uv, int(u_sigma_m * 2.5f), u_sigma_m);
-    outColor = vec4(vec3(tang), 1.0f);
+    int radius = max(5, int(u_sigma * 2.5f));
+    vec3 color = LIC(u_sampler, u_flow, u_resolution, uv, radius, u_sigma);
+    outColor = vec4(color, 1.0f);
 }

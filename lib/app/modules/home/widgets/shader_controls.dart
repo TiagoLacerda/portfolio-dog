@@ -13,9 +13,9 @@ class ShaderControlsState extends State<ShaderControls> {
 
   int radius = 5;
   double sigmaC = 2.5;
-  double sigmaM = 1.0;
+  double sigmaM = 3.0;
   double sigmaE = 2.8;
-  double sigmaA = 1.0;
+  double sigmaA = 0.25;
   double k = 2.4;
   double tau = 40.0;
   double epsilon = 0.6;
@@ -142,6 +142,18 @@ class ShaderControlsState extends State<ShaderControls> {
         ),
         buildSlider(
           context: context,
+          label: 'σ e',
+          subtitle: 'Orthogonal blur',
+          value: sigmaE,
+          min: 0.001,
+          max: 10.0,
+          onChanged: (value) => setState(() {
+            sigmaE = value.toDouble();
+            draw();
+          }),
+        ),
+        buildSlider(
+          context: context,
           label: 'σ m',
           subtitle: 'Tangent blur',
           value: sigmaM,
@@ -154,27 +166,16 @@ class ShaderControlsState extends State<ShaderControls> {
         ),
         buildSlider(
           context: context,
-          label: 'σ e',
-          subtitle: 'Orthogonal blur',
-          value: sigmaE,
+          label: 'σ a',
+          subtitle: 'Second LIC pass',
+          value: sigmaA,
           min: 0.001,
           max: 10.0,
           onChanged: (value) => setState(() {
-            sigmaE = value.toDouble();
+            sigmaA = value.toDouble();
             draw();
           }),
         ),
-        // buildSlider(
-        //   context: context,
-        //   label: 'σ a',
-        //   value: sigmaA,
-        //   min: 0.001,
-        //   max: 10.0,
-        //   onChanged: (value) => setState(() {
-        //     sigmaA = value.toDouble();
-        //     draw();
-        //   }),
-        // ),
         buildSlider(
           context: context,
           label: 'k',
