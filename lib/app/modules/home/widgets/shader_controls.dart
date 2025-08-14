@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart' hide Image;
+import 'package:flutter_shaders/app/core/utils/utils.dart';
 import 'package:flutter_shaders/app/modules/home/my_shader_pipeline.dart';
 
 class ShaderControls extends StatefulWidget {
@@ -43,7 +44,11 @@ class ShaderControlsState extends State<ShaderControls> {
     );
     p.initialize().then((_) {
       pipeline = p;
-      draw();
+      Utils.loadImageFromAsset('images/chicken.jpg').then((image) {
+        pipeline!.setImage(image!).then((_) {
+          draw();
+        });
+      });
     });
   }
 

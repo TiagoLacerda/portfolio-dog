@@ -111,7 +111,7 @@ class MyShaderPipeline extends ShaderPipeline {
     tangentBlur = ShaderPipeline.loadShaderProgram(gl, vertSource, tangentBlurSource);
     colorMapping = ShaderPipeline.loadShaderProgram(gl, vertSource, colorMappingSource);
 
-    texture0 = (await ShaderPipeline.createTexture(gl, 'web/assets/images/lalaland_small.jpg'))!; // Raw
+    texture0 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Raw
     texture1 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Grayscale
     texture2 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Tensor
     texture3 = (await ShaderPipeline.createTexture(gl, null, canvas.width, canvas.height))!; // Blurred tensor
