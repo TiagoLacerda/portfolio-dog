@@ -19,16 +19,20 @@ class HomeView extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              ShaderControls(),
+              ShaderControls(
+                loadImage: controller.loadImage,
+              ),
               Expanded(
                 child: FittedBox(
-                  fit: BoxFit.fitHeight,
+                  fit: BoxFit.contain,
                   child: SizedBox(
-                    width: 325,
-                    height: 288,
-                    child: InteractiveViewer(
-                      child: ColoredBox(
-                        color: Colors.black,
+                    width: controller.size?.width ?? 800,
+                    height: controller.size?.height ?? 600,
+                    child: ColoredBox(
+                      color: Colors.black,
+                      child: InteractiveViewer(
+                        minScale: 0.01,
+                        maxScale: 100.0,
                         child: HtmlElementView(
                           viewType: 'webgl-canvas',
                         ),

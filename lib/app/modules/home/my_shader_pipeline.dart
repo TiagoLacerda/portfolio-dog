@@ -1,5 +1,6 @@
 import 'dart:js_interop';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_shaders/app/core/adapters/webgl/shader_pipeline.dart';
@@ -35,6 +36,63 @@ class MyShaderPipeline extends ShaderPipeline {
 
   int color2int(Color color) {
     return (color.toARGB32() & 0x00FFFFFF);
+  }
+
+  Future<void> setImage(Image image) async {
+    final pixels = (await image.toByteData())!.buffer.asUint8List().toJS;
+
+    final w = image.width;
+    final h = image.height;
+
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.width = '${w}px';
+    canvas.style.height = '${h}px';
+
+    gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
+    gl.viewport(0, 0, w, h);
+    gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, framebuffer);
+    gl.viewport(0, 0, w, h);
+
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture0);
+    gl.pixelStorei(web.WebGL2RenderingContext.UNPACK_FLIP_Y_WEBGL, 1);
+    gl.texImage2D(
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      0,
+      web.WebGL2RenderingContext.RGBA,
+      w.toJS,
+      h.toJS,
+      0.toJS,
+      web.WebGL2RenderingContext.RGBA,
+      web.WebGL2RenderingContext.UNSIGNED_BYTE,
+      pixels,
+    );
+
+    final textures = [
+      texture1,
+      texture2,
+      texture3,
+      texture4,
+      texture5,
+      texture6,
+      texture7,
+      texture8,
+    ];
+
+    for (var texture in textures) {
+      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture);
+      gl.texImage2D(
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        0,
+        web.WebGL2RenderingContext.RGBA,
+        w.toJS,
+        h.toJS,
+        0.toJS,
+        web.WebGL2RenderingContext.RGBA,
+        web.WebGL2RenderingContext.UNSIGNED_BYTE,
+        null,
+      );
+    }
   }
 
   /// Load and compile shaders and textures, intermediate frame buffer and fullscreen quad VBO.
@@ -167,7 +225,6 @@ class MyShaderPipeline extends ShaderPipeline {
 
     // Sobel filter
 
-    // gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, framebuffer);
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
       web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
@@ -197,7 +254,6 @@ class MyShaderPipeline extends ShaderPipeline {
 
     // Gaussian blur
 
-    // gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, framebuffer);
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
       web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
@@ -235,7 +291,6 @@ class MyShaderPipeline extends ShaderPipeline {
 
     // Flow analysis
 
-    // gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
       web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
@@ -265,7 +320,6 @@ class MyShaderPipeline extends ShaderPipeline {
 
     // Flow-Orthogonal Difference of Gaussians
 
-    // gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
       web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
@@ -325,7 +379,6 @@ class MyShaderPipeline extends ShaderPipeline {
 
     // Flow-Tangent blur (LIC)
 
-    // gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
       web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
@@ -365,7 +418,6 @@ class MyShaderPipeline extends ShaderPipeline {
 
     // Color-mapping
 
-    // gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
       web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
@@ -405,7 +457,6 @@ class MyShaderPipeline extends ShaderPipeline {
 
     // Yet another LIC
 
-    // gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
       web.WebGL2RenderingContext.COLOR_ATTACHMENT0,

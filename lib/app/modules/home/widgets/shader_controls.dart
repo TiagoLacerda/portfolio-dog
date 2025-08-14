@@ -249,11 +249,18 @@
 //   }
 // }
 
-import 'package:flutter/material.dart';
+import 'dart:ui';
+
+import 'package:flutter/material.dart' hide Image;
 import 'package:flutter_shaders/app/modules/home/my_shader_pipeline.dart';
 
 class ShaderControls extends StatefulWidget {
-  const ShaderControls({super.key});
+  final Future<Image?> Function()? loadImage;
+
+  const ShaderControls({
+    super.key,
+    this.loadImage,
+  });
 
   @override
   State<ShaderControls> createState() => ShaderControlsState();
@@ -269,8 +276,8 @@ class ShaderControlsState extends State<ShaderControls> {
   double sigmaA = 0.25;
   double k = 2.4;
   double tau = 40.0;
-  double epsilon = 0.6;
-  double phi = 10.0;
+  double epsilon = 0.235;
+  double phi = 4.645;
   double s = 0.0;
 
   void draw() {
@@ -381,6 +388,20 @@ class ShaderControlsState extends State<ShaderControls> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
+        ElevatedButton(
+          onPressed: () {
+            widget.loadImage?.call().then((image) async {
+              if (image != null) {
+                await pipeline?.setImage(image);
+                draw();
+              }
+            });
+          },
+          style: ElevatedButton.styleFrom(
+            surfaceTintColor: ColorScheme.of(context).primary,
+          ),
+          child: Text('Load image'),
+        ),
         buildSlider(
           context: context,
           label: 'radius',

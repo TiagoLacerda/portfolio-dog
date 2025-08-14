@@ -10,8 +10,8 @@ abstract class ShaderPipeline {
   late web.WebGL2RenderingContext gl;
 
   ShaderPipeline({
-    int width = 800,
-    int height = 600,
+    width = 4,
+    height = 4,
   }) : canvas = web.HTMLCanvasElement()
          ..width = width
          ..height = height
