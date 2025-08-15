@@ -23,6 +23,8 @@ class HomeController extends ChangeNotifier {
 
       await pipeline.setImage(image);
 
+      pipeline.setColorMap(shaderControls.currentState!.colors);
+
       shaderControls.currentState!.draw();
     } catch (e) {
       log(e.toString());

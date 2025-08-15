@@ -46,7 +46,10 @@ class MyShaderPipeline extends ShaderPipeline {
 
   late web.WebGLFramebuffer framebuffer;
 
-  List<Color> colors = [];
+  int colorMapSize = 32;
+  int colorMapUsed = 0;
+
+  bool get useColorMapping => colorMapUsed >= 2;
 
   int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
 
@@ -106,6 +109,56 @@ class MyShaderPipeline extends ShaderPipeline {
     }
   }
 
+  void setColorMap(List<Color> colors) {
+    if (colors.length < 2) {
+      colorMapUsed = 0;
+      return;
+    }
+
+    final buffer = Uint8List(colors.length * 4);
+
+    for (int i = 0; i < colors.length; ++i) {
+      buffer[i * 4 + 0] = (colors[i].r * 255.0).round() & 0xff;
+      buffer[i * 4 + 1] = (colors[i].g * 255.0).round() & 0xff;
+      buffer[i * 4 + 2] = (colors[i].b * 255.0).round() & 0xff;
+      buffer[i * 4 + 3] = (colors[i].a * 255.0).round() & 0xff;
+    }
+
+    colorMapUsed = colors.length;
+
+    //
+
+    if (colorMapUsed > colorMapSize || colorMapUsed < colorMapSize / 2) {
+      colorMapSize = colorMapUsed;
+
+      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
+      gl.texImage2D(
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        0,
+        web.WebGL2RenderingContext.RGBA,
+        colorMapUsed.toJS,
+        1.toJS,
+        0.toJS,
+        web.WebGL2RenderingContext.RGBA,
+        web.WebGL2RenderingContext.UNSIGNED_BYTE,
+        buffer.toJS,
+      );
+    } else {
+      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
+      gl.texSubImage2D(
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        0,
+        0,
+        0,
+        colorMapUsed.toJS,
+        1.toJS,
+        web.WebGL2RenderingContext.RGBA.toJS,
+        web.WebGL2RenderingContext.UNSIGNED_BYTE,
+        buffer.toJS,
+      );
+    }
+  }
+
   /// Load and compile shaders and textures, intermediate frame buffer and fullscreen quad VBO.
   Future<void> initialize() async {
     final vertSource = await rootBundle.loadString('shaders/vert.vert');
@@ -133,21 +186,9 @@ class MyShaderPipeline extends ShaderPipeline {
     texture5 = createTexture(canvas.width, canvas.height);
     texture6 = createTexture(canvas.width, canvas.height);
     texture7 = createTexture(canvas.width, canvas.height);
+    colorMap = createTexture(colorMapSize, 1);
 
     framebuffer = createFrameBuffer(texture1);
-
-    colors = [
-      Color(0xFF0E3738),
-      Color(0xFF1B3F5D),
-      Color(0xFF3B4479),
-      Color(0xFF694A7E),
-      Color(0xFF9C556E),
-      Color(0xFFBF6A5C),
-      Color(0xFFC78C56),
-      Color(0xFFB5B96A),
-    ];
-
-    colorMap = createPaletteTexture(colors.map((c) => color2int(c)).toList());
 
     // Fullscreen quad
     final vertices = [-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0];
@@ -414,50 +455,52 @@ class MyShaderPipeline extends ShaderPipeline {
 
     // Pass 7 - Color quantization and mapping
 
-    gl.framebufferTexture2D(
-      web.WebGL2RenderingContext.FRAMEBUFFER,
-      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      texture7,
-      0,
-    );
+    if (useColorMapping) {
+      gl.framebufferTexture2D(
+        web.WebGL2RenderingContext.FRAMEBUFFER,
+        web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        texture7,
+        0,
+      );
 
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture6);
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
+      gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
+      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture6);
+      gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
+      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
-    gl.useProgram(colorMapping);
-    gl.uniform2f(
-      gl.getUniformLocation(colorMapping, 'u_resolution'),
-      canvas.width,
-      canvas.height,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(colorMapping, 'u_n'),
-      colors.length,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(colorMapping, 'u_sampler'),
-      0,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(colorMapping, 'u_colors'),
-      1,
-    );
+      gl.useProgram(colorMapping);
+      gl.uniform2f(
+        gl.getUniformLocation(colorMapping, 'u_resolution'),
+        canvas.width,
+        canvas.height,
+      );
+      gl.uniform1i(
+        gl.getUniformLocation(colorMapping, 'u_n'),
+        colorMapUsed,
+      );
+      gl.uniform1i(
+        gl.getUniformLocation(colorMapping, 'u_sampler'),
+        0,
+      );
+      gl.uniform1i(
+        gl.getUniformLocation(colorMapping, 'u_colors'),
+        1,
+      );
 
-    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+      gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+    }
 
     // Pass 8 - Anti-aliasing LIC
 
     gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
 
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture7);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, useColorMapping ? texture7 : texture6);
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
 

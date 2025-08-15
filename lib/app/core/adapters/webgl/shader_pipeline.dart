@@ -1,5 +1,4 @@
 import 'dart:js_interop';
-import 'dart:typed_data';
 import 'dart:ui_web' as ui_web;
 
 import 'package:web/web.dart' as web;
@@ -129,65 +128,6 @@ abstract class ShaderPipeline {
       web.WebGL2RenderingContext.TEXTURE_2D,
       web.WebGL2RenderingContext.TEXTURE_WRAP_T,
       web.WebGL2RenderingContext.MIRRORED_REPEAT,
-    );
-
-    return texture;
-  }
-
-  web.WebGLTexture createPaletteTexture(
-    List<int> colors,
-  ) {
-    final texture = gl.createTexture();
-
-    if (texture == null) {
-      throw TextureCreationException();
-    }
-
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture);
-
-    final data = Uint8List(colors.length * 3);
-
-    for (int i = 0; i < colors.length; ++i) {
-      final color = colors[i];
-      data[i * 3 + 0] = (color >> 16) & 0xFF;
-      data[i * 3 + 1] = (color >> 8) & 0xFF;
-      data[i * 3 + 2] = (color) & 0xFF;
-    }
-
-    gl.texImage2D(
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      0,
-      web.WebGL2RenderingContext.RGB,
-      colors.length.toJS,
-      1.toJS,
-      0.toJS,
-      web.WebGL2RenderingContext.RGB,
-      web.WebGL2RenderingContext.UNSIGNED_BYTE,
-      data.toJS,
-    );
-
-    gl.texParameteri(
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      web.WebGL2RenderingContext.TEXTURE_MIN_FILTER,
-      web.WebGL2RenderingContext.NEAREST,
-    );
-
-    gl.texParameteri(
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      web.WebGL2RenderingContext.TEXTURE_MAG_FILTER,
-      web.WebGL2RenderingContext.NEAREST,
-    );
-
-    gl.texParameteri(
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      web.WebGL2RenderingContext.TEXTURE_WRAP_S,
-      web.WebGL2RenderingContext.CLAMP_TO_EDGE,
-    );
-
-    gl.texParameteri(
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      web.WebGL2RenderingContext.TEXTURE_WRAP_T,
-      web.WebGL2RenderingContext.CLAMP_TO_EDGE,
     );
 
     return texture;

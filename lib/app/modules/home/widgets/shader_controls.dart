@@ -26,6 +26,19 @@ class ShaderControlsState extends State<ShaderControls> {
   double epsilon = 0.235;
   double phi = 4.645;
 
+  bool useColorMapping = true;
+
+  List<Color> colors = [
+    Color(0xFF0E3738),
+    Color(0xFF1B3F5D),
+    Color(0xFF3B4479),
+    Color(0xFF694A7E),
+    Color(0xFF9C556E),
+    Color(0xFFBF6A5C),
+    Color(0xFFC78C56),
+    Color(0xFFB5B96A),
+  ];
+
   void draw() => widget.pipeline.draw(radius, sigmaC, sigmaM, sigmaE, sigmaA, k, tau, epsilon, phi);
 
   Widget buildSlider({
@@ -224,6 +237,35 @@ class ShaderControlsState extends State<ShaderControls> {
           onChanged: (value) => setState(() {
             phi = value.toDouble();
           }),
+        ),
+        Row(
+          children: [
+            SizedBox(
+              width: 150.0,
+              child: Text(
+                'Color-mapping',
+                style: TextTheme.of(context).bodyMedium?.copyWith(
+                  color: TextTheme.of(context).bodyMedium?.color?.withValues(alpha: 0.5),
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.w100,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            Checkbox(
+              value: useColorMapping,
+              onChanged: (value) {
+                setState(() => useColorMapping = value!);
+                if (useColorMapping) {
+                  widget.pipeline.setColorMap(colors);
+                } else {
+                  widget.pipeline.setColorMap([]);
+                }
+
+                draw();
+              },
+            ),
+          ],
         ),
       ],
     );
