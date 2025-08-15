@@ -10,14 +10,14 @@ uniform float u_sigma;
 uniform sampler2D u_sampler;
 
 float gaussian(float x, float sigma) {
-    return exp(-(x * x) / (2.0 * sigma * sigma));
+    return exp(-(x * x) / (2.0f * sigma * sigma));
 }
 
 vec3 blur(sampler2D sampler, vec2 resolution, vec2 coordinates, float radius, float sigma) {
-    vec2 texelSize = 1.0 / resolution;
-    vec3 color = vec3(0.0);
+    vec2 texelSize = 1.0f / resolution;
+    vec3 color = vec3(0.0f);
 
-    float sum = 0.0;
+    float sum = 0.0f;
 
     for(float i = -radius; i <= radius; ++i) {
         for(float j = -radius; j <= radius; ++j) {
@@ -34,5 +34,5 @@ vec3 blur(sampler2D sampler, vec2 resolution, vec2 coordinates, float radius, fl
 void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
     vec3 blurred = blur(u_sampler, u_resolution, uv, u_radius, u_sigma);
-    outColor = vec4(blurred, 1.0);
+    outColor = vec4(blurred, 1.0f);
 }

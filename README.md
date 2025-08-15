@@ -14,3 +14,17 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+## TODO:
+- ~~Initialize the pipeline with all empty textures, and automate loading an asset outside the pipeline's scope~~
+- ~~Properly handle webgl support detection~~
+- ~~Properly handle shader compilation/link errors~~
+- ~~Properly handle framebuffer configuration errors~~
+- Develop a mechanism for the shader pipeline to notify HTMLElementView that new canvas dimensions are available 
+    - Most likely have the pipeline inherit ChangeNotifier
+- Add option to toggle and configure color-mapping
+- Add option to save image to a new file
+- Add option to save image by right clicking? (Very low priority)
+- Add option to save image to a new file
+- Look into moving shader pipeline to a separate thread (Isolates not available on web :c)
