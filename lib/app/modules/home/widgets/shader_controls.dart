@@ -1,14 +1,13 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart' hide Image;
-import 'package:flutter_shaders/app/core/utils/utils.dart';
 import 'package:flutter_shaders/app/modules/home/my_shader_pipeline.dart';
 
 class ShaderControls extends StatefulWidget {
-  final Future<Image?> Function()? loadImage;
+  final MyShaderPipeline pipeline;
+  final Future<void> Function()? loadImage;
 
   const ShaderControls({
     super.key,
+    required this.pipeline,
     this.loadImage,
   });
 
@@ -17,8 +16,6 @@ class ShaderControls extends StatefulWidget {
 }
 
 class ShaderControlsState extends State<ShaderControls> {
-  MyShaderPipeline? pipeline;
-
   int radius = 5;
   double sigmaC = 2.5;
   double sigmaM = 3.0;
@@ -28,29 +25,8 @@ class ShaderControlsState extends State<ShaderControls> {
   double tau = 40.0;
   double epsilon = 0.235;
   double phi = 4.645;
-  double s = 0.0;
 
-  void draw() {
-    pipeline?.draw(radius, sigmaC, sigmaM, sigmaE, sigmaA, k, tau, epsilon, phi);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    var p = MyShaderPipeline(
-      width: 325,
-      height: 288,
-    );
-    p.initialize().then((_) {
-      pipeline = p;
-      Utils.loadImageFromAsset('images/chicken.jpg').then((image) {
-        pipeline!.setImage(image!).then((_) {
-          draw();
-        });
-      });
-    });
-  }
+  void draw() => widget.pipeline.draw(radius, sigmaC, sigmaM, sigmaE, sigmaA, k, tau, epsilon, phi);
 
   Widget buildSlider({
     required BuildContext context,
@@ -143,14 +119,7 @@ class ShaderControlsState extends State<ShaderControls> {
       mainAxisSize: MainAxisSize.min,
       children: [
         ElevatedButton(
-          onPressed: () {
-            widget.loadImage?.call().then((image) async {
-              if (image != null) {
-                await pipeline?.setImage(image);
-                draw();
-              }
-            });
-          },
+          onPressed: () => widget.loadImage?.call(),
           style: ElevatedButton.styleFrom(
             surfaceTintColor: ColorScheme.of(context).primary,
           ),

@@ -20,14 +20,16 @@ class HomeView extends StatelessWidget {
           child: Column(
             children: [
               ShaderControls(
+                key: controller.shaderControls,
+                pipeline: controller.pipeline,
                 loadImage: controller.loadImage,
               ),
               Expanded(
                 child: FittedBox(
                   fit: BoxFit.contain,
                   child: SizedBox(
-                    width: controller.size?.width ?? 800,
-                    height: controller.size?.height ?? 600,
+                    width: controller.pipeline.canvas.width.toDouble(),
+                    height: controller.pipeline.canvas.height.toDouble(),
                     child: ColoredBox(
                       color: Colors.black,
                       child: InteractiveViewer(

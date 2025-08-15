@@ -1,26 +1,47 @@
 import 'dart:developer';
-import 'dart:ui';
 
 import 'package:flutter/material.dart' hide Image;
 import 'package:flutter_shaders/app/core/utils/utils.dart';
+import 'package:flutter_shaders/app/modules/home/my_shader_pipeline.dart';
+import 'package:flutter_shaders/app/modules/home/widgets/shader_controls.dart';
 
 class HomeController extends ChangeNotifier {
-  Size? size;
-  Future<Image?> loadImage() async {
+  final pipeline = MyShaderPipeline();
+  final shaderControls = GlobalKey<ShaderControlsState>();
+
+  HomeController() {
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    try {
+      await pipeline.initialize();
+
+      final image = await Utils.loadImageFromAsset('images/chicken.jpg');
+
+      if (image == null) return;
+
+      await pipeline.setImage(image);
+
+      shaderControls.currentState!.draw();
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadImage() async {
     try {
       final image = await Utils.pickImage();
 
-      if (image != null) {
-        size = Size(
-          image.width.toDouble(),
-          image.height.toDouble(),
-        );
-      }
+      if (image == null) return;
 
-      return image;
+      await pipeline.setImage(image);
+
+      shaderControls.currentState!.draw();
     } catch (e) {
       log(e.toString());
-      return null;
     } finally {
       notifyListeners();
     }

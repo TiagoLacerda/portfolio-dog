@@ -7,6 +7,19 @@ import 'package:web/web.dart' as web;
 
 import '../../core/adapters/webgl/shader_pipeline.dart';
 
+typedef DrawFunction =
+    void Function(
+      int radius,
+      double sigmaC,
+      double sigmaM,
+      double sigmaE,
+      double sigmaA,
+      double k,
+      double tau,
+      double epsilon,
+      double phi,
+    );
+
 class MyShaderPipeline extends ShaderPipeline {
   MyShaderPipeline({
     super.width,
@@ -35,9 +48,7 @@ class MyShaderPipeline extends ShaderPipeline {
 
   List<Color> colors = [];
 
-  int color2int(Color color) {
-    return (color.toARGB32() & 0x00FFFFFF);
-  }
+  int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
 
   Future<void> setImage(Image image) async {
     final pixels = (await image.toByteData())!.buffer.asUint8List().toJS;
