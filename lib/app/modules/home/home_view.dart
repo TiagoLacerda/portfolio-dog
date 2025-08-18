@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_shaders/app/modules/home/home_controller.dart';
 import 'package:flutter_shaders/app/modules/home/widgets/shader_controls.dart';
@@ -12,17 +14,39 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final minWidth = size.width;
+
+    final (x1, y1, x2, y2) = (600.0, 20.0, 1920.0, 1920.0 * 0.25);
+    final m = (y2 - y1) / (x2 - x1);
+    f(double x) => (x - x1) * m + y1;
+
+    final horizontal = max(y1, f(minWidth));
+
     return ListenableBuilder(
       listenable: controller,
       builder: (_, _) => Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontal,
+            vertical: 16.0,
+          ),
           child: Column(
             children: [
-              ShaderControls(
-                key: controller.shaderControls,
-                pipeline: controller.pipeline,
-                loadImage: controller.loadImage,
+              Card(
+                elevation: 8.0,
+                color: ColorScheme.of(context).surfaceContainerHigh,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32.0,
+                    vertical: 16.0,
+                  ),
+                  child: ShaderControls(
+                    key: controller.shaderControls,
+                    pipeline: controller.pipeline,
+                    loadImage: controller.loadImage,
+                  ),
+                ),
               ),
               Expanded(
                 child: FittedBox(
