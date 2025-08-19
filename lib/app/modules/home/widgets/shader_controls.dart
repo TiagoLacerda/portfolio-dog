@@ -17,9 +17,8 @@ class ShaderControls extends StatefulWidget {
 }
 
 class ShaderControlsState extends State<ShaderControls> {
-  int radius = 5;
   double sigmaC = 2.5;
-  double sigmaM = 3.0;
+  double sigmaM = 10.0;
   double sigmaE = 2.8;
   double sigmaA = 0.25;
   double k = 2.4;
@@ -40,7 +39,7 @@ class ShaderControlsState extends State<ShaderControls> {
     Color(0xFFB5B96A),
   ];
 
-  void draw() => widget.pipeline.draw(radius, sigmaC, sigmaM, sigmaE, sigmaA, k, tau, epsilon, phi);
+  void draw() => widget.pipeline.draw(sigmaC, sigmaM, sigmaE, sigmaA, k, tau, epsilon, phi);
 
   @override
   Widget build(BuildContext context) {
@@ -69,18 +68,6 @@ class ShaderControlsState extends State<ShaderControls> {
           ),
         ),
         const SizedBox(height: 16.0),
-        ShaderSlider(
-          title: 'radius',
-          subtitle: 'Structure-tensor blur',
-          value: radius.toDouble(),
-          min: 1,
-          max: 9,
-          divisions: 8,
-          onChanged: (value) {
-            radius = value.toInt();
-            draw();
-          },
-        ),
         ShaderSlider(
           title: 'σ c',
           subtitle: 'Structure-tensor blur',

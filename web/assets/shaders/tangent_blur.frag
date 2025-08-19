@@ -27,40 +27,43 @@ vec3 LIC(
 
     vec3 value = texture(sampler, uv).rgb * weight;
 
-    // Travel forward along the flow line
     vec2 st = uv;
-    vec2 oldTangent = texture(flow, uv).zw;
+    vec2 oldTangent = texture(flow, st).zw;
 
     for(int i = 1; i <= radius; ++i) {
-        vec2 tangent = texture(flow, st).zw / resolution;
-        if(dot(oldTangent, tangent) > 0.0f) {
-            // Angle is smaller than between oldTangent, -tangent
-            st += tangent;
-        } else {
-            // Angle is bigger than between oldTangent, -tangent
-            st -= tangent;
-        }
         weight = gaussian(float(i), sigma);
-        value += texture(sampler, st).rgb * weight;
         total += weight;
+
+        vec2 tangent = normalize(texture(flow, st).zw);
+
+        // Since eigenvectors don't care for orientation, let's choose the one that's more aligned with the previous tangent
+        if(dot(oldTangent, tangent) < 0.0f)
+            tangent = -tangent;
+
+        oldTangent = tangent;
+
+        st += tangent / resolution;
+
+        value += texture(sampler, st).rgb * weight;
     }
 
-    // Travel backward along the flow line
     st = uv;
-    oldTangent = texture(flow, uv).zw;
+    oldTangent = texture(flow, st).zw;
 
     for(int i = 1; i <= radius; ++i) {
-        vec2 tangent = texture(flow, st).zw / resolution;
-        if(dot(oldTangent, tangent) > 0.0f) {
-            // Angle is smaller than between oldTangent, -tangent
-            st -= tangent;
-        } else {
-            // Angle is bigger than between oldTangent, -tangent
-            st += tangent;
-        }
         weight = gaussian(float(i), sigma);
-        value += texture(sampler, st).rgb * weight;
         total += weight;
+
+        vec2 tangent = normalize(texture(flow, st).zw);
+
+        if(dot(oldTangent, tangent) < 0.0f)
+            tangent = -tangent;
+
+        oldTangent = tangent;
+
+        st -= tangent / resolution;
+
+        value += texture(sampler, st).rgb * weight;
     }
 
     return value / total;
@@ -68,7 +71,7 @@ vec3 LIC(
 
 void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
-    int radius = max(5, int(u_sigma * 2.5f));
+    int radius = max(5, int(3.0f * u_sigma));
     vec3 color = LIC(u_sampler, u_flow, u_resolution, uv, radius, u_sigma);
     outColor = vec4(color, 1.0f);
 }

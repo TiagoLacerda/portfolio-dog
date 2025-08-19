@@ -1,4 +1,5 @@
 import 'dart:js_interop';
+import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -214,7 +215,6 @@ class MyShaderPipeline extends ShaderPipeline {
   }
 
   void draw(
-    int radius,
     double sigmaC,
     double sigmaM,
     double sigmaE,
@@ -308,9 +308,9 @@ class MyShaderPipeline extends ShaderPipeline {
       canvas.width,
       canvas.height,
     );
-    gl.uniform1f(
+    gl.uniform1i(
       gl.getUniformLocation(blur, 'u_radius'),
-      radius.toDouble(),
+      max(5.0, 3.0 * sigmaC).floor(),
     );
     gl.uniform1f(
       gl.getUniformLocation(blur, 'u_sigma'),
@@ -377,13 +377,9 @@ class MyShaderPipeline extends ShaderPipeline {
       gl.getUniformLocation(orthogonalDog, 'u_resolution'),
       canvas.width,
       canvas.height,
-    );
+    );   
     gl.uniform1f(
-      gl.getUniformLocation(orthogonalDog, 'u_radius'),
-      radius.toDouble(),
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(orthogonalDog, 'u_sigma_e'),
+      gl.getUniformLocation(orthogonalDog, 'u_sigma'),
       sigmaE,
     );
     gl.uniform1f(

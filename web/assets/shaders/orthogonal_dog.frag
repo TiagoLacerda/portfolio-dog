@@ -4,7 +4,7 @@ precision mediump float;
 out vec4 outColor;
 
 uniform vec2 u_resolution;
-uniform float u_sigma_e;
+uniform float u_sigma;
 uniform float u_k;
 uniform float u_tau;
 uniform float u_epsilon;
@@ -45,11 +45,11 @@ float threshold(float u, float epsilon, float phi) {
 
 void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
+    int radius = max(5, int(3.0f * u_sigma));
 
     vec4 flow = texture(u_flow, uv); // orth.xy, tang.xy
-    int radius = max(5, int(u_sigma_e * 2.5f));
-    float small = blur_orthogonal(u_sampler, u_resolution, flow.xy, uv, radius, u_sigma_e);
-    float large = blur_orthogonal(u_sampler, u_resolution, flow.xy, uv, radius, u_sigma_e * u_k);
+    float small = blur_orthogonal(u_sampler, u_resolution, flow.xy, uv, radius, u_sigma);
+    float large = blur_orthogonal(u_sampler, u_resolution, flow.xy, uv, radius, u_sigma * u_k);
     float u = ((1.0f + u_tau) * small) - (u_tau * large);
 
     float orth = threshold(u, u_epsilon, u_phi);
