@@ -24,7 +24,7 @@ samples, guidance on mobile development, and a full API reference.
 - ~~Develop a mechanism for the shader pipeline to notify HTMLElementView that new canvas dimensions are available~~
 - Add option to scale the image
 - Add option to toggle and configure color-mapping
-- Add option to save image to a new file
+- ~~Add option to save image to a new file~~
 - ~~Add option to save image by right clicking? (Very low priority)~~
     - This actually just works like that (I guess because it is an embedded html canvas)
 - Look into moving shader pipeline to a separate thread (Isolates not available on web :c)

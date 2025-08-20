@@ -5,11 +5,13 @@ import 'package:flutter_shaders/app/modules/home/widgets/shader_slider.dart';
 class ShaderControls extends StatefulWidget {
   final MyShaderPipeline pipeline;
   final Future<void> Function()? loadImage;
+  final Future<void> Function()? saveImage;
 
   const ShaderControls({
     super.key,
     required this.pipeline,
     this.loadImage,
+    this.saveImage,
   });
 
   @override
@@ -47,25 +49,36 @@ class ShaderControlsState extends State<ShaderControls> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        ElevatedButton(
-          onPressed: () => widget.loadImage?.call(),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: ColorScheme.of(context).primary,
-            foregroundColor: ColorScheme.of(context).surface,
-            textStyle: TextTheme.of(context).labelMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
+        Row(
+          children: [
+            ElevatedButton(
+              onPressed: () => widget.loadImage?.call(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ColorScheme.of(context).primary,
+                foregroundColor: ColorScheme.of(context).surface,
+                textStyle: TextTheme.of(context).labelMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              child: Icon(
                 Icons.add_photo_alternate_outlined,
               ),
-              // SizedBox(width: 4.0),
-              // Text('Load image'),
-            ],
-          ),
+            ),
+            const SizedBox(width: 16.0),
+            ElevatedButton(
+              onPressed: () => widget.saveImage?.call(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ColorScheme.of(context).primary,
+                foregroundColor: ColorScheme.of(context).surface,
+                textStyle: TextTheme.of(context).labelMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              child: Icon(
+                Icons.save_outlined,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 16.0),
         ShaderSlider(

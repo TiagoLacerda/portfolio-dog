@@ -45,6 +45,7 @@ class HomeView extends StatelessWidget {
                     key: controller.shaderControls,
                     pipeline: controller.pipeline,
                     loadImage: controller.loadImage,
+                    saveImage: controller.saveImage,
                   ),
                 ),
               ),

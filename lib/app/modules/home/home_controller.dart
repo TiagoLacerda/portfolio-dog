@@ -48,4 +48,14 @@ class HomeController extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> saveImage() async {
+    try {
+      await pipeline.saveImage('download.png');
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
 }

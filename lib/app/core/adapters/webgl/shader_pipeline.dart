@@ -26,7 +26,8 @@ abstract class ShaderPipeline {
       (_) => canvas,
     );
 
-    final context = canvas.getContext('webgl2') as web.WebGL2RenderingContext?;
+    final options = {'preserveDrawingBuffer': true}.jsify();
+    final context = canvas.getContext('webgl2', options) as web.WebGL2RenderingContext?;
 
     if (context == null) {
       throw WebglNotSupportedException();
@@ -161,5 +162,13 @@ abstract class ShaderPipeline {
     }
 
     return framebuffer;
+  }
+
+  Future<void> saveImage(String filename) async {
+    final dataUrl = canvas.toDataURL('image/png');
+    final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+    anchor.href = dataUrl;
+    anchor.download = filename;
+    anchor.click();
   }
 }
