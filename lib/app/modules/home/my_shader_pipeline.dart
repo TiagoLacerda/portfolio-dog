@@ -499,7 +499,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       0,
     );
     gl.uniform1i(
-      gl.getUniformLocation(orthogonalDog, 'u_flow'),
+      gl.getUniformLocation(tangentBlur, 'u_flow'),
       1,
     );
 
@@ -575,7 +575,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       0,
     );
     gl.uniform1i(
-      gl.getUniformLocation(orthogonalDog, 'u_flow'),
+      gl.getUniformLocation(tangentBlur, 'u_flow'),
       1,
     );
 
