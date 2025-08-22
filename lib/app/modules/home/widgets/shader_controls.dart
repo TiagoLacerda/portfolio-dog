@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart' hide Image;
-import 'package:flutter_shaders/app/modules/home/my_shader_pipeline.dart';
-import 'package:flutter_shaders/app/modules/home/widgets/shader_slider.dart';
+
+import '../../../core/utils/utils.dart';
+import '../my_shader_pipeline.dart';
+import 'shader_slider.dart';
 
 class ShaderControls extends StatefulWidget {
   final MyShaderPipeline pipeline;
-  final Future<void> Function()? loadImage;
-  final Future<void> Function()? saveImage;
 
   const ShaderControls({
     super.key,
     required this.pipeline,
-    this.loadImage,
-    this.saveImage,
   });
 
   @override
@@ -27,6 +25,7 @@ class ShaderControlsState extends State<ShaderControls> {
   double tau = 40.0;
   double epsilon = 0.235;
   double phi = 4.645;
+  double scale = 1.0;
 
   bool useColorMapping = true;
 
@@ -52,7 +51,18 @@ class ShaderControlsState extends State<ShaderControls> {
         Row(
           children: [
             ElevatedButton(
-              onPressed: () => widget.loadImage?.call(),
+              onPressed: () async {
+                final image = await Utils.pickImage();
+
+                if (image == null) return;
+
+                setState(() => scale = 1.0);
+
+                widget.pipeline.setScale(scale);
+                await widget.pipeline.setImage(image);
+
+                draw();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorScheme.of(context).primary,
                 foregroundColor: ColorScheme.of(context).surface,
@@ -66,7 +76,7 @@ class ShaderControlsState extends State<ShaderControls> {
             ),
             const SizedBox(width: 16.0),
             ElevatedButton(
-              onPressed: () => widget.saveImage?.call(),
+              onPressed: () => widget.pipeline.saveImage('download.png'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: ColorScheme.of(context).primary,
                 foregroundColor: ColorScheme.of(context).surface,
@@ -169,6 +179,18 @@ class ShaderControlsState extends State<ShaderControls> {
             draw();
           },
         ),
+        ShaderSlider(
+          title: 'scale',
+          subtitle: 'Downscale the image',
+          value: scale,
+          min: 0.0,
+          max: 1.0,
+          onChanged: (value) {
+            scale = value;
+            widget.pipeline.setScale(scale);
+            draw();
+          },
+        ),
         Row(
           children: [
             SizedBox(
@@ -189,11 +211,13 @@ class ShaderControlsState extends State<ShaderControls> {
                   value: useColorMapping,
                   onChanged: (value) {
                     setState(() => useColorMapping = value!);
+
                     if (useColorMapping) {
                       widget.pipeline.setColorMap(colors);
                     } else {
                       widget.pipeline.setColorMap([]);
                     }
+                    
                     draw();
                   },
                 );

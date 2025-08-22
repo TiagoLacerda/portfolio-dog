@@ -23,36 +23,34 @@ class HomeView extends StatelessWidget {
 
     final horizontal = max(y1, f(minWidth));
 
-    return ListenableBuilder(
-      listenable: controller,
-      builder: (_, _) => Scaffold(
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: horizontal,
-            vertical: 16.0,
-          ),
-          child: Column(
-            children: [
-              Card(
-                elevation: 8.0,
-                color: ColorScheme.of(context).surfaceContainerHigh,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32.0,
-                    vertical: 16.0,
-                  ),
-                  child: ShaderControls(
-                    key: controller.shaderControls,
-                    pipeline: controller.pipeline,
-                    loadImage: controller.loadImage,
-                    saveImage: controller.saveImage,
-                  ),
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontal,
+          vertical: 16.0,
+        ),
+        child: Column(
+          children: [
+            Card(
+              elevation: 8.0,
+              color: ColorScheme.of(context).surfaceContainerHigh,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32.0,
+                  vertical: 16.0,
+                ),
+                child: ShaderControls(
+                  key: controller.shaderControls,
+                  pipeline: controller.pipeline,
                 ),
               ),
-              Expanded(
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: SizedBox(
+            ),
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: ListenableBuilder(
+                  listenable: controller.pipeline,
+                  builder: (_, _) => SizedBox(
                     width: controller.pipeline.canvas.width.toDouble(),
                     height: controller.pipeline.canvas.height.toDouble(),
                     child: ColoredBox(
@@ -68,8 +66,8 @@ class HomeView extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

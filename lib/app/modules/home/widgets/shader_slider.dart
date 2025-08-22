@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_debouncer/flutter_debouncer.dart';
 
 class ShaderSlider extends StatefulWidget {
   final String title;
@@ -26,6 +27,7 @@ class ShaderSlider extends StatefulWidget {
 }
 
 class _ShaderSliderState extends State<ShaderSlider> {
+  final throttler = Throttler();
   final textEditingController0 = TextEditingController();
   final textEditingController1 = TextEditingController();
   final focusNode0 = FocusNode();
@@ -109,6 +111,15 @@ class _ShaderSliderState extends State<ShaderSlider> {
         });
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant ShaderSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    value = widget.value;
+    min = widget.min;
+    max = widget.max;
   }
 
   @override
@@ -204,7 +215,13 @@ class _ShaderSliderState extends State<ShaderSlider> {
       divisions: widget.divisions,
       onChanged: (value) {
         setState(() => this.value = value);
-        widget.onChanged?.call(this.value);
+
+        throttler.throttle(
+          duration: const Duration(milliseconds: 10),
+          onThrottle: () {
+            widget.onChanged?.call(this.value);
+          },
+        );
       },
     );
 

@@ -9,6 +9,13 @@ class HomeController extends ChangeNotifier {
   final pipeline = MyShaderPipeline();
   final shaderControls = GlobalKey<ShaderControlsState>();
 
+  @override
+  dispose() {
+    pipeline.dispose();
+
+    super.dispose();
+  }
+
   HomeController() {
     initialize();
   }
@@ -26,32 +33,8 @@ class HomeController extends ChangeNotifier {
       pipeline.setColorMap(shaderControls.currentState!.colors);
 
       shaderControls.currentState!.draw();
-    } catch (e) {
-      log(e.toString());
-    } finally {
-      notifyListeners();
-    }
-  }
 
-  Future<void> loadImage() async {
-    try {
-      final image = await Utils.pickImage();
-
-      if (image == null) return;
-
-      await pipeline.setImage(image);
-
-      shaderControls.currentState!.draw();
-    } catch (e) {
-      log(e.toString());
-    } finally {
-      notifyListeners();
-    }
-  }
-
-  Future<void> saveImage() async {
-    try {
-      await pipeline.saveImage('download.png');
+      pipeline.notifyListeners();
     } catch (e) {
       log(e.toString());
     } finally {

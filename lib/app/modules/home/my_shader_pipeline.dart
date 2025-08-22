@@ -1,8 +1,8 @@
 import 'dart:js_interop';
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:web/web.dart' as web;
 
@@ -21,7 +21,7 @@ typedef DrawFunction =
       double phi,
     );
 
-class MyShaderPipeline extends ShaderPipeline {
+class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
   MyShaderPipeline({
     super.width,
     super.height,
@@ -47,18 +47,71 @@ class MyShaderPipeline extends ShaderPipeline {
 
   late web.WebGLFramebuffer framebuffer;
 
+  double scale = 1.0;
+
+  /// Width and height, in pixels, of the input image.
+  Size imageSize = Size.zero;
+
+  /// How many values the [colorMap] currently supports.
+  ///
+  /// See also: [colorMapUsed].
   int colorMapSize = 32;
+
+  /// How many values from [colorMap] are currently being used for color-mapping.
+  ///
+  /// See also: [colorMapSize].
   int colorMapUsed = 0;
 
   bool get useColorMapping => colorMapUsed >= 2;
 
   int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
 
+  void setScale(double scale) {
+    this.scale = scale;
+
+    final w = (imageSize.width * scale).toInt();
+    final h = (imageSize.height * scale).toInt();
+
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.width = '${w}px';
+    canvas.style.height = '${h}px';
+
+    final textures = [
+      texture1,
+      texture2,
+      texture3,
+      texture4,
+      texture5,
+      texture6,
+      texture7,
+    ];
+
+    for (var texture in textures) {
+      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture);
+      gl.texImage2D(
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        0,
+        web.WebGL2RenderingContext.RGBA,
+        w.toJS,
+        h.toJS,
+        0.toJS,
+        web.WebGL2RenderingContext.RGBA,
+        web.WebGL2RenderingContext.UNSIGNED_BYTE,
+        null,
+      );
+    }
+
+    notifyListeners();
+  }
+
   Future<void> setImage(Image image) async {
     final pixels = (await image.toByteData())!.buffer.asUint8List().toJS;
-
     final w = image.width;
     final h = image.height;
+
+    scale = 1.0;
+    imageSize = Size(w.toDouble(), h.toDouble());
 
     canvas.width = w;
     canvas.height = h;
@@ -226,6 +279,9 @@ class MyShaderPipeline extends ShaderPipeline {
   ) {
     // Pass 1 - Grayscale
 
+    final width = (imageSize.width * scale).toInt();
+    final height = (imageSize.height * scale).toInt();
+
     gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, framebuffer);
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
@@ -238,15 +294,15 @@ class MyShaderPipeline extends ShaderPipeline {
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture0);
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.viewport(0, 0, width, height);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.useProgram(grayscale);
     gl.uniform2f(
       gl.getUniformLocation(grayscale, 'u_resolution'),
-      canvas.width,
-      canvas.height,
+      width,
+      height,
     );
     gl.uniform1i(
       gl.getUniformLocation(grayscale, 'u_sampler'),
@@ -268,15 +324,15 @@ class MyShaderPipeline extends ShaderPipeline {
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture1);
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.viewport(0, 0, width, height);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.useProgram(sobel);
     gl.uniform2f(
       gl.getUniformLocation(sobel, 'u_resolution'),
-      canvas.width,
-      canvas.height,
+      width,
+      height,
     );
     gl.uniform1i(
       gl.getUniformLocation(sobel, 'u_sampler'),
@@ -295,7 +351,7 @@ class MyShaderPipeline extends ShaderPipeline {
       0,
     );
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.viewport(0, 0, width, height);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
@@ -305,8 +361,8 @@ class MyShaderPipeline extends ShaderPipeline {
     gl.useProgram(blur);
     gl.uniform2f(
       gl.getUniformLocation(blur, 'u_resolution'),
-      canvas.width,
-      canvas.height,
+      width,
+      height,
     );
     gl.uniform1i(
       gl.getUniformLocation(blur, 'u_radius'),
@@ -336,15 +392,15 @@ class MyShaderPipeline extends ShaderPipeline {
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture3);
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.viewport(0, 0, width, height);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.useProgram(flow);
     gl.uniform2f(
       gl.getUniformLocation(flow, 'u_resolution'),
-      canvas.width,
-      canvas.height,
+      width,
+      height,
     );
     gl.uniform1i(
       gl.getUniformLocation(flow, 'u_sampler'),
@@ -368,16 +424,16 @@ class MyShaderPipeline extends ShaderPipeline {
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.viewport(0, 0, width, height);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.useProgram(orthogonalDog);
     gl.uniform2f(
       gl.getUniformLocation(orthogonalDog, 'u_resolution'),
-      canvas.width,
-      canvas.height,
-    );   
+      width,
+      height,
+    );
     gl.uniform1f(
       gl.getUniformLocation(orthogonalDog, 'u_sigma'),
       sigmaE,
@@ -424,15 +480,15 @@ class MyShaderPipeline extends ShaderPipeline {
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.viewport(0, 0, width, height);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.useProgram(tangentBlur);
     gl.uniform2f(
       gl.getUniformLocation(tangentBlur, 'u_resolution'),
-      canvas.width,
-      canvas.height,
+      width,
+      height,
     );
     gl.uniform1f(
       gl.getUniformLocation(tangentBlur, 'u_sigma'),
@@ -465,15 +521,15 @@ class MyShaderPipeline extends ShaderPipeline {
       gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
       gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
 
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.viewport(0, 0, width, height);
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
       gl.useProgram(colorMapping);
       gl.uniform2f(
         gl.getUniformLocation(colorMapping, 'u_resolution'),
-        canvas.width,
-        canvas.height,
+        width,
+        height,
       );
       gl.uniform1i(
         gl.getUniformLocation(colorMapping, 'u_n'),
@@ -500,15 +556,15 @@ class MyShaderPipeline extends ShaderPipeline {
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.viewport(0, 0, width, height);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.useProgram(tangentBlur);
     gl.uniform2f(
       gl.getUniformLocation(tangentBlur, 'u_resolution'),
-      canvas.width,
-      canvas.height,
+      width,
+      height,
     );
     gl.uniform1f(
       gl.getUniformLocation(tangentBlur, 'u_sigma'),

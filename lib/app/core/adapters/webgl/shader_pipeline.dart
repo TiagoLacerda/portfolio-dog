@@ -18,7 +18,6 @@ abstract class ShaderPipeline {
     canvas = web.HTMLCanvasElement()
       ..width = width
       ..height = height
-      ..style.border = '1px solid black'
       ..style.imageRendering = 'pixelated';
 
     ui_web.platformViewRegistry.registerViewFactory(
