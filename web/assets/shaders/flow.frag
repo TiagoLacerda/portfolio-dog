@@ -23,7 +23,7 @@ void main() {
 
     vec2 lambda = eigenvalues(E, F, G);
 
-    // As in the jkyptian paper...
+    // jkyprian's paper defines eigenvector as follows, and states that they are intentionally not normalized...
     vec2 v1 = normalize(vec2(F, lambda.x - E));
     vec2 v2 = normalize(vec2(lambda.y - G, F));
 

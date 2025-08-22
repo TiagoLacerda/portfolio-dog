@@ -17,17 +17,17 @@ class ShaderControls extends StatefulWidget {
 }
 
 class ShaderControlsState extends State<ShaderControls> {
-  double sigmaC = 2.5;
-  double sigmaM = 10.0;
-  double sigmaE = 2.8;
-  double sigmaA = 0.25;
-  double k = 2.4;
+  double sigmaC = 5.0;
+  double sigmaM = 0.001;
+  double sigmaE = 3.1415;
+  double sigmaA = 0.001;
+  double k = 1.6;
   double tau = 40.0;
-  double epsilon = 0.235;
-  double phi = 4.645;
+  double epsilon = 0.3;
+  double phi = 4.0;
   double scale = 1.0;
 
-  bool useColorMapping = true;
+  bool useColorMapping = false;
 
   List<Color> colors = [
     Color(0xFF0E3738),
@@ -217,7 +217,7 @@ class ShaderControlsState extends State<ShaderControls> {
                     } else {
                       widget.pipeline.setColorMap([]);
                     }
-                    
+
                     draw();
                   },
                 );

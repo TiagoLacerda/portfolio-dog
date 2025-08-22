@@ -24,13 +24,15 @@ class HomeController extends ChangeNotifier {
     try {
       await pipeline.initialize();
 
-      final image = await Utils.loadImageFromAsset('images/chicken.jpg');
+      final image = await Utils.loadImageFromAsset('images/lena-forsen.png');
 
       if (image == null) return;
 
       await pipeline.setImage(image);
 
-      pipeline.setColorMap(shaderControls.currentState!.colors);
+      if (shaderControls.currentState!.useColorMapping) {
+        pipeline.setColorMap(shaderControls.currentState!.colors);
+      }
 
       shaderControls.currentState!.draw();
 
