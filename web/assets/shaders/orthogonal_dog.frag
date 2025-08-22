@@ -17,7 +17,7 @@ float gaussian(float x, float sigma) {
     return exp(-(x * x) / (2.0f * sigma * sigma));
 }
 
-float blur_orthogonal(
+float blur(
     sampler2D sampler,
     vec2 resolution,
     vec2 direction,
@@ -47,9 +47,9 @@ void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
     int radius = max(5, int(3.0f * u_sigma));
 
-    vec4 flow = texture(u_flow, uv); // orth.xy, tang.xy
-    float small = blur_orthogonal(u_sampler, u_resolution, flow.xy, uv, radius, u_sigma);
-    float large = blur_orthogonal(u_sampler, u_resolution, flow.xy, uv, radius, u_sigma * u_k);
+    vec2 gradient = texture(u_flow, uv).xy;
+    float small = blur(u_sampler, u_resolution, gradient, uv, radius, u_sigma);
+    float large = blur(u_sampler, u_resolution, gradient, uv, radius, u_sigma * u_k);
     float u = ((1.0f + u_tau) * small) - (u_tau * large);
 
     float orth = threshold(u, u_epsilon, u_phi);
