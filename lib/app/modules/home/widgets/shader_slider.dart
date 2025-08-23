@@ -258,7 +258,7 @@ class _ShaderSliderState extends State<ShaderSlider> {
         textEditingController0.text = value.toStringAsFixed(decimals);
 
         throttler.throttle(
-          duration: const Duration(milliseconds: 10),
+          duration: const Duration(milliseconds: 1),
           onThrottle: () {
             widget.onChanged?.call(this.value);
           },
