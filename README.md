@@ -31,3 +31,8 @@ samples, guidance on mobile development, and a full API reference.
 - Reduce number of textures by overwriting previous steps
 - Parameterize shader path in pipeline initialization
 - Show image resolution in scale slider
+
+
+
+https://www.youtube.com/watch?v=5EuYKEvugLU&t=388s&ab_channel=Acerola
+- At 11:10 he talks about coloring the final image
