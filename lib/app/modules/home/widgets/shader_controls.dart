@@ -28,6 +28,7 @@ class ShaderControlsState extends State<ShaderControls> {
   double scale = 1.0;
 
   bool useColorMapping = false;
+  bool useColorBlending = false;
 
   List<Color> colors = [
     Color(0xFF0E3738),
@@ -217,6 +218,35 @@ class ShaderControlsState extends State<ShaderControls> {
                     } else {
                       widget.pipeline.setColorMap([]);
                     }
+
+                    draw();
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            SizedBox(
+              width: 150.0,
+              child: Text(
+                'Color-blending',
+                style: TextTheme.of(context).bodyMedium?.copyWith(
+                  color: TextTheme.of(context).bodyMedium?.color?.withValues(alpha: 0.5),
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.w100,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            StatefulBuilder(
+              builder: (context, setState) {
+                return Checkbox(
+                  value: useColorBlending,
+                  onChanged: (value) {
+                    setState(() => useColorBlending = value!);
+                    widget.pipeline.setColorBlending(useColorBlending);
 
                     draw();
                   },

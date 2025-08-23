@@ -34,6 +34,8 @@ class HomeController extends ChangeNotifier {
         pipeline.setColorMap(shaderControls.currentState!.colors);
       }
 
+      pipeline.setColorBlending(shaderControls.currentState!.useColorBlending);
+
       shaderControls.currentState!.draw();
 
       pipeline.notifyListeners();

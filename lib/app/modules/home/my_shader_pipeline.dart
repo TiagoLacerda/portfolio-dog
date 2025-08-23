@@ -34,6 +34,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
   late web.WebGLProgram orthogonalDog;
   late web.WebGLProgram tangentBlur;
   late web.WebGLProgram colorMapping;
+  late web.WebGLProgram blend;
 
   late web.WebGLTexture texture0;
   late web.WebGLTexture texture1;
@@ -43,6 +44,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
   late web.WebGLTexture texture5;
   late web.WebGLTexture texture6;
   late web.WebGLTexture texture7;
+  late web.WebGLTexture texture8;
   late web.WebGLTexture colorMap;
 
   late web.WebGLFramebuffer framebuffer;
@@ -62,9 +64,15 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
   /// See also: [colorMapSize].
   int colorMapUsed = 0;
 
+  bool useColorBlending = false;
+
   bool get useColorMapping => colorMapUsed >= 2;
 
   int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
+
+  void setColorBlending(bool value) {
+    useColorBlending = value;
+  }
 
   void setScale(double scale) {
     this.scale = scale;
@@ -85,6 +93,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       texture5,
       texture6,
       texture7,
+      texture8,
     ];
 
     for (var texture in textures) {
@@ -145,6 +154,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       texture5,
       texture6,
       texture7,
+      texture8,
     ];
 
     for (var texture in textures) {
@@ -223,6 +233,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
     final orthogonalDogSource = await rootBundle.loadString('shaders/orthogonal_dog.frag');
     final tangentBlurSource = await rootBundle.loadString('shaders/tangent_blur.frag');
     final colorMappingSource = await rootBundle.loadString('shaders/color_mapping.frag');
+    final blendSource = await rootBundle.loadString('shaders/blend.frag');
 
     grayscale = createShaderProgram(vertSource, grayscaleSource);
     sobel = createShaderProgram(vertSource, sobelSource);
@@ -231,6 +242,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
     orthogonalDog = createShaderProgram(vertSource, orthogonalDogSource);
     tangentBlur = createShaderProgram(vertSource, tangentBlurSource);
     colorMapping = createShaderProgram(vertSource, colorMappingSource);
+    blend = createShaderProgram(vertSource, blendSource);
 
     texture0 = createTexture(canvas.width, canvas.height);
     texture1 = createTexture(canvas.width, canvas.height);
@@ -240,6 +252,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
     texture5 = createTexture(canvas.width, canvas.height);
     texture6 = createTexture(canvas.width, canvas.height);
     texture7 = createTexture(canvas.width, canvas.height);
+    texture8 = createTexture(canvas.width, canvas.height);
     colorMap = createTexture(colorMapSize, 1);
 
     framebuffer = createFrameBuffer(texture1);
@@ -549,7 +562,17 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
 
     // Pass 8 - Anti-aliasing LIC
 
-    gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
+    if (useColorBlending) {
+      gl.framebufferTexture2D(
+        web.WebGL2RenderingContext.FRAMEBUFFER,
+        web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        texture8,
+        0,
+      );
+    } else {
+      gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
+    }
 
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, useColorMapping ? texture7 : texture6);
@@ -580,5 +603,37 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
     );
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+
+    // Pass 9 - Color-blending
+
+    if (useColorBlending) {
+      gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
+
+      gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
+      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture0);
+      gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
+      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture8);
+
+      gl.viewport(0, 0, width, height);
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
+
+      gl.useProgram(blend);
+      gl.uniform2f(
+        gl.getUniformLocation(blend, 'u_resolution'),
+        width,
+        height,
+      );
+      gl.uniform1i(
+        gl.getUniformLocation(blend, 'u_a'),
+        0,
+      );
+      gl.uniform1i(
+        gl.getUniformLocation(blend, 'u_b'),
+        1,
+      );
+
+      gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+    }
   }
 }
