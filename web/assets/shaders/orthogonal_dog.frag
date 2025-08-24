@@ -1,6 +1,8 @@
 #version 300 es
 precision mediump float;
 
+#define ERR 1e-4f
+
 out vec4 outColor;
 
 uniform vec2 u_resolution;
@@ -25,7 +27,10 @@ float blur(
     int radius,
     float sigma
 ) {
-    vec2 offset = direction / resolution;
+    if(dot(direction, direction) < ERR)
+        return texture(sampler, uv).r;
+
+    vec2 offset = normalize(direction) / resolution;
 
     float value = 0.0f;
     float sum = 0.0f;
@@ -45,7 +50,7 @@ float threshold(float u, float epsilon, float phi) {
 
 void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
-    int radius = max(5, int(3.0f * u_sigma));
+    int radius = max(1, int(2.5f * u_sigma));
 
     vec2 gradient = texture(u_flow, uv).xy;
     float small = blur(u_sampler, u_resolution, gradient, uv, radius, u_sigma);

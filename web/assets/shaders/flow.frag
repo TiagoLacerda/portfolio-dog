@@ -24,11 +24,11 @@ void main() {
     vec2 lambda = eigenvalues(E, F, G);
 
     // jkyprian's paper defines eigenvector as follows, and states that they are intentionally not normalized...
-    vec2 v1 = normalize(vec2(F, lambda.x - E));
-    vec2 v2 = normalize(vec2(lambda.y - G, F));
+    vec2 v1 = vec2(F, lambda.x - E);
+    vec2 v2 = vec2(lambda.y - G, F);
 
     // ...which differs from Acerola's definition of the eigenvector that points to the direction of least change (DoG video at 5:15).
-    // vec2 t = vec2(lambda.x - E, -F);
+    // vec2 v2 = vec2(lambda.x - E, -F);
 
     outColor = vec4(v1.x, v1.y, v2.x, v2.y);
 }
