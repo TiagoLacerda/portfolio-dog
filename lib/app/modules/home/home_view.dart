@@ -71,6 +71,9 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 16.0,
+            ),
             MouseRegion(
               onEnter: (_) => isHovering.value = true,
               onExit: (_) => isHovering.value = false,
