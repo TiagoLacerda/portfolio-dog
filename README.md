@@ -16,6 +16,11 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 
+## Notes
+
+- Keep in mind that textures are setup to use unsigned bytes, so textures that hold gradient data should be normalized to [0, 1].
+
+
 ## TODO:
 - ~~Initialize the pipeline with all empty textures, and automate loading an asset outside the pipeline's scope~~
 - ~~Properly handle webgl support detection~~

@@ -17,7 +17,7 @@ class ShaderControls extends StatefulWidget {
 }
 
 class ShaderControlsState extends State<ShaderControls> {
-  double sigmaC = 5.0;
+  double sigmaC = 3.0;
   double sigmaM = 0.001;
   double sigmaE = 3.1415;
   double sigmaA = 0.001;

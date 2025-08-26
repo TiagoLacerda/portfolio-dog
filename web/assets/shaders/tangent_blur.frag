@@ -28,13 +28,13 @@ vec3 LIC(
     vec3 value = texture(sampler, uv).rgb;
 
     vec2 st = uv;
-    vec2 oldTangent = texture(flow, st).zw;
+    vec2 oldTangent = texture(flow, st).zw * 2.0f - 1.0f;
 
     if(dot(oldTangent, oldTangent) < ERR)
         return texture(sampler, uv).rgb;
 
     for(int i = 1; i <= radius; ++i) {
-        vec2 tangent = texture(flow, st).zw;
+        vec2 tangent = texture(flow, st).zw * 2.0f - 1.0f;
 
         if(dot(tangent, tangent) < ERR)
             break;
@@ -53,10 +53,10 @@ vec3 LIC(
     }
 
     st = uv;
-    oldTangent = texture(flow, st).zw;
+    oldTangent = texture(flow, st).zw * 2.0f - 1.0f;
 
     for(int i = 1; i <= radius; ++i) {
-        vec2 tangent = texture(flow, st).zw;
+        vec2 tangent = texture(flow, st).zw * 2.0f - 1.0f;
 
         if(dot(tangent, tangent) < ERR)
             break;

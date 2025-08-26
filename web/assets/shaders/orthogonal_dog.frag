@@ -30,7 +30,7 @@ float blur(
     if(dot(direction, direction) < ERR)
         return texture(sampler, uv).r;
 
-    vec2 offset = normalize(direction) / resolution;
+    vec2 offset = direction / resolution;
 
     float value = 0.0f;
     float sum = 0.0f;
@@ -52,7 +52,8 @@ void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
     int radius = max(1, int(2.5f * u_sigma));
 
-    vec2 gradient = texture(u_flow, uv).xy;
+    vec2 gradient = texture(u_flow, uv).xy * 2.0f - 1.0f;
+
     float small = blur(u_sampler, u_resolution, gradient, uv, radius, u_sigma);
     float large = blur(u_sampler, u_resolution, gradient, uv, radius, u_sigma * u_k);
     float u = ((1.0f + u_tau) * small) - (u_tau * large);
