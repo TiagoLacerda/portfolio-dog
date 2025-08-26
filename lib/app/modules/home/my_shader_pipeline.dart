@@ -447,6 +447,10 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       width,
       height,
     );
+    gl.uniform1i(
+      gl.getUniformLocation(orthogonalDog, 'u_radius'),
+      max(1.0, 4.0 * sigmaE).floor(),
+    );
     gl.uniform1f(
       gl.getUniformLocation(orthogonalDog, 'u_sigma'),
       sigmaE,
@@ -502,6 +506,10 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       gl.getUniformLocation(tangentBlur, 'u_resolution'),
       width,
       height,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(tangentBlur, 'u_radius'),
+      max(1.0, 4.0 * sigmaM).floor(),
     );
     gl.uniform1f(
       gl.getUniformLocation(tangentBlur, 'u_sigma'),
@@ -588,6 +596,10 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       gl.getUniformLocation(tangentBlur, 'u_resolution'),
       width,
       height,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(tangentBlur, 'u_radius'),
+      max(1.0, 4.0 * sigmaA).floor(),
     );
     gl.uniform1f(
       gl.getUniformLocation(tangentBlur, 'u_sigma'),

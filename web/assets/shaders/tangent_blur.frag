@@ -6,6 +6,7 @@ precision mediump float;
 out vec4 outColor;
 
 uniform vec2 u_resolution;
+uniform int u_radius;
 uniform float u_sigma;
 
 uniform sampler2D u_sampler;
@@ -78,7 +79,6 @@ vec3 LIC(
 
 void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
-    int radius = max(1, int(4.0f * u_sigma));
-    vec3 color = LIC(u_sampler, u_flow, u_resolution, uv, radius, u_sigma);
+    vec3 color = LIC(u_sampler, u_flow, u_resolution, uv, u_radius, u_sigma);
     outColor = vec4(color, 1.0f);
 }
