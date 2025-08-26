@@ -24,7 +24,7 @@ class HomeController extends ChangeNotifier {
     try {
       await pipeline.initialize();
 
-      final image = await Utils.loadImageFromAsset('images/samia.png');
+      final image = await Utils.loadImageFromAsset('images/bridge.png');
 
       if (image == null) return;
 
