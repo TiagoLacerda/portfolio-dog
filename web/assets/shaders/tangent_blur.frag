@@ -45,7 +45,7 @@ vec3 LIC(
 
         oldTangent = tangent;
 
-        st += normalize(tangent) / resolution;
+        st += tangent / resolution;
 
         float weight = gaussian(float(i), sigma);
         sum += weight;
@@ -66,7 +66,7 @@ vec3 LIC(
 
         oldTangent = tangent;
 
-        st -= normalize(tangent) / resolution;
+        st -= tangent / resolution;
 
         float weight = gaussian(float(i), sigma);
         sum += weight;

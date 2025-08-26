@@ -33,12 +33,12 @@ void main() {
     // vec2 v2 = vec2(lambda.x - E, -F);
 
     // This is jkyprian's definition, but normalized to unit length and remapped to [0, 1] range, as textures are setup to hold unsigned values.
-    vec2 v2 = normalize(vec2(F, lambda.x - E)) * 0.5f + 0.5f;
-    vec2 v1 = normalize(vec2(lambda.y - G, F)) * 0.5f + 0.5f;
+    // vec2 v2 = vec2(F, lambda.x - E) * 0.5f + 0.5f;
+    // vec2 v1 = vec2(lambda.y - G, F) * 0.5f + 0.5f;
 
     // ... and this would be Acerola's.
-    // vec2 v2 = normalize(vec2(lambda.x - E, -F)) * 0.5f + 0.5f;
-    // vec2 v1 = normalize(vec2(-F, E - lambda.x)) * 0.5f + 0.5f;
+    vec2 v2 = normalize(vec2(lambda.x - E, -F)) * 0.5f + 0.5f;
+    vec2 v1 = normalize(vec2(-F, E - lambda.x)) * 0.5f + 0.5f;
 
     outColor = vec4(v1, v2);
 }
