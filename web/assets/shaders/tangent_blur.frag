@@ -78,7 +78,7 @@ vec3 LIC(
 
 void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
-    int radius = max(1, int(2.5f * u_sigma));
+    int radius = max(1, int(4.0f * u_sigma));
     vec3 color = LIC(u_sampler, u_flow, u_resolution, uv, radius, u_sigma);
     outColor = vec4(color, 1.0f);
 }

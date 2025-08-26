@@ -379,7 +379,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
     );
     gl.uniform1i(
       gl.getUniformLocation(blur, 'u_radius'),
-      max(1.0, 2.5 * sigmaC).floor(),
+      max(1.0, 4.0 * sigmaC).floor(),
     );
     gl.uniform1f(
       gl.getUniformLocation(blur, 'u_sigma'),
