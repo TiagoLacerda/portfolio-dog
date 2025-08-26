@@ -1,16 +1,34 @@
-import 'dart:math';
+import 'dart:math' hide log;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_shaders/app/modules/home/home_controller.dart';
-import 'package:flutter_shaders/app/modules/home/widgets/shader_controls.dart';
 
-class HomeView extends StatelessWidget {
+import 'home_controller.dart';
+import 'widgets/shader_controls.dart';
+
+class HomeView extends StatefulWidget {
   final HomeController controller;
 
   const HomeView({
     super.key,
     required this.controller,
   });
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final scrollController = ScrollController();
+
+  final isHovering = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    isHovering.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +42,19 @@ class HomeView extends StatelessWidget {
     final horizontal = max(y1, f(minWidth));
 
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: horizontal,
-          vertical: 16.0,
-        ),
+      body: ValueListenableBuilder<bool>(
+        valueListenable: isHovering,
+        builder: (context, value, child) {
+          return SingleChildScrollView(
+            controller: scrollController,
+            physics: isHovering.value ? NeverScrollableScrollPhysics() : null,
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontal,
+              vertical: 16.0,
+            ),
+            child: child,
+          );
+        },
         child: Column(
           children: [
             Card(
@@ -40,26 +66,31 @@ class HomeView extends StatelessWidget {
                   vertical: 16.0,
                 ),
                 child: ShaderControls(
-                  key: controller.shaderControls,
-                  pipeline: controller.pipeline,
+                  key: widget.controller.shaderControls,
+                  pipeline: widget.controller.pipeline,
                 ),
               ),
             ),
-            Expanded(
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: ListenableBuilder(
-                  listenable: controller.pipeline,
-                  builder: (_, _) => SizedBox(
-                    width: controller.pipeline.canvas.width.toDouble(),
-                    height: controller.pipeline.canvas.height.toDouble(),
-                    child: ColoredBox(
-                      color: Colors.black,
-                      child: InteractiveViewer(
-                        minScale: 0.01,
-                        maxScale: 100.0,
-                        child: HtmlElementView(
-                          viewType: 'webgl-canvas',
+            MouseRegion(
+              onEnter: (_) => isHovering.value = true,
+              onExit: (_) => isHovering.value = false,
+              child: SizedBox(
+                height: 400.0,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: ListenableBuilder(
+                    listenable: widget.controller.pipeline,
+                    builder: (_, _) => SizedBox(
+                      width: widget.controller.pipeline.canvas.width.toDouble(),
+                      height: widget.controller.pipeline.canvas.height.toDouble(),
+                      child: ColoredBox(
+                        color: Colors.black,
+                        child: InteractiveViewer(
+                          minScale: 0.01,
+                          maxScale: 100.0,
+                          child: HtmlElementView(
+                            viewType: 'webgl-canvas',
+                          ),
                         ),
                       ),
                     ),

@@ -2,5 +2,6 @@
     "dart.lineLength": 120,
     "editor.rulers": [
         120
-    ]
+    ],
+    "editor.inlineSuggest.enabled": false,
 }
