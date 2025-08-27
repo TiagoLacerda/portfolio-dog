@@ -33,8 +33,10 @@ class HomeController extends ChangeNotifier {
       final state = shaderControls.currentState!;
       final colors = state.useColorMapping ? state.colors : <Color>[];
 
+      pipeline.useColorQuantization = state.useColorQuantization;
+      pipeline.useColorMapping = state.useColorMapping;
+      pipeline.useColorBlending = state.useColorBlending;
       pipeline.setColorMap(colors);
-      pipeline.setColorBlending(state.useColorBlending);
       pipeline.setScale(state.scale);
 
       shaderControls.currentState!.draw();

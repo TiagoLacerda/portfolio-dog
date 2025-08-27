@@ -64,15 +64,11 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
   /// See also: [colorMapSize].
   int colorMapUsed = 0;
 
+  bool useColorQuantization = false;
+  bool useColorMapping = false;
   bool useColorBlending = false;
 
-  bool get useColorMapping => colorMapUsed >= 2;
-
   int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
-
-  void setColorBlending(bool value) {
-    useColorBlending = value;
-  }
 
   void setScale(double scale) {
     this.scale = scale;
@@ -289,6 +285,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
     double tau,
     double epsilon,
     double phi,
+    int? numColors,
   ) {
     // Pass 1 - Grayscale
 
@@ -526,9 +523,9 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Pass 7 - Color quantization and mapping
+    // Pass 7 - Color-quantization and color-mapping
 
-    if (useColorMapping) {
+    if (useColorQuantization) {
       gl.framebufferTexture2D(
         web.WebGL2RenderingContext.FRAMEBUFFER,
         web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
@@ -554,7 +551,11 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       );
       gl.uniform1i(
         gl.getUniformLocation(colorMapping, 'u_n'),
-        colorMapUsed,
+        useColorMapping ? (numColors == null ? colorMapUsed : min(numColors, colorMapUsed)) : numColors ?? 2,
+      );
+      gl.uniform1i(
+        gl.getUniformLocation(colorMapping, 'u_use_color_mapping'),
+        useColorMapping ? 1 : 0,
       );
       gl.uniform1i(
         gl.getUniformLocation(colorMapping, 'u_sampler'),
@@ -583,7 +584,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
     }
 
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, useColorMapping ? texture7 : texture6);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, useColorQuantization ? texture7 : texture6);
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
 

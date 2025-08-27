@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide Image;
+import 'package:flutter_shaders/app/modules/home/widgets/shader_checkbox.dart';
 
 import '../../../core/utils/utils.dart';
 import '../my_shader_pipeline.dart';
@@ -28,6 +29,9 @@ class ShaderControlsState extends State<ShaderControls> {
   double phi = 0.9;
   double scale = 0.347;
 
+  int numColors = 8;
+
+  bool useColorQuantization = true;
   bool useColorMapping = true;
   bool useColorBlending = true;
 
@@ -42,7 +46,7 @@ class ShaderControlsState extends State<ShaderControls> {
     Color(0xFFB5B96A),
   ];
 
-  void draw() => widget.pipeline.draw(sigmaC, sigmaM, sigmaE, sigmaA, k, tau, epsilon, phi);
+  void draw() => widget.pipeline.draw(sigmaC, sigmaM, sigmaE, sigmaA, k, tau, epsilon, phi, numColors);
 
   @override
   Widget build(BuildContext context) {
@@ -195,68 +199,58 @@ class ShaderControlsState extends State<ShaderControls> {
             draw();
           },
         ),
-        Row(
-          children: [
-            SizedBox(
-              width: 150.0,
-              child: Text(
-                'Color-mapping',
-                style: TextTheme.of(context).bodyMedium?.copyWith(
-                  color: TextTheme.of(context).bodyMedium?.color?.withValues(alpha: 0.5),
-                  fontSize: 10.0,
-                  fontWeight: FontWeight.w100,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-            StatefulBuilder(
-              builder: (context, setState) {
-                return Checkbox(
-                  value: useColorMapping,
-                  onChanged: (value) {
-                    setState(() => useColorMapping = value!);
+        ShaderCheckbox(
+          subtitle: 'Color-quantization',
+          initialValue: useColorQuantization,
+          onChanged: (value) {
+            setState(() {
+              useColorQuantization = value;
+            });
 
-                    if (useColorMapping) {
-                      widget.pipeline.setColorMap(colors);
-                    } else {
-                      widget.pipeline.setColorMap([]);
-                    }
-
-                    draw();
-                  },
-                );
-              },
-            ),
-          ],
+            widget.pipeline.useColorQuantization = useColorQuantization;
+            draw();
+          },
         ),
-        Row(
-          children: [
-            SizedBox(
-              width: 150.0,
-              child: Text(
-                'Color-blending',
-                style: TextTheme.of(context).bodyMedium?.copyWith(
-                  color: TextTheme.of(context).bodyMedium?.color?.withValues(alpha: 0.5),
-                  fontSize: 10.0,
-                  fontWeight: FontWeight.w100,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-            StatefulBuilder(
-              builder: (context, setState) {
-                return Checkbox(
-                  value: useColorBlending,
-                  onChanged: (value) {
-                    setState(() => useColorBlending = value!);
-                    widget.pipeline.setColorBlending(useColorBlending);
+        if (useColorQuantization) ...[
+          Padding(
+            padding: EdgeInsets.only(left: 16.0),
+            child: ShaderCheckbox(
+              subtitle: 'Color-mapping',
+              initialValue: useColorMapping,
+              onChanged: (value) {
+                setState(() {
+                  useColorMapping = value;
+                });
 
-                    draw();
-                  },
-                );
+                widget.pipeline.useColorMapping = useColorMapping;
+                draw();
               },
             ),
-          ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 16.0),
+            child: ShaderSlider(
+              title: 'Colors',
+              subtitle: '',
+              value: numColors.toDouble(),
+              min: 2.0,
+              max: 8.0,
+              divisions: 6,
+              onChanged: (value) {
+                numColors = value.toInt();
+                draw();
+              },
+            ),
+          ),
+        ],
+        ShaderCheckbox(
+          subtitle: 'Color-blending',
+          initialValue: useColorBlending,
+          onChanged: (value) {
+            useColorBlending = value;
+            widget.pipeline.useColorBlending = useColorBlending;
+            draw();
+          },
         ),
       ],
     );
