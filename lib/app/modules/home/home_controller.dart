@@ -30,11 +30,12 @@ class HomeController extends ChangeNotifier {
 
       await pipeline.setImage(image);
 
-      if (shaderControls.currentState!.useColorMapping) {
-        pipeline.setColorMap(shaderControls.currentState!.colors);
-      }
+      final state = shaderControls.currentState!;
+      final colors = state.useColorMapping ? state.colors : <Color>[];
 
-      pipeline.setColorBlending(shaderControls.currentState!.useColorBlending);
+      pipeline.setColorMap(colors);
+      pipeline.setColorBlending(state.useColorBlending);
+      pipeline.setScale(state.scale);
 
       shaderControls.currentState!.draw();
 
