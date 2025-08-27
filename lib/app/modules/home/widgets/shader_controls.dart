@@ -19,15 +19,15 @@ class ShaderControls extends StatefulWidget {
 class ShaderControlsState extends State<ShaderControls> {
   double sigmaC = 0.075;
   double sigmaE = 0.5;
-  double sigmaM = 20.0;
+  double sigmaM = 10.0;
   double sigmaA = 4.8;
   double k = 1.6;
   double tau = 100.0;
   double epsilon = 0.3;
   double phi = 0.9;
-  double scale = 1.0;
+  double scale = 0.347;
 
-  bool useColorMapping = false;
+  bool useColorMapping = true;
   bool useColorBlending = true;
 
   List<Color> colors = [
