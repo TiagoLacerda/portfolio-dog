@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' hide Image;
 import '../../../core/utils/utils.dart';
 import '../my_shader_pipeline.dart';
 import 'shader_slider.dart';
+import 'sound_button.dart';
 
 class ShaderControls extends StatefulWidget {
   final MyShaderPipeline pipeline;
@@ -87,6 +88,10 @@ class ShaderControlsState extends State<ShaderControls> {
                 Icons.file_download_outlined,
               ),
             ),
+            SizedBox(
+              width: 8.0,
+            ),
+            SoundButton(),
           ],
         ),
         const SizedBox(height: 16.0),
