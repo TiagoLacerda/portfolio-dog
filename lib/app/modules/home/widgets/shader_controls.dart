@@ -51,7 +51,7 @@ class ShaderControlsState extends State<ShaderControls> {
       children: [
         Row(
           children: [
-            ElevatedButton(
+            IconButton(
               onPressed: () async {
                 final image = await Utils.pickImage();
 
@@ -64,29 +64,24 @@ class ShaderControlsState extends State<ShaderControls> {
 
                 draw();
               },
-              style: ElevatedButton.styleFrom(
+              tooltip: 'Change image',
+              style: IconButton.styleFrom(
                 backgroundColor: ColorScheme.of(context).primary,
                 foregroundColor: ColorScheme.of(context).surface,
-                textStyle: TextTheme.of(context).labelMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
               ),
-              child: Icon(
+              icon: Icon(
                 Icons.add_photo_alternate_outlined,
               ),
             ),
-            const SizedBox(width: 16.0),
-            ElevatedButton(
+            IconButton(
               onPressed: () => widget.pipeline.saveImage('download.png'),
-              style: ElevatedButton.styleFrom(
+              tooltip: 'Download image',
+              style: IconButton.styleFrom(
                 backgroundColor: ColorScheme.of(context).primary,
                 foregroundColor: ColorScheme.of(context).surface,
-                textStyle: TextTheme.of(context).labelMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
               ),
-              child: Icon(
-                Icons.save_outlined,
+              icon: Icon(
+                Icons.file_download_outlined,
               ),
             ),
           ],
