@@ -41,69 +41,116 @@ class _HomeViewState extends State<HomeView> {
 
     final horizontal = max(y1, f(minWidth));
 
-    return Scaffold(
-      body: ValueListenableBuilder<bool>(
-        valueListenable: isHovering,
-        builder: (context, value, child) {
-          return SingleChildScrollView(
-            controller: scrollController,
-            physics: isHovering.value ? NeverScrollableScrollPhysics() : null,
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontal,
-              vertical: 16.0,
-            ),
-            child: child,
-          );
-        },
-        child: Column(
-          children: [
-            Card(
-              elevation: 8.0,
-              color: ColorScheme.of(context).surfaceContainerHigh,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32.0,
-                  vertical: 16.0,
-                ),
-                child: ShaderControls(
-                  key: widget.controller.shaderControls,
-                  pipeline: widget.controller.pipeline,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 16.0,
-            ),
-            MouseRegion(
-              onEnter: (_) => isHovering.value = true,
-              onExit: (_) => isHovering.value = false,
-              child: SizedBox(
-                height: 400.0,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: ListenableBuilder(
-                    listenable: widget.controller.pipeline,
-                    builder: (_, _) => SizedBox(
-                      width: widget.controller.pipeline.canvas.width.toDouble(),
-                      height: widget.controller.pipeline.canvas.height.toDouble(),
-                      child: ColoredBox(
-                        color: Colors.black,
-                        child: InteractiveViewer(
-                          minScale: 0.01,
-                          maxScale: 100.0,
-                          child: HtmlElementView(
-                            viewType: 'webgl-canvas',
-                          ),
-                        ),
-                      ),
-                    ),
+    final controls = Card(
+      elevation: 8.0,
+      color: ColorScheme.of(context).surfaceContainerHigh,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 32.0,
+          vertical: 16.0,
+        ),
+        child: ShaderControls(
+          key: widget.controller.shaderControls,
+          pipeline: widget.controller.pipeline,
+        ),
+      ),
+    );
+
+    final canvas = MouseRegion(
+      onEnter: (_) {
+        print('enter');
+        isHovering.value = true;
+      },
+      onExit: (_) {
+        print('exit');
+        isHovering.value = false;
+      },
+      child: SizedBox(
+        height: 400.0,
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: ListenableBuilder(
+            listenable: widget.controller.pipeline,
+            builder: (_, _) => SizedBox(
+              width: widget.controller.pipeline.canvas.width.toDouble(),
+              height: widget.controller.pipeline.canvas.height.toDouble(),
+              child: ColoredBox(
+                color: Colors.black,
+                child: InteractiveViewer(
+                  minScale: 0.01,
+                  maxScale: 100.0,
+                  child: HtmlElementView(
+                    viewType: 'webgl-canvas',
                   ),
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
+
+    if (size.width > size.height) {
+      return Scaffold(
+        body: Row(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  left: horizontal / 2.0,
+                  right: 8.0,
+                  top: 16.0,
+                  bottom: 16.0,
+                ),
+                child: controls,
+              ),
+            ),
+            Expanded(
+              child: ValueListenableBuilder(
+                valueListenable: isHovering,
+                builder: (context, value, child) {
+                  return SingleChildScrollView(
+                    controller: scrollController,
+                    physics: isHovering.value ? NeverScrollableScrollPhysics() : null,
+                    padding: EdgeInsets.only(
+                      left: 8.0,
+                      right: horizontal / 2.0,
+                      top: 16.0,
+                      bottom: 16.0,
+                    ),
+                    child: child,
+                  );
+                },
+                child: canvas,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Scaffold(
+        body: ValueListenableBuilder<bool>(
+          valueListenable: isHovering,
+          builder: (context, value, child) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              physics: isHovering.value ? NeverScrollableScrollPhysics() : null,
+              padding: EdgeInsets.symmetric(
+                vertical: 16.0,
+                horizontal: horizontal,
+              ),
+              child: child,
+            );
+          },
+          child: Column(
+            children: [
+              controls,
+              SizedBox(height: 16.0),
+              canvas,
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

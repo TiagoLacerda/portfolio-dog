@@ -73,6 +73,9 @@ class ShaderControlsState extends State<ShaderControls> {
                 Icons.add_photo_alternate_outlined,
               ),
             ),
+            SizedBox(
+              width: 8.0,
+            ),
             IconButton(
               onPressed: () => widget.pipeline.saveImage('download.png'),
               tooltip: 'Download image',
