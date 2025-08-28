@@ -19,25 +19,28 @@ samples, guidance on mobile development, and a full API reference.
 ## Notes
 
 - Keep in mind that textures are setup to use unsigned bytes, so textures that hold gradient data should be normalized to [0, 1].
-
+- At 11:10 he talks about coloring the final image
+    - https://www.youtube.com/watch?v=5EuYKEvugLU&t=388s&ab_channel=Acerola
 
 ## TODO:
-- ~~Initialize the pipeline with all empty textures, and automate loading an asset outside the pipeline's scope~~
-- ~~Properly handle webgl support detection~~
-- ~~Properly handle shader compilation/link errors~~
-- ~~Properly handle framebuffer configuration errors~~
-- ~~Develop a mechanism for the shader pipeline to notify HTMLElementView that new canvas dimensions are available~~
-- ~~Add option to scale the image~~
-- Add option to ~~toggle~~ and configure color-mapping
-- ~~Add option to save image to a new file~~
-- ~~Add option to save image by right clicking? (Very low priority)~~
-    - ~~This actually just works like that (I guess because it is an embedded html canvas)~~
-- Look into moving shader pipeline to a separate thread (Isolates not available on web :c)
-- Reduce number of textures by overwriting previous steps
-- Parameterize shader path in pipeline initialization
-- Show image resolution in scale slider
+- Optimize pipeline by reducing number of intermediate textures (by reusing them).
+- Parameterize shader asset locations.
+- Add option to define colors used for color-mapping.
+- Implement presets, which on selection would animate controls and canvas status towards a defined collection of values.
+- Add brief contextualization text ("The Difference of Gaussians is a post-processing effect that ... in Winnemollers paper [link]...").
+- Improve controls layout.
+    - Math text stylization.
+    - Make them less cluttered.
+
+- Fine-tune music loop offset.
+- ~~Implement charcoal sketch effect.~~
+- Implement hatching effect.
+- Implement dithering effect.
+- Implement watercolor effect. (https://youtu.be/5EuYKEvugLU?t=739)
+- Implement option to blend final image onto a selection of textures, such as watercolor paper and wood.
+
+## TODO (maybe):
+- Look into viability of using webworkers to offload graphics or audio work from the UI thread.
 
 
 
-https://www.youtube.com/watch?v=5EuYKEvugLU&t=388s&ab_channel=Acerola
-- At 11:10 he talks about coloring the final image
