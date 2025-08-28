@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Image;
-import 'package:flutter_shaders/app/modules/home/widgets/shader_checkbox.dart';
 
 import '../../../core/utils/utils.dart';
 import '../my_shader_pipeline.dart';
+import 'shader_checkbox.dart';
 import 'shader_slider.dart';
 import 'sound_button.dart';
 
@@ -199,50 +199,55 @@ class ShaderControlsState extends State<ShaderControls> {
             draw();
           },
         ),
-        ShaderCheckbox(
-          subtitle: 'Color-quantization',
-          initialValue: useColorQuantization,
-          onChanged: (value) {
-            setState(() {
-              useColorQuantization = value;
-            });
+        StatefulBuilder(
+          builder: (context, setState) => Column(
+            children: [
+              ShaderCheckbox(
+                subtitle: 'Color-quantization',
+                initialValue: useColorQuantization,
+                onChanged: (value) {
+                  setState(() {
+                    useColorQuantization = value;
+                  });
 
-            widget.pipeline.useColorQuantization = useColorQuantization;
-            draw();
-          },
+                  widget.pipeline.useColorQuantization = useColorQuantization;
+                  draw();
+                },
+              ),
+              if (useColorQuantization) ...[
+                Padding(
+                  padding: EdgeInsets.only(left: 16.0),
+                  child: ShaderCheckbox(
+                    subtitle: 'Color-mapping',
+                    initialValue: useColorMapping,
+                    onChanged: (value) {
+                      setState(() {
+                        useColorMapping = value;
+                      });
+                      widget.pipeline.useColorMapping = useColorMapping;
+                      draw();
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 16.0),
+                  child: ShaderSlider(
+                    title: 'Colors',
+                    subtitle: '',
+                    value: numColors.toDouble(),
+                    min: 2.0,
+                    max: 8.0,
+                    divisions: 6,
+                    onChanged: (value) {
+                      numColors = value.toInt();
+                      draw();
+                    },
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
-        if (useColorQuantization) ...[
-          Padding(
-            padding: EdgeInsets.only(left: 16.0),
-            child: ShaderCheckbox(
-              subtitle: 'Color-mapping',
-              initialValue: useColorMapping,
-              onChanged: (value) {
-                setState(() {
-                  useColorMapping = value;
-                });
-
-                widget.pipeline.useColorMapping = useColorMapping;
-                draw();
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 16.0),
-            child: ShaderSlider(
-              title: 'Colors',
-              subtitle: '',
-              value: numColors.toDouble(),
-              min: 2.0,
-              max: 8.0,
-              divisions: 6,
-              onChanged: (value) {
-                numColors = value.toInt();
-                draw();
-              },
-            ),
-          ),
-        ],
         ShaderCheckbox(
           subtitle: 'Color-blending',
           initialValue: useColorBlending,
