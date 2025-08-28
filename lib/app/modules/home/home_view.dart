@@ -56,38 +56,43 @@ class _HomeViewState extends State<HomeView> {
       ),
     );
 
-    final canvas = MouseRegion(
-      onEnter: (_) {
-        print('enter');
-        isHovering.value = true;
-      },
-      onExit: (_) {
-        print('exit');
-        isHovering.value = false;
-      },
-      child: SizedBox(
-        height: 400.0,
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: ListenableBuilder(
-            listenable: widget.controller.pipeline,
-            builder: (_, _) => SizedBox(
-              width: widget.controller.pipeline.canvas.width.toDouble(),
-              height: widget.controller.pipeline.canvas.height.toDouble(),
-              child: ColoredBox(
-                color: Colors.black,
-                child: InteractiveViewer(
-                  minScale: 0.01,
-                  maxScale: 100.0,
-                  child: HtmlElementView(
-                    viewType: 'webgl-canvas',
+    final canvas = ListenableBuilder(
+      listenable: widget.controller.pipeline,
+      builder: (_, _) {
+        final width = widget.controller.pipeline.canvas.width.toDouble();
+        final height = widget.controller.pipeline.canvas.height.toDouble();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            MouseRegion(
+              onEnter: (_) => isHovering.value = true,
+              onExit: (_) => isHovering.value = false,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: SizedBox(
+                  width: width,
+                  height: height,
+                  child: ColoredBox(
+                    color: Colors.black,
+                    child: InteractiveViewer(
+                      minScale: 0.01,
+                      maxScale: 100.0,
+                      child: HtmlElementView(
+                        viewType: 'webgl-canvas',
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text('${width}x$height'),
+            ),
+          ],
+        );
+      },
     );
 
     if (size.width > size.height) {
