@@ -224,7 +224,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
     final vertSource = await rootBundle.loadString('shaders/vert.vert');
     final grayscaleSource = await rootBundle.loadString('shaders/grayscale.frag');
     final sobelSource = await rootBundle.loadString('shaders/sobel.frag');
-    final blurSource = await rootBundle.loadString('shaders/blur.frag');
+    final blurSource = await rootBundle.loadString('shaders/gaussian_blur.frag');
     final flowSource = await rootBundle.loadString('shaders/flow.frag');
     final orthogonalDogSource = await rootBundle.loadString('shaders/orthogonal_dog.frag');
     final tangentBlurSource = await rootBundle.loadString('shaders/tangent_blur.frag');
@@ -351,13 +351,13 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Pass 3 - Gaussian blur
+    // Pass 3 - Horizontal-pass gaussian blur on structure-tensor
 
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
       web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
       web.WebGL2RenderingContext.TEXTURE_2D,
-      texture3,
+      texture4,
       0,
     );
 
@@ -374,6 +374,11 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       width,
       height,
     );
+    gl.uniform2f(
+      gl.getUniformLocation(blur, 'u_direction'),
+      1.0,
+      0.0,
+    );
     gl.uniform1i(
       gl.getUniformLocation(blur, 'u_radius'),
       max(1.0, 4.0 * sigmaC).floor(),
@@ -389,7 +394,50 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Pass 4 - Flow analysis
+    // Pass 4 - Vertical-pass gaussian blur on structure-tensor
+
+    gl.framebufferTexture2D(
+      web.WebGL2RenderingContext.FRAMEBUFFER,
+      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      texture3,
+      0,
+    );
+
+    gl.viewport(0, 0, width, height);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
+
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
+
+    gl.useProgram(blur);
+    gl.uniform2f(
+      gl.getUniformLocation(blur, 'u_resolution'),
+      width,
+      height,
+    );
+    gl.uniform2f(
+      gl.getUniformLocation(blur, 'u_direction'),
+      0.0,
+      1.0,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(blur, 'u_radius'),
+      max(1.0, 4.0 * sigmaC).floor(),
+    );
+    gl.uniform1f(
+      gl.getUniformLocation(blur, 'u_sigma'),
+      sigmaC,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(blur, 'u_sampler'),
+      0,
+    );
+
+    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+
+    // Pass 5 - Flow analysis
 
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
@@ -419,7 +467,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Pass 5 - Flow-orthogonal Difference of Gaussians
+    // Pass 6 - Flow-orthogonal Difference of Gaussians
 
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
@@ -479,7 +527,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Pass 6 - Flow-tangent blur (LIC)
+    // Pass 7 - Flow-tangent blur (LIC)
 
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
@@ -523,7 +571,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Pass 7 - Color-quantization and color-mapping
+    // Pass 8 - Color-quantization and color-mapping
 
     if (useColorQuantization) {
       gl.framebufferTexture2D(
@@ -569,7 +617,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
     }
 
-    // Pass 8 - Anti-aliasing LIC
+    // Pass 9 - Anti-aliasing LIC
 
     if (useColorBlending) {
       gl.framebufferTexture2D(
@@ -617,7 +665,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Pass 9 - Color-blending
+    // Pass 10 - Color-blending
 
     if (useColorBlending) {
       gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
