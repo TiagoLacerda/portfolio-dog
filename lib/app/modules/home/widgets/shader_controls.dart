@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide Image;
 
 import '../../../core/utils/utils.dart';
 import '../my_shader_pipeline.dart';
+import 'color_row.dart';
 import 'shader_checkbox.dart';
 import 'shader_slider.dart';
 import 'sound_button.dart';
@@ -217,16 +218,25 @@ class ShaderControlsState extends State<ShaderControls> {
               if (useColorQuantization) ...[
                 Padding(
                   padding: EdgeInsets.only(left: 16.0),
-                  child: ShaderCheckbox(
-                    subtitle: 'Color-mapping',
-                    initialValue: useColorMapping,
-                    onChanged: (value) {
-                      setState(() {
-                        useColorMapping = value;
-                      });
-                      widget.pipeline.useColorMapping = useColorMapping;
-                      draw();
-                    },
+                  child: Row(
+                    children: [
+                      ShaderCheckbox(
+                        subtitle: 'Color-mapping',
+                        initialValue: useColorMapping,
+                        onChanged: (value) {
+                          setState(() {
+                            useColorMapping = value;
+                          });
+                          widget.pipeline.useColorMapping = useColorMapping;
+                          draw();
+                        },
+                      ),
+                      Expanded(
+                        child: ColorRow(
+                          colors: colors,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
