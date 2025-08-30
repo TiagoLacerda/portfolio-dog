@@ -65,7 +65,10 @@ class _SoundButtonState extends State<SoundButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () => setState(() => soloud.setPause(handle!, playing)),
+      onPressed: () {
+        if (!soloud.isInitialized) return;
+        setState(() => soloud.setPause(handle!, playing));
+      },
       tooltip: 'Toggle music',
       style: IconButton.styleFrom(
         backgroundColor: ColorScheme.of(context).primary,
