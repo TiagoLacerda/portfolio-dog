@@ -215,46 +215,41 @@ class ShaderControlsState extends State<ShaderControls> {
                   draw();
                 },
               ),
-              if (useColorQuantization) ...[
-                Padding(
-                  padding: EdgeInsets.only(left: 16.0),
-                  child: Row(
-                    children: [
-                      ShaderCheckbox(
-                        subtitle: 'Color-mapping',
-                        initialValue: useColorMapping,
-                        onChanged: (value) {
-                          setState(() {
-                            useColorMapping = value;
-                          });
-                          widget.pipeline.useColorMapping = useColorMapping;
-                          draw();
-                        },
-                      ),
-                      Expanded(
-                        child: ColorRow(
-                          colors: colors,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 16.0),
-                  child: ShaderSlider(
-                    title: 'Colors',
-                    subtitle: '',
-                    value: numColors.toDouble(),
-                    min: 2.0,
-                    max: 8.0,
-                    divisions: 6,
+              Row(
+                children: [
+                  ShaderCheckbox(
+                    subtitle: 'Color-mapping',
+                    initialValue: useColorMapping,
+                    enabled: useColorQuantization,
                     onChanged: (value) {
-                      numColors = value.toInt();
+                      setState(() {
+                        useColorMapping = value;
+                      });
+                      widget.pipeline.useColorMapping = useColorMapping;
                       draw();
                     },
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: ColorRow(
+                      colors: colors,
+                    ),
+                  ),
+                ],
+              ),
+              ShaderSlider(
+                title: 'colors',
+                subtitle: '',
+                value: numColors.toDouble(),
+                min: 2.0,
+                max: 8.0,
+                divisions: 6,
+                decimals: 0,
+                enabled: useColorQuantization,
+                onChanged: (value) {
+                  numColors = value.toInt();
+                  draw();
+                },
+              ),
             ],
           ),
         ),

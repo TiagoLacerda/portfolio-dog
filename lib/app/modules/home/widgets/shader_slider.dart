@@ -9,6 +9,8 @@ class ShaderSlider extends StatefulWidget {
   final double min;
   final double max;
   final int? divisions;
+  final int decimals;
+  final bool enabled;
   final void Function(double)? onChanged;
 
   const ShaderSlider({
@@ -19,6 +21,8 @@ class ShaderSlider extends StatefulWidget {
     required this.min,
     required this.max,
     this.divisions,
+    this.decimals = 3,
+    this.enabled = true,
     this.onChanged,
   });
 
@@ -41,8 +45,6 @@ class _ShaderSliderState extends State<ShaderSlider> {
   late double min;
   late double max;
 
-  int decimals = 3;
-
   /// Listen to changes to the value field and update the other accordingly.
   void valueListener() {
     if (focusNode0.hasFocus) {
@@ -54,21 +56,21 @@ class _ShaderSliderState extends State<ShaderSlider> {
       final number = double.tryParse(textEditingController0.text);
 
       if (number == null || number == value) {
-        textEditingController0.text = value.toStringAsFixed(decimals);
+        textEditingController0.text = value.toStringAsFixed(widget.decimals);
       } else {
         setState(() {
           value = number;
-          textEditingController0.text = value.toStringAsFixed(decimals);
+          textEditingController0.text = value.toStringAsFixed(widget.decimals);
           widget.onChanged?.call(value);
 
           if (min > value) {
             min = value;
-            textEditingController1.text = min.toStringAsFixed(decimals);
+            textEditingController1.text = min.toStringAsFixed(widget.decimals);
           }
 
           if (max < value) {
             max = value;
-            textEditingController2.text = max.toStringAsFixed(decimals);
+            textEditingController2.text = max.toStringAsFixed(widget.decimals);
           }
         });
       }
@@ -86,21 +88,21 @@ class _ShaderSliderState extends State<ShaderSlider> {
       final number = double.tryParse(textEditingController1.text);
 
       if (number == null || number == min) {
-        textEditingController1.text = min.toStringAsFixed(decimals);
+        textEditingController1.text = min.toStringAsFixed(widget.decimals);
       } else {
         setState(() {
           min = number;
-          textEditingController1.text = min.toStringAsFixed(decimals);
+          textEditingController1.text = min.toStringAsFixed(widget.decimals);
 
           if (value < min) {
             value = min;
-            textEditingController0.text = value.toStringAsFixed(decimals);
+            textEditingController0.text = value.toStringAsFixed(widget.decimals);
             widget.onChanged?.call(value);
           }
 
           if (max < min) {
             max = min;
-            textEditingController2.text = max.toStringAsFixed(decimals);
+            textEditingController2.text = max.toStringAsFixed(widget.decimals);
           }
         });
       }
@@ -118,21 +120,21 @@ class _ShaderSliderState extends State<ShaderSlider> {
       final number = double.tryParse(textEditingController2.text);
 
       if (number == null || number == max) {
-        textEditingController2.text = max.toStringAsFixed(decimals);
+        textEditingController2.text = max.toStringAsFixed(widget.decimals);
       } else {
         setState(() {
           max = number;
-          textEditingController2.text = max.toStringAsFixed(decimals);
+          textEditingController2.text = max.toStringAsFixed(widget.decimals);
 
           if (value > max) {
             value = max;
-            textEditingController0.text = value.toStringAsFixed(decimals);
+            textEditingController0.text = value.toStringAsFixed(widget.decimals);
             widget.onChanged?.call(value);
           }
 
           if (max < min) {
             min = max;
-            textEditingController1.text = min.toStringAsFixed(decimals);
+            textEditingController1.text = min.toStringAsFixed(widget.decimals);
           }
         });
       }
@@ -152,9 +154,9 @@ class _ShaderSliderState extends State<ShaderSlider> {
     if (min > max) min = max;
     if (max < min) max = min;
 
-    textEditingController0.text = value.toStringAsFixed(decimals);
-    textEditingController1.text = min.toStringAsFixed(decimals);
-    textEditingController2.text = max.toStringAsFixed(decimals);
+    textEditingController0.text = value.toStringAsFixed(widget.decimals);
+    textEditingController1.text = min.toStringAsFixed(widget.decimals);
+    textEditingController2.text = max.toStringAsFixed(widget.decimals);
 
     focusNode0.addListener(valueListener);
     focusNode1.addListener(minListener);
@@ -174,9 +176,9 @@ class _ShaderSliderState extends State<ShaderSlider> {
     if (min > max) min = max;
     if (max < min) max = min;
 
-    textEditingController0.text = value.toStringAsFixed(decimals);
-    textEditingController1.text = min.toStringAsFixed(decimals);
-    textEditingController2.text = max.toStringAsFixed(decimals);
+    textEditingController0.text = value.toStringAsFixed(widget.decimals);
+    textEditingController1.text = min.toStringAsFixed(widget.decimals);
+    textEditingController2.text = max.toStringAsFixed(widget.decimals);
   }
 
   @override
@@ -198,6 +200,16 @@ class _ShaderSliderState extends State<ShaderSlider> {
     double width = 64.0,
     TextAlign textAlign = TextAlign.start,
   }) {
+    final style = TextTheme.of(context).bodyMedium?.copyWith(
+      color: TextTheme.of(context).bodyMedium?.color?.withValues(
+        alpha: widget.enabled ? 1.0 : 0.5,
+      ),
+    );
+
+    final prefixStyle = style?.copyWith(
+      fontStyle: FontStyle.italic,
+    );
+
     return SizedBox(
       width: width,
       child: TextField(
@@ -205,6 +217,7 @@ class _ShaderSliderState extends State<ShaderSlider> {
         focusNode: focusNode,
         textAlign: textAlign,
         keyboardType: TextInputType.number,
+        enabled: widget.enabled,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
           TextInputFormatter.withFunction((oldValue, newValue) {
@@ -212,13 +225,11 @@ class _ShaderSliderState extends State<ShaderSlider> {
             return double.tryParse(newValue.text) == null ? oldValue : newValue;
           }),
         ],
-        style: TextTheme.of(context).bodyMedium,
+        style: style,
         decoration: InputDecoration(
           isDense: true,
           prefixText: prefixText,
-          prefixStyle: TextTheme.of(context).bodyMedium?.copyWith(
-            fontStyle: FontStyle.italic,
-          ),
+          prefixStyle: prefixStyle,
           border: InputBorder.none,
         ),
       ),
@@ -263,17 +274,19 @@ class _ShaderSliderState extends State<ShaderSlider> {
       min: min,
       max: max,
       divisions: widget.divisions,
-      onChanged: (value) {
-        setState(() => this.value = value);
-        textEditingController0.text = value.toStringAsFixed(decimals);
+      onChanged: widget.enabled
+          ? (value) {
+              setState(() => this.value = value);
+              textEditingController0.text = value.toStringAsFixed(widget.decimals);
 
-        throttler.throttle(
-          duration: const Duration(milliseconds: 1),
-          onThrottle: () {
-            widget.onChanged?.call(this.value);
-          },
-        );
-      },
+              throttler.throttle(
+                duration: const Duration(milliseconds: 1),
+                onThrottle: () {
+                  widget.onChanged?.call(this.value);
+                },
+              );
+            }
+          : null,
     );
 
     return Row(

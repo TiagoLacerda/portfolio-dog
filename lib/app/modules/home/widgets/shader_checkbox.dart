@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class ShaderCheckbox extends StatefulWidget {
   final String subtitle;
   final bool? initialValue;
+  final bool enabled;
   final void Function(bool)? onChanged;
 
   const ShaderCheckbox({
     super.key,
     required this.subtitle,
     this.initialValue,
+    this.enabled = true,
     this.onChanged,
   });
 
@@ -52,11 +54,13 @@ class _ShaderCheckboxState extends State<ShaderCheckbox> {
         StatefulBuilder(
           builder: (context, setState) {
             return Checkbox(
-              value: value,
-              onChanged: (value) {
-                setState(() => this.value = value!);
-                widget.onChanged?.call(this.value);
-              },
+              value: widget.enabled ? value : false,
+              onChanged: widget.enabled
+                  ? (value) {
+                      setState(() => this.value = value!);
+                      widget.onChanged?.call(this.value);
+                    }
+                  : null,
             );
           },
         ),
