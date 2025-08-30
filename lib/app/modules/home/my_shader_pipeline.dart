@@ -54,15 +54,8 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
   /// Width and height, in pixels, of the input image.
   Size imageSize = Size.zero;
 
-  /// How many values the [colorMap] currently supports.
-  ///
-  /// See also: [colorMapUsed].
-  int colorMapSize = 32;
-
-  /// How many values from [colorMap] are currently being used for color-mapping.
-  ///
-  /// See also: [colorMapSize].
-  int colorMapUsed = 0;
+  /// Width of the [colorMap] texture.
+  int colorMapSize = 0;
 
   bool useColorQuantization = false;
   bool useColorMapping = false;
@@ -170,10 +163,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
   }
 
   void setColorMap(List<Color> colors) {
-    if (colors.length < 2) {
-      colorMapUsed = 0;
-      return;
-    }
+    colorMapSize = colors.length;
 
     final buffer = Uint8List(colors.length * 4);
 
@@ -184,39 +174,20 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       buffer[i * 4 + 3] = (colors[i].a * 255.0).round() & 0xff;
     }
 
-    colorMapUsed = colors.length;
-
     //
 
-    if (colorMapUsed > colorMapSize || colorMapUsed < colorMapSize / 2) {
-      colorMapSize = colorMapUsed;
-
-      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
-      gl.texImage2D(
-        web.WebGL2RenderingContext.TEXTURE_2D,
-        0,
-        web.WebGL2RenderingContext.RGBA,
-        colorMapUsed.toJS,
-        1.toJS,
-        0.toJS,
-        web.WebGL2RenderingContext.RGBA,
-        web.WebGL2RenderingContext.UNSIGNED_BYTE,
-        buffer.toJS,
-      );
-    } else {
-      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
-      gl.texSubImage2D(
-        web.WebGL2RenderingContext.TEXTURE_2D,
-        0,
-        0,
-        0,
-        colorMapUsed.toJS,
-        1.toJS,
-        web.WebGL2RenderingContext.RGBA.toJS,
-        web.WebGL2RenderingContext.UNSIGNED_BYTE,
-        buffer.toJS,
-      );
-    }
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
+    gl.texImage2D(
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      0,
+      web.WebGL2RenderingContext.RGBA,
+      colorMapSize.toJS,
+      1.toJS,
+      0.toJS,
+      web.WebGL2RenderingContext.RGBA,
+      web.WebGL2RenderingContext.UNSIGNED_BYTE,
+      buffer.toJS,
+    );
   }
 
   /// Load and compile shaders and textures, intermediate frame buffer and fullscreen quad VBO.
@@ -285,7 +256,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
     double tau,
     double epsilon,
     double phi,
-    int? numColors,
+    int numColors,
   ) {
     // Pass 1 - Grayscale
 
@@ -599,7 +570,7 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
       );
       gl.uniform1i(
         gl.getUniformLocation(colorMapping, 'u_n'),
-        useColorMapping ? (numColors == null ? colorMapUsed : min(numColors, colorMapUsed)) : numColors ?? 2,
+        useColorMapping ? min(numColors, colorMapSize) : numColors,
       );
       gl.uniform1i(
         gl.getUniformLocation(colorMapping, 'u_use_color_mapping'),

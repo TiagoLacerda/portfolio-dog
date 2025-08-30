@@ -45,9 +45,9 @@ class _HomeViewState extends State<HomeView> {
       elevation: 8.0,
       color: ColorScheme.of(context).surfaceContainerHigh,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
+        padding: EdgeInsets.symmetric(
+          vertical: 24.0,
           horizontal: 32.0,
-          vertical: 16.0,
         ),
         child: ShaderControls(
           key: widget.controller.shaderControls,

@@ -25,7 +25,7 @@ samples, guidance on mobile development, and a full API reference.
 ## TODO:
 - Optimize pipeline by reducing number of intermediate textures (by reusing them).
 - Parameterize shader asset locations.
-- Add option to define colors used for color-mapping.
+- ~~Add option to define colors used for color-mapping.~~
 - Implement presets, which on selection would animate controls and canvas status towards a defined collection of values.
 - Add brief contextualization text ("The Difference of Gaussians is a post-processing effect that ... in Winnemollers paper [link]...").
 - Improve controls layout.

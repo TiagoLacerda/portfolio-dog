@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 
-class ColorRow extends StatefulWidget {
+class PaletteWidget extends StatefulWidget {
   final List<Color> colors;
   final double size;
   final double spacing;
+  final int? divider;
 
-  const ColorRow({
+  const PaletteWidget({
     super.key,
     this.colors = const [],
     this.size = 24.0,
     this.spacing = 2.0,
+    this.divider,
   });
 
   @override
-  State<ColorRow> createState() => _ColorRowState();
+  State<PaletteWidget> createState() => _PaletteWidgetState();
 }
 
-class _ColorRowState extends State<ColorRow> {
+class _PaletteWidgetState extends State<PaletteWidget> {
   final scrollController = ScrollController();
 
   @override
@@ -39,6 +41,18 @@ class _ColorRowState extends State<ColorRow> {
         child: Row(
           children: [
             for (int i = 0; i < widget.colors.length; ++i) ...[
+              if (i == widget.divider) ...[
+                SizedBox(
+                  height: widget.size,
+                  child: VerticalDivider(
+                    color: Colors.white.withValues(alpha: 0.25),
+                    thickness: widget.spacing,
+                    radius: BorderRadius.circular(
+                      widget.spacing,
+                    ),
+                  ),
+                ),
+              ],
               Container(
                 width: widget.size,
                 height: widget.size,

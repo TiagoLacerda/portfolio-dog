@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart' hide Image;
 
 import '../../../core/utils/utils.dart';
 import '../my_shader_pipeline.dart';
-import 'color_row.dart';
+import 'palette_generate_dialog.dart';
+import 'palette_import_dialog.dart';
+import 'palette_widget.dart';
 import 'shader_checkbox.dart';
 import 'shader_slider.dart';
 import 'sound_button.dart';
@@ -30,11 +34,11 @@ class ShaderControlsState extends State<ShaderControls> {
   double phi = 0.9;
   double scale = 0.347;
 
-  int numColors = 8;
-
   bool useColorQuantization = true;
   bool useColorMapping = true;
   bool useColorBlending = true;
+
+  late int numColors;
 
   List<Color> colors = [
     Color(0xFF0E3738),
@@ -47,7 +51,34 @@ class ShaderControlsState extends State<ShaderControls> {
     Color(0xFFB5B96A),
   ];
 
-  void draw() => widget.pipeline.draw(sigmaC, sigmaM, sigmaE, sigmaA, k, tau, epsilon, phi, numColors);
+  List<Color> get grayscale => List.generate(
+    numColors,
+    (i) {
+      final l = i / (numColors - 1);
+      return Color.from(alpha: 1, red: l, green: l, blue: l);
+    },
+  );
+
+  void draw() {
+    widget.pipeline.draw(
+      sigmaC,
+      sigmaM,
+      sigmaE,
+      sigmaA,
+      k,
+      tau,
+      epsilon,
+      phi,
+      numColors,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    numColors = max(2, colors.length);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,51 +86,6 @@ class ShaderControlsState extends State<ShaderControls> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          children: [
-            IconButton(
-              onPressed: () async {
-                final image = await Utils.pickImage();
-
-                if (image == null) return;
-
-                setState(() => scale = 1.0);
-
-                widget.pipeline.setScale(scale);
-                await widget.pipeline.setImage(image);
-
-                draw();
-              },
-              tooltip: 'Change image',
-              style: IconButton.styleFrom(
-                backgroundColor: ColorScheme.of(context).primary,
-                foregroundColor: ColorScheme.of(context).surface,
-              ),
-              icon: Icon(
-                Icons.add_photo_alternate_outlined,
-              ),
-            ),
-            SizedBox(
-              width: 8.0,
-            ),
-            IconButton(
-              onPressed: () => widget.pipeline.saveImage('download.png'),
-              tooltip: 'Download image',
-              style: IconButton.styleFrom(
-                backgroundColor: ColorScheme.of(context).primary,
-                foregroundColor: ColorScheme.of(context).surface,
-              ),
-              icon: Icon(
-                Icons.file_download_outlined,
-              ),
-            ),
-            SizedBox(
-              width: 8.0,
-            ),
-            SoundButton(),
-          ],
-        ),
-        const SizedBox(height: 16.0),
         ShaderSlider(
           title: 'σ c',
           subtitle: 'Structure-tensor blur',
@@ -204,6 +190,8 @@ class ShaderControlsState extends State<ShaderControls> {
           builder: (context, setState) => Column(
             children: [
               ShaderCheckbox(
+                prefixText: 'colors: ',
+                title: numColors.toString(),
                 subtitle: 'Color-quantization',
                 initialValue: useColorQuantization,
                 onChanged: (value) {
@@ -214,41 +202,126 @@ class ShaderControlsState extends State<ShaderControls> {
                   widget.pipeline.useColorQuantization = useColorQuantization;
                   draw();
                 },
-              ),
-              Row(
-                children: [
-                  ShaderCheckbox(
-                    subtitle: 'Color-mapping',
-                    initialValue: useColorMapping,
-                    enabled: useColorQuantization,
-                    onChanged: (value) {
-                      setState(() {
-                        useColorMapping = value;
-                      });
-                      widget.pipeline.useColorMapping = useColorMapping;
-                      draw();
-                    },
+                trailing: Expanded(
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            numColors = max(2, numColors - 1);
+                          });
+
+                          if (useColorMapping) {
+                            widget.pipeline.setColorMap(colors.sublist(0, min(numColors, colors.length)));
+                          }
+
+                          draw();
+                        },
+                        tooltip: 'Decrease',
+                        icon: Icon(
+                          Icons.remove_circle_outline_rounded,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            numColors = numColors + 1;
+                          });
+
+                          if (useColorMapping) {
+                            widget.pipeline.setColorMap(colors.sublist(0, min(numColors, colors.length)));
+                          }
+
+                          draw();
+                        },
+                        tooltip: 'Increase',
+                        icon: Icon(
+                          Icons.add_circle_outline_rounded,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16.0,
+                      ),
+                      Expanded(
+                        child: PaletteWidget(
+                          colors: grayscale,
+                          divider: min(colors.length, numColors),
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: ColorRow(
-                      colors: colors,
-                    ),
-                  ),
-                ],
+                ),
               ),
-              ShaderSlider(
-                title: 'colors',
-                subtitle: '',
-                value: numColors.toDouble(),
-                min: 2.0,
-                max: 8.0,
-                divisions: 6,
-                decimals: 0,
+              ShaderCheckbox(
+                subtitle: 'Color-mapping',
+                initialValue: useColorMapping,
                 enabled: useColorQuantization,
                 onChanged: (value) {
-                  numColors = value.toInt();
+                  setState(() {
+                    useColorMapping = value;
+                  });
+
+                  widget.pipeline.useColorMapping = useColorMapping;
                   draw();
                 },
+                trailing: Expanded(
+                  // TODO: Look into both these callbacks to make sure pipeline is being updated accordingly
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          final palette = await showDialog<List<Color>>(
+                            context: context,
+                            builder: (_) => PaletteGenerateDialog(),
+                          );
+
+                          if (palette == null) return;
+
+                          setState(() {
+                            colors = palette;
+                          });
+
+                          widget.pipeline.setColorMap(colors);
+                          draw();
+                        },
+                        tooltip: 'Generate palette',
+                        icon: Icon(
+                          Icons.palette,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          final palette = await showDialog<List<Color>>(
+                            context: context,
+                            builder: (_) => PaletteImportDialog(),
+                          );
+
+                          if (palette == null) return;
+
+                          setState(() {
+                            colors = palette;
+                          });
+
+                          widget.pipeline.setColorMap(colors);
+                          draw();
+                        },
+                        tooltip: 'Import palette',
+                        icon: Icon(
+                          Icons.paste_rounded,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16.0,
+                      ),
+                      Expanded(
+                        child: PaletteWidget(
+                          colors: colors,
+                          divider: min(colors.length, numColors),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -261,6 +334,53 @@ class ShaderControlsState extends State<ShaderControls> {
             widget.pipeline.useColorBlending = useColorBlending;
             draw();
           },
+        ),
+        SizedBox(
+          height: 16.0,
+        ),
+        Row(
+          children: [
+            IconButton(
+              onPressed: () async {
+                final image = await Utils.pickImage();
+
+                if (image == null) return;
+
+                setState(() => scale = 1.0);
+
+                widget.pipeline.setScale(scale);
+                await widget.pipeline.setImage(image);
+
+                draw();
+              },
+              tooltip: 'Change image',
+              style: IconButton.styleFrom(
+                backgroundColor: ColorScheme.of(context).primary,
+                foregroundColor: ColorScheme.of(context).surface,
+              ),
+              icon: Icon(
+                Icons.add_photo_alternate_outlined,
+              ),
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+            IconButton(
+              onPressed: () => widget.pipeline.saveImage('download.png'),
+              tooltip: 'Download image',
+              style: IconButton.styleFrom(
+                backgroundColor: ColorScheme.of(context).primary,
+                foregroundColor: ColorScheme.of(context).surface,
+              ),
+              icon: Icon(
+                Icons.file_download_outlined,
+              ),
+            ),
+            SizedBox(
+              width: 8.0,
+            ),
+            SoundButton(),
+          ],
         ),
       ],
     );
