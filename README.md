@@ -37,6 +37,7 @@ samples, guidance on mobile development, and a full API reference.
 - Implement hatching effect.
 - Implement dithering effect.
 - Implement watercolor effect. (https://youtu.be/5EuYKEvugLU?t=739)
+- Implement stipple brush effect. (https://youtu.be/5EuYKEvugLU?t=767)
 - Implement option to blend final image onto a selection of textures, such as watercolor paper and wood.
 
 ## TODO (maybe):
