@@ -211,7 +211,7 @@ class ShaderControlsState extends State<ShaderControls> {
                             numColors = max(2, numColors - 1);
                           });
 
-                          if (useColorMapping) {
+                          if (numColors <= colors.length) {
                             widget.pipeline.setColorMap(colors.sublist(0, min(numColors, colors.length)));
                           }
 
@@ -228,7 +228,7 @@ class ShaderControlsState extends State<ShaderControls> {
                             numColors = numColors + 1;
                           });
 
-                          if (useColorMapping) {
+                          if (numColors <= colors.length) {
                             widget.pipeline.setColorMap(colors.sublist(0, min(numColors, colors.length)));
                           }
 
@@ -265,7 +265,6 @@ class ShaderControlsState extends State<ShaderControls> {
                   draw();
                 },
                 trailing: Expanded(
-                  // TODO: Look into both these callbacks to make sure pipeline is being updated accordingly
                   child: Row(
                     children: [
                       IconButton(
