@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:web/web.dart' as web;
 
-import '../../core/adapters/webgl/shader_pipeline.dart';
+import 'shader_pipeline.dart';
 
 typedef DrawFunction =
     void Function(
@@ -21,8 +21,8 @@ typedef DrawFunction =
       double phi,
     );
 
-class MyShaderPipeline extends ShaderPipeline {
-  MyShaderPipeline({
+class FDoGShaderPipeline extends ShaderPipeline {
+  FDoGShaderPipeline({
     super.width,
     super.height,
   });

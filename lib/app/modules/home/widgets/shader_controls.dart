@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart' hide Image;
 
+import '../../../core/adapters/webgl/fdog_shader_pipeline.dart';
 import '../../../core/utils/utils.dart';
-import '../my_shader_pipeline.dart';
 import 'palette_generate_dialog.dart';
 import 'palette_import_dialog.dart';
 import 'palette_widget.dart';
@@ -12,7 +12,7 @@ import 'shader_slider.dart';
 import 'sound_button.dart';
 
 class ShaderControls extends StatefulWidget {
-  final MyShaderPipeline pipeline;
+  final FDoGShaderPipeline pipeline;
   final void Function()? onSetScale;
 
   const ShaderControls({
