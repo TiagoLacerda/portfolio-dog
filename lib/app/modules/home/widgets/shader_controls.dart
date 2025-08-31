@@ -292,7 +292,9 @@ class ShaderControlsState extends State<ShaderControls> {
                         onPressed: () async {
                           final palette = await showDialog<List<Color>>(
                             context: context,
-                            builder: (_) => PaletteImportDialog(),
+                            builder: (_) => PaletteImportDialog(
+                              colors: colors,
+                            ),
                           );
 
                           if (palette == null) return;

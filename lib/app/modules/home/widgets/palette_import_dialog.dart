@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 import 'palette_widget.dart';
 
 class PaletteImportDialog extends StatefulWidget {
-  const PaletteImportDialog({super.key});
+  final List<Color>? colors;
+
+  const PaletteImportDialog({
+    super.key,
+    this.colors,
+  });
 
   @override
   State<PaletteImportDialog> createState() => _PaletteImportDialogState();
@@ -24,16 +29,24 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
     return Color(int.parse(hex, radix: 16));
   }
 
+  String srgb2hex(Color color) {
+    String a = (color.a * 255.0).toInt().toRadixString(16).padLeft(2, '0').toUpperCase();
+    String r = (color.r * 255.0).toInt().toRadixString(16).padLeft(2, '0').toUpperCase();
+    String g = (color.g * 255.0).toInt().toRadixString(16).padLeft(2, '0').toUpperCase();
+    String b = (color.b * 255.0).toInt().toRadixString(16).padLeft(2, '0').toUpperCase();
+    return color.a == 1.0 ? '#$r$g$b' : '#$a$r$g$b';
+  }
+
   void refresh() {
     final values = <Color>[];
     final lines = textEditingController.text.split('\n');
 
-    try {
-      for (final line in lines) {
+    for (final line in lines) {
+      try {
         values.add(hex2srgb(line));
+      } catch (e) {
+        log(e.toString());
       }
-    } catch (e) {
-      log(e.toString());
     }
 
     setState(() {
@@ -47,14 +60,17 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
     super.initState();
 
     final n = 4;
-    colors = List.generate(
-      n,
-      (i) {
-        final l = i / (n - 1);
-        return Color.from(alpha: 1, red: l, green: l, blue: l);
-      },
-    );
+    colors =
+        widget.colors ??
+        List.generate(
+          n,
+          (i) {
+            final l = i / (n - 1);
+            return Color.from(alpha: 1, red: l, green: l, blue: l);
+          },
+        );
 
+    textEditingController.text = colors.map((e) => srgb2hex(e)).join('\n');
     focusNode.requestFocus();
   }
 
