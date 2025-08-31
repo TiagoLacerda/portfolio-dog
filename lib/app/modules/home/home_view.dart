@@ -1,5 +1,3 @@
-import 'dart:math' hide log;
-
 import 'package:flutter/material.dart';
 
 import 'home_controller.dart';
@@ -32,15 +30,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final minWidth = size.width;
-
-    final (x1, y1, x2, y2) = (600.0, 20.0, 1920.0, 1920.0 * 0.25);
-    final m = (y2 - y1) / (x2 - x1);
-    f(double x) => (x - x1) * m + y1;
-
-    final horizontal = max(y1, f(minWidth));
-
     final controls = Card(
       elevation: 8.0,
       color: ColorScheme.of(context).surfaceContainerHigh,
@@ -95,34 +84,77 @@ class _HomeViewState extends State<HomeView> {
       },
     );
 
-    if (size.width > size.height) {
-      return Scaffold(
-        body: Row(
+    final style = TextTheme.of(context).bodyMedium;
+    final styleBold = style?.copyWith(
+      fontWeight: FontWeight.bold,
+    );
+
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: 16.0,
+          horizontal: 32.0,
+        ),
+        child: Row(
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  left: horizontal / 2.0,
-                  right: 8.0,
-                  top: 16.0,
-                  bottom: 16.0,
+              flex: 3,
+              child: Center(
+                child: RichText(
+                  textAlign: TextAlign.justify,
+                  text: TextSpan(
+                    style: style,
+                    children: [
+                      TextSpan(
+                        text: 'The ',
+                      ),
+                      TextSpan(
+                        text: 'Flow-Based Difference of Gaussians (FDoG)',
+                        style: styleBold,
+                      ),
+                      TextSpan(
+                        text:
+                            ' is an image processing technique that enables a wide range of stylizations, including pencil, cross-hatching, watercolor, charcoal sketch, and stipple-brush effects.',
+                      ),
+                      TextSpan(
+                        text: '\n\nProposed by ',
+                      ),
+                      TextSpan(
+                        text: 'Holger Winnemöller and their team',
+                        style: styleBold,
+                      ),
+                      TextSpan(
+                        text:
+                            ', it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image\'s features.',
+                      ),
+                    ],
+                  ),
                 ),
+              ),
+            ),
+            SizedBox(
+              width: 16.0,
+            ),
+            Expanded(
+              flex: 4,
+              child: SingleChildScrollView(
                 child: controls,
               ),
             ),
+            SizedBox(
+              width: 16.0,
+            ),
             Expanded(
+              flex: 3,
               child: ValueListenableBuilder(
                 valueListenable: isHovering,
                 builder: (context, value, child) {
                   return SingleChildScrollView(
                     controller: scrollController,
-                    physics: isHovering.value ? NeverScrollableScrollPhysics() : null,
                     padding: EdgeInsets.only(
-                      left: 8.0,
-                      right: horizontal / 2.0,
-                      top: 16.0,
-                      bottom: 16.0,
+                      right: 32.0,
                     ),
+                    physics: isHovering.value ? NeverScrollableScrollPhysics() : null,
                     child: child,
                   );
                 },
@@ -131,31 +163,7 @@ class _HomeViewState extends State<HomeView> {
             ),
           ],
         ),
-      );
-    } else {
-      return Scaffold(
-        body: ValueListenableBuilder<bool>(
-          valueListenable: isHovering,
-          builder: (context, value, child) {
-            return SingleChildScrollView(
-              controller: scrollController,
-              physics: isHovering.value ? NeverScrollableScrollPhysics() : null,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.0,
-                horizontal: horizontal,
-              ),
-              child: child,
-            );
-          },
-          child: Column(
-            children: [
-              controls,
-              SizedBox(height: 16.0),
-              canvas,
-            ],
-          ),
-        ),
-      );
-    }
+      ),
+    );
   }
 }

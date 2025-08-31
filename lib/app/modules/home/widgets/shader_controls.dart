@@ -176,7 +176,7 @@ class ShaderControlsState extends State<ShaderControls> {
         ),
         ShaderSlider(
           title: 'scale',
-          subtitle: 'Downscale the image',
+          subtitle: 'Rescale the image',
           value: scale,
           min: 0.0,
           max: 1.0,

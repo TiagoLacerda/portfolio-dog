@@ -27,11 +27,16 @@ samples, guidance on mobile development, and a full API reference.
 - Parameterize shader asset locations.
 - ~~Add option to define colors used for color-mapping.~~
 - Implement presets, which on selection would animate controls and canvas status towards a defined collection of values.
-- Add brief contextualization text ("The Difference of Gaussians is a post-processing effect that ... in Winnemollers paper [link]...").
+- ~~Add brief contextualization text ("The Difference of Gaussians is a post-processing effect that ... in Winnemollers paper [link]...").~~
+    - For now it's fine, but feels a little stiff. Make it more shitposty like acerola's stuff?
+    - When moving to portfolio, add hyperlink to the paper (which can be found in acerola's video).
+    - When presets are implemented, have keyword such as the stylization examples trigger a preset.
 - Improve controls layout.
     - Math text stylization.
     - Make them less cluttered.
 
+
+- Prevent pipeline draw call before initialization.
 - Fine-tune music loop offset.
 - ~~Implement charcoal sketch effect.~~
 - Implement hatching effect.
@@ -44,4 +49,4 @@ samples, guidance on mobile development, and a full API reference.
 - Look into viability of using webworkers to offload graphics or audio work from the UI thread.
 
 
-
+The Flow-Based Difference of Gaussians (FDoG) is an image processing technique that enables a wide range of stylizations, including pencil, hatching, watercolor, charcoal sketch, and stipple-brush effects. Proposed by Holger Winnemöller, it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features.
