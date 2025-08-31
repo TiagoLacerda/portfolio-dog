@@ -102,7 +102,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
   }
 
   Future<void> setImage(Image image) async {
-    final pixels = (await image.toByteData())!.buffer.asUint8List().toJS;
     final w = image.width;
     final h = image.height;
 
@@ -119,19 +118,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
     gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, framebuffer);
     gl.viewport(0, 0, w, h);
 
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture0);
-    gl.pixelStorei(web.WebGL2RenderingContext.UNPACK_FLIP_Y_WEBGL, 1);
-    gl.texImage2D(
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      0,
-      web.WebGL2RenderingContext.RGBA,
-      w.toJS,
-      h.toJS,
-      0.toJS,
-      web.WebGL2RenderingContext.RGBA,
-      web.WebGL2RenderingContext.UNSIGNED_BYTE,
-      pixels,
-    );
+    await updateTextureWithImage(texture0, image);
 
     final textures = [
       texture1,
@@ -145,18 +132,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
     ];
 
     for (var texture in textures) {
-      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture);
-      gl.texImage2D(
-        web.WebGL2RenderingContext.TEXTURE_2D,
-        0,
-        web.WebGL2RenderingContext.RGBA,
-        w.toJS,
-        h.toJS,
-        0.toJS,
-        web.WebGL2RenderingContext.RGBA,
-        web.WebGL2RenderingContext.UNSIGNED_BYTE,
-        null,
-      );
+      updateTextureWithSize(texture, width: w, height: h);
     }
   }
 

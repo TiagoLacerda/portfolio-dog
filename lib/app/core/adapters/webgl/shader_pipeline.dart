@@ -1,4 +1,5 @@
 import 'dart:js_interop';
+import 'dart:ui' as ui;
 import 'dart:ui_web' as ui_web;
 
 import 'package:web/web.dart' as web;
@@ -85,8 +86,15 @@ abstract class ShaderPipeline {
 
   web.WebGLTexture createTexture(
     int width,
-    int height,
-  ) {
+    int height, {
+    int internalFormat = web.WebGL2RenderingContext.RGBA,
+    int format = web.WebGL2RenderingContext.RGBA,
+    int type = web.WebGL2RenderingContext.UNSIGNED_BYTE,
+    int textureMinFilter = web.WebGL2RenderingContext.NEAREST,
+    int textureMagFilter = web.WebGL2RenderingContext.NEAREST,
+    int textureWrapS = web.WebGL2RenderingContext.MIRRORED_REPEAT,
+    int textureWrapT = web.WebGL2RenderingContext.MIRRORED_REPEAT,
+  }) {
     final texture = gl.createTexture();
 
     if (texture == null) {
@@ -97,40 +105,152 @@ abstract class ShaderPipeline {
     gl.texImage2D(
       web.WebGL2RenderingContext.TEXTURE_2D,
       0,
-      web.WebGL2RenderingContext.RGBA as dynamic,
+      internalFormat,
       width.toJS,
       height.toJS,
       0.toJS,
-      web.WebGL2RenderingContext.RGBA as dynamic,
-      web.WebGL2RenderingContext.UNSIGNED_BYTE as dynamic,
+      format,
+      type,
       null,
     );
 
     gl.texParameteri(
       web.WebGL2RenderingContext.TEXTURE_2D,
       web.WebGL2RenderingContext.TEXTURE_MIN_FILTER,
-      web.WebGL2RenderingContext.NEAREST,
+      textureMinFilter,
     );
 
     gl.texParameteri(
       web.WebGL2RenderingContext.TEXTURE_2D,
       web.WebGL2RenderingContext.TEXTURE_MAG_FILTER,
-      web.WebGL2RenderingContext.NEAREST,
+      textureMagFilter,
     );
 
     gl.texParameteri(
       web.WebGL2RenderingContext.TEXTURE_2D,
       web.WebGL2RenderingContext.TEXTURE_WRAP_S,
-      web.WebGL2RenderingContext.MIRRORED_REPEAT,
+      textureWrapS,
     );
 
     gl.texParameteri(
       web.WebGL2RenderingContext.TEXTURE_2D,
       web.WebGL2RenderingContext.TEXTURE_WRAP_T,
-      web.WebGL2RenderingContext.MIRRORED_REPEAT,
+      textureWrapT,
     );
 
     return texture;
+  }
+
+  void _updateTexture(
+    web.WebGLTexture texture, {
+    int? textureMinFilter,
+    int? textureMagFilter,
+    int? textureWrapS,
+    int? textureWrapT,
+  }) {
+    if (textureMinFilter != null) {
+      gl.texParameteri(
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        web.WebGL2RenderingContext.TEXTURE_MIN_FILTER,
+        textureMinFilter,
+      );
+    }
+
+    if (textureMagFilter != null) {
+      gl.texParameteri(
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        web.WebGL2RenderingContext.TEXTURE_MAG_FILTER,
+        textureMagFilter,
+      );
+    }
+
+    if (textureWrapS != null) {
+      gl.texParameteri(
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        web.WebGL2RenderingContext.TEXTURE_WRAP_S,
+        textureWrapS,
+      );
+    }
+
+    if (textureWrapT != null) {
+      gl.texParameteri(
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        web.WebGL2RenderingContext.TEXTURE_WRAP_T,
+        textureWrapT,
+      );
+    }
+  }
+
+  Future<void> updateTextureWithImage(
+    web.WebGLTexture texture,
+    ui.Image image, {
+    bool flipY = true,
+    int internalFormat = web.WebGL2RenderingContext.RGBA,
+    int format = web.WebGL2RenderingContext.RGBA,
+    int type = web.WebGL2RenderingContext.UNSIGNED_BYTE,
+    int? textureMinFilter,
+    int? textureMagFilter,
+    int? textureWrapS,
+    int? textureWrapT,
+  }) async {
+
+    final pixels = (await image.toByteData())!.buffer.asUint8List().toJS;
+
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture);
+    gl.pixelStorei(web.WebGL2RenderingContext.UNPACK_FLIP_Y_WEBGL, flipY ? 1 : 0);
+    gl.texImage2D(
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      0,
+      internalFormat,
+      image.width.toJS,
+      image.height.toJS,
+      0.toJS,
+      format,
+      type,
+      pixels,
+    );
+
+    _updateTexture(
+      texture,
+      textureMinFilter: textureMinFilter,
+      textureMagFilter: textureMagFilter,
+      textureWrapS: textureWrapS,
+      textureWrapT: textureWrapT,
+    );
+  }
+
+  void updateTextureWithSize(
+    web.WebGLTexture texture, {
+    required int width,
+    required int height,
+    int internalFormat = web.WebGL2RenderingContext.RGBA,
+    int format = web.WebGL2RenderingContext.RGBA,
+    int type = web.WebGL2RenderingContext.UNSIGNED_BYTE,
+    int? textureMinFilter,
+    int? textureMaxFilter,
+    int? textureWrapS,
+    int? textureWrapT,
+  }) async {
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture);
+    gl.texImage2D(
+      web.WebGL2RenderingContext.TEXTURE_2D,
+      0,
+      internalFormat,
+      width.toJS,
+      height.toJS,
+      0.toJS,
+      format,
+      type,
+      null,
+    );
+
+    _updateTexture(
+      texture,
+      textureMinFilter: textureMinFilter,
+      textureMagFilter: textureMaxFilter,
+      textureWrapS: textureWrapS,
+      textureWrapT: textureWrapT,
+    );
   }
 
   web.WebGLFramebuffer createFrameBuffer(
