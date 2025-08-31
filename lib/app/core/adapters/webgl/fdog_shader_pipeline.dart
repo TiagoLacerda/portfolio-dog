@@ -232,12 +232,16 @@ class FDoGShaderPipeline extends ShaderPipeline {
     double phi,
     int numColors,
   ) {
-    // Pass 1 - Grayscale
-
     final width = (imageSize.width * scale).toInt();
     final height = (imageSize.height * scale).toInt();
 
+    gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
+    gl.viewport(0, 0, width, height);
     gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, framebuffer);
+    gl.viewport(0, 0, width, height);
+
+    // Pass 1 - Grayscale
+
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
       web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
@@ -248,10 +252,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture0);
-
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.useProgram(grayscale);
     gl.uniform2f(
@@ -279,10 +279,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture1);
 
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
-
     gl.useProgram(sobel);
     gl.uniform2f(
       gl.getUniformLocation(sobel, 'u_resolution'),
@@ -305,10 +301,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
       texture4,
       0,
     );
-
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture2);
@@ -349,10 +341,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
       0,
     );
 
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
-
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
 
@@ -382,7 +370,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Pass 5 - Flow analysis
+    // Pass 5 - Structure-tensor eigenanalysis
 
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
@@ -394,10 +382,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture3);
-
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.useProgram(flow);
     gl.uniform2f(
@@ -412,7 +396,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Pass 6 - Flow-orthogonal Difference of Gaussians
+    // Pass 6 - Edge-orthogonal Difference of Gaussians
 
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
@@ -426,10 +410,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture1);
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
-
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.useProgram(orthogonalDog);
     gl.uniform2f(
@@ -472,7 +452,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
-    // Pass 7 - Flow-tangent blur (LIC)
+    // Pass 7 - Edge-tangent blur (LIC)
 
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
@@ -486,10 +466,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture5);
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
-
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
     gl.useProgram(tangentBlur);
     gl.uniform2f(
@@ -531,10 +507,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
       gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture6);
       gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
       gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
-
-      gl.viewport(0, 0, width, height);
-      gl.clearColor(0.0, 0.0, 0.0, 1.0);
-      gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
       gl.useProgram(colorMapping);
       gl.uniform2f(
@@ -581,10 +553,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
     gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
 
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
-
     gl.useProgram(tangentBlur);
     gl.uniform2f(
       gl.getUniformLocation(tangentBlur, 'u_resolution'),
@@ -619,10 +587,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
       gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture0);
       gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
       gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture8);
-
-      gl.viewport(0, 0, width, height);
-      gl.clearColor(0.0, 0.0, 0.0, 1.0);
-      gl.clear(web.WebGL2RenderingContext.COLOR_BUFFER_BIT);
 
       gl.useProgram(blend);
       gl.uniform2f(
