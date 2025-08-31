@@ -41,12 +41,13 @@ class _HomeViewState extends State<HomeView> {
         child: ShaderControls(
           key: widget.controller.shaderControls,
           pipeline: widget.controller.pipeline,
+          onSetScale: () => widget.controller.onSetScale(),
         ),
       ),
     );
 
     final canvas = ListenableBuilder(
-      listenable: widget.controller.pipeline,
+      listenable: widget.controller,
       builder: (_, _) {
         final width = widget.controller.pipeline.canvas.width.toDouble();
         final height = widget.controller.pipeline.canvas.height.toDouble();

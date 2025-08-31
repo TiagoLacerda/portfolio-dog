@@ -13,10 +13,12 @@ import 'sound_button.dart';
 
 class ShaderControls extends StatefulWidget {
   final MyShaderPipeline pipeline;
+  final void Function()? onSetScale;
 
   const ShaderControls({
     super.key,
     required this.pipeline,
+    this.onSetScale,
   });
 
   @override
@@ -183,6 +185,7 @@ class ShaderControlsState extends State<ShaderControls> {
           onChanged: (value) {
             scale = value;
             widget.pipeline.setScale(scale);
+            widget.onSetScale?.call();
             draw();
           },
         ),
@@ -350,6 +353,7 @@ class ShaderControlsState extends State<ShaderControls> {
                 setState(() => scale = 1.0);
 
                 widget.pipeline.setScale(scale);
+                widget.onSetScale?.call();
                 await widget.pipeline.setImage(image);
 
                 draw();

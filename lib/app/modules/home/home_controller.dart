@@ -9,13 +9,6 @@ class HomeController extends ChangeNotifier {
   final pipeline = MyShaderPipeline();
   final shaderControls = GlobalKey<ShaderControlsState>();
 
-  @override
-  dispose() {
-    pipeline.dispose();
-
-    super.dispose();
-  }
-
   HomeController() {
     initialize();
   }
@@ -40,12 +33,12 @@ class HomeController extends ChangeNotifier {
       pipeline.setScale(state.scale);
 
       shaderControls.currentState!.draw();
-
-      pipeline.notifyListeners();
     } catch (e) {
       log(e.toString());
     } finally {
       notifyListeners();
     }
   }
+
+  void onSetScale() => notifyListeners();
 }

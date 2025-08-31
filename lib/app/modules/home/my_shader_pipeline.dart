@@ -21,7 +21,7 @@ typedef DrawFunction =
       double phi,
     );
 
-class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
+class MyShaderPipeline extends ShaderPipeline {
   MyShaderPipeline({
     super.width,
     super.height,
@@ -99,8 +99,6 @@ class MyShaderPipeline extends ShaderPipeline with ChangeNotifier {
         null,
       );
     }
-
-    notifyListeners();
   }
 
   Future<void> setImage(Image image) async {
