@@ -8,19 +8,6 @@ import 'package:web/web.dart' as web;
 
 import 'shader_pipeline.dart';
 
-typedef DrawFunction =
-    void Function(
-      int radius,
-      double sigmaC,
-      double sigmaM,
-      double sigmaE,
-      double sigmaA,
-      double k,
-      double tau,
-      double epsilon,
-      double phi,
-    );
-
 class FDoGShaderPipeline extends ShaderPipeline {
   FDoGShaderPipeline({
     super.width,
