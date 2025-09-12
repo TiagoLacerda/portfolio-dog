@@ -1,11 +1,11 @@
 import 'dart:js_interop';
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:web/web.dart' as web;
 
+import 'fdog_shader_pipeline_extensions.dart';
 import 'shader_pipeline.dart';
 
 class FDoGShaderPipeline extends ShaderPipeline {
@@ -49,6 +49,8 @@ class FDoGShaderPipeline extends ShaderPipeline {
   bool useColorBlending = false;
 
   int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
+
+
 
   void setScale(double scale) {
     this.scale = scale;
@@ -229,368 +231,92 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     // Pass 1 - Grayscale
 
-    gl.framebufferTexture2D(
-      web.WebGL2RenderingContext.FRAMEBUFFER,
-      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      texture1,
-      0,
+    useGrayscaleProgram(
+      resolution: (width, height),
+      sourceTexture: texture0,
+      targetTexture: texture1,
     );
-
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture0);
-
-    gl.useProgram(grayscale);
-    gl.uniform2f(
-      gl.getUniformLocation(grayscale, 'u_resolution'),
-      width,
-      height,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(grayscale, 'u_sampler'),
-      0,
-    );
-
-    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
 
     // Pass 2 - Sobel filter
 
-    gl.framebufferTexture2D(
-      web.WebGL2RenderingContext.FRAMEBUFFER,
-      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      texture2,
-      0,
+    useSobelProgram(
+      resolution: (width, height),
+      sourceTexture: texture1,
+      targetTexture: texture2,
     );
 
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture1);
+    // Pass 3 - Gaussian blur on structure-tensor
 
-    gl.useProgram(sobel);
-    gl.uniform2f(
-      gl.getUniformLocation(sobel, 'u_resolution'),
-      width,
-      height,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(sobel, 'u_sampler'),
-      0,
+    useGaussianBlurProgram(
+      resolution: (width, height),
+      sigma: sigmaC,
+      sourceTexture: texture2,
+      bufferTexture: texture4,
+      targetTexture: texture3,
     );
 
-    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+    // Pass 4 - Structure-tensor eigenanalysis
 
-    // Pass 3 - Horizontal-pass gaussian blur on structure-tensor
-
-    gl.framebufferTexture2D(
-      web.WebGL2RenderingContext.FRAMEBUFFER,
-      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      texture4,
-      0,
+    useFlowProgram(
+      resolution: (width, height),
+      sourceTexture: texture3,
+      targetTexture: texture4,
     );
 
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture2);
+    // Pass 5 - Edge-orthogonal Difference of Gaussians
 
-    gl.useProgram(blur);
-    gl.uniform2f(
-      gl.getUniformLocation(blur, 'u_resolution'),
-      width,
-      height,
-    );
-    gl.uniform2f(
-      gl.getUniformLocation(blur, 'u_direction'),
-      1.0,
-      0.0,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(blur, 'u_radius'),
-      max(1.0, 4.0 * sigmaC).floor(),
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(blur, 'u_sigma'),
-      sigmaC,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(blur, 'u_sampler'),
-      0,
+    useDifferenceOfGaussiansProgram(
+      resolution: (width, height),
+      sigma: sigmaE,
+      k: k,
+      tau: tau,
+      epsilon: epsilon,
+      phi: phi,
+      sourceTexture: texture1,
+      vectorTexture: texture4,
+      targetTexture: texture5,
     );
 
-    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+    // Pass 6 - Edge-tangent blur (Line Integral Convolution)
 
-    // Pass 4 - Vertical-pass gaussian blur on structure-tensor
-
-    gl.framebufferTexture2D(
-      web.WebGL2RenderingContext.FRAMEBUFFER,
-      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      texture3,
-      0,
+    useLineIntegralConvolutionProgram(
+      resolution: (width, height),
+      sigma: sigmaM,
+      sourceTexture: texture5,
+      vectorTexture: texture4,
+      targetTexture: texture6,
     );
 
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
-
-    gl.useProgram(blur);
-    gl.uniform2f(
-      gl.getUniformLocation(blur, 'u_resolution'),
-      width,
-      height,
-    );
-    gl.uniform2f(
-      gl.getUniformLocation(blur, 'u_direction'),
-      0.0,
-      1.0,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(blur, 'u_radius'),
-      max(1.0, 4.0 * sigmaC).floor(),
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(blur, 'u_sigma'),
-      sigmaC,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(blur, 'u_sampler'),
-      0,
-    );
-
-    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
-
-    // Pass 5 - Structure-tensor eigenanalysis
-
-    gl.framebufferTexture2D(
-      web.WebGL2RenderingContext.FRAMEBUFFER,
-      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      texture4,
-      0,
-    );
-
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture3);
-
-    gl.useProgram(flow);
-    gl.uniform2f(
-      gl.getUniformLocation(flow, 'u_resolution'),
-      width,
-      height,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(flow, 'u_sampler'),
-      0,
-    );
-
-    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
-
-    // Pass 6 - Edge-orthogonal Difference of Gaussians
-
-    gl.framebufferTexture2D(
-      web.WebGL2RenderingContext.FRAMEBUFFER,
-      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      texture5,
-      0,
-    );
-
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture1);
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
-
-    gl.useProgram(orthogonalDog);
-    gl.uniform2f(
-      gl.getUniformLocation(orthogonalDog, 'u_resolution'),
-      width,
-      height,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(orthogonalDog, 'u_radius'),
-      max(1.0, 4.0 * sigmaE).floor(),
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(orthogonalDog, 'u_sigma'),
-      sigmaE,
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(orthogonalDog, 'u_k'),
-      k,
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(orthogonalDog, 'u_tau'),
-      tau,
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(orthogonalDog, 'u_epsilon'),
-      epsilon,
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(orthogonalDog, 'u_phi'),
-      phi,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(orthogonalDog, 'u_sampler'),
-      0,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(orthogonalDog, 'u_flow'),
-      1,
-    );
-
-    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
-
-    // Pass 7 - Edge-tangent blur (LIC)
-
-    gl.framebufferTexture2D(
-      web.WebGL2RenderingContext.FRAMEBUFFER,
-      web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
-      web.WebGL2RenderingContext.TEXTURE_2D,
-      texture6,
-      0,
-    );
-
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture5);
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
-
-    gl.useProgram(tangentBlur);
-    gl.uniform2f(
-      gl.getUniformLocation(tangentBlur, 'u_resolution'),
-      width,
-      height,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(tangentBlur, 'u_radius'),
-      max(1.0, 4.0 * sigmaM).floor(),
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(tangentBlur, 'u_sigma'),
-      sigmaM,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(tangentBlur, 'u_sampler'),
-      0,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(tangentBlur, 'u_flow'),
-      1,
-    );
-
-    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
-
-    // Pass 8 - Color-quantization and color-mapping
+    // Pass 7 - Color-quantization and color-mapping
 
     if (useColorQuantization) {
-      gl.framebufferTexture2D(
-        web.WebGL2RenderingContext.FRAMEBUFFER,
-        web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
-        web.WebGL2RenderingContext.TEXTURE_2D,
-        texture7,
-        0,
+      useColorQuantizationProgram(
+        resolution: (width, height),
+        numColors: numColors,
+        sourceTexture: texture6,
+        targetTexture: texture7,
       );
-
-      gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture6);
-      gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
-      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, colorMap);
-
-      gl.useProgram(colorMapping);
-      gl.uniform2f(
-        gl.getUniformLocation(colorMapping, 'u_resolution'),
-        width,
-        height,
-      );
-      gl.uniform1i(
-        gl.getUniformLocation(colorMapping, 'u_n'),
-        useColorMapping ? min(numColors, colorMapSize) : numColors,
-      );
-      gl.uniform1i(
-        gl.getUniformLocation(colorMapping, 'u_use_color_mapping'),
-        useColorMapping ? 1 : 0,
-      );
-      gl.uniform1i(
-        gl.getUniformLocation(colorMapping, 'u_sampler'),
-        0,
-      );
-      gl.uniform1i(
-        gl.getUniformLocation(colorMapping, 'u_colors'),
-        1,
-      );
-
-      gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
     }
 
-    // Pass 9 - Anti-aliasing LIC
+    // Pass 8 - Anti-aliasing LIC
+
+    useLineIntegralConvolutionProgram(
+      resolution: (width, height),
+      sigma: sigmaA,
+      sourceTexture: useColorQuantization ? texture7 : texture6,
+      vectorTexture: texture4,
+      targetTexture: useColorBlending ? texture8 : null,
+    );
+
+    // Pass 9 - Color-blending
 
     if (useColorBlending) {
-      gl.framebufferTexture2D(
-        web.WebGL2RenderingContext.FRAMEBUFFER,
-        web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
-        web.WebGL2RenderingContext.TEXTURE_2D,
-        texture8,
-        0,
+      useColorBlendingProgram(
+        resolution: (width, height),
+        sourceTextureA: texture0,
+        sourceTextureB: texture8,
+        targetTexture: null,
       );
-    } else {
-      gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
-    }
-
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, useColorQuantization ? texture7 : texture6);
-    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
-    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture4);
-
-    gl.useProgram(tangentBlur);
-    gl.uniform2f(
-      gl.getUniformLocation(tangentBlur, 'u_resolution'),
-      width,
-      height,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(tangentBlur, 'u_radius'),
-      max(1.0, 4.0 * sigmaA).floor(),
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(tangentBlur, 'u_sigma'),
-      sigmaA,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(tangentBlur, 'u_sampler'),
-      0,
-    );
-    gl.uniform1i(
-      gl.getUniformLocation(tangentBlur, 'u_flow'),
-      1,
-    );
-
-    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
-
-    // Pass 10 - Color-blending
-
-    if (useColorBlending) {
-      gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
-
-      gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
-      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture0);
-      gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
-      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture8);
-
-      gl.useProgram(blend);
-      gl.uniform2f(
-        gl.getUniformLocation(blend, 'u_resolution'),
-        width,
-        height,
-      );
-      gl.uniform1i(
-        gl.getUniformLocation(blend, 'u_a'),
-        0,
-      );
-      gl.uniform1i(
-        gl.getUniformLocation(blend, 'u_b'),
-        1,
-      );
-
-      gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
     }
   }
 }
