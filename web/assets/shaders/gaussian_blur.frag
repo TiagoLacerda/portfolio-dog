@@ -20,7 +20,7 @@ void main() {
     vec2 d = normalize(u_direction) / u_resolution; // Assume direction in normalized in CPU.
 
     vec3 color = texture(u_sampler, uv).rgb;
-    float sum = 0.0f;
+    float sum = 1.0f;
 
     for(int i = 1; i < u_radius; ++i) {
         float k = float(i);
