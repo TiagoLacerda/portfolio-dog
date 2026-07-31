@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_shaders/app/modules/home/home_controller.dart';
-import 'package:flutter_shaders/app/modules/home/home_view.dart';
+
+import 'home_controller.dart';
+import 'home_view.dart';
 
 class HomeModule extends StatefulWidget {
   const HomeModule({super.key});

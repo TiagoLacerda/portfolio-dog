@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "flutter_shaders",
+            "name": "portfolio_dog",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "flutter_shaders (profile mode)",
+            "name": "portfolio_dog (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "flutter_shaders (release mode)",
+            "name": "portfolio_dog (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

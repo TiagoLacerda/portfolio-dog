@@ -1,25 +1,11 @@
-# flutter_shaders
+# portfolio_dog
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+An implementation of the Flow-based Difference of Gaussians using WebGL on a Flutter Web application.
 
 ## Notes
 
 - Keep in mind that textures are setup to use unsigned bytes, so textures that hold gradient data should be normalized to [0, 1].
-- At 11:10 he talks about coloring the final image
+- At 11:10 Acerola talks about coloring the final image
     - https://www.youtube.com/watch?v=5EuYKEvugLU&t=388s&ab_channel=Acerola
 
 ## TODO:
@@ -36,7 +22,6 @@ samples, guidance on mobile development, and a full API reference.
     - Math text stylization.
     - Make them less cluttered.
 
-
 - Prevent pipeline draw call before initialization.
 - Fine-tune music loop offset.
 - ~~Implement charcoal sketch effect.~~
@@ -45,20 +30,9 @@ samples, guidance on mobile development, and a full API reference.
 - Implement watercolor effect. (https://youtu.be/5EuYKEvugLU?t=739)
 - Implement stipple brush effect. (https://youtu.be/5EuYKEvugLU?t=767)
 - Implement option to blend final image onto a selection of textures, such as watercolor paper and wood.
+- Give option to show canvas in a popup window
+- Show unprocessed image beside canvas
+- Change page icon to something akin to Marilyn Diptych
 
 ## TODO (maybe):
 - Look into viability of using webworkers to offload graphics or audio work from the UI thread.
-
-
-The Flow-Based Difference of Gaussians (FDoG) is an image processing technique that enables a wide range of stylizations, including pencil, hatching, watercolor, charcoal sketch, and stipple-brush effects. Proposed by Holger Winnemöller, it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features.
-
-
-
-
-- localizations
-- html icons and metadata setup to match portfolio
-- register subdomain in squarespace
-- create page in firebase
-- flesh out descriptive text
-- (optional) setup canvas in popup window
-- show unchanged image side by side
