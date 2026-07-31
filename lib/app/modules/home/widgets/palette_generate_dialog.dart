@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/adapters/oklab/oklab.dart';
 import 'palette_widget.dart';
@@ -89,9 +90,7 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                             width: 16.0,
                           ),
                           IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
+                            onPressed: () => context.pop(),
                             tooltip: 'Close',
                             icon: Icon(
                               Icons.close_rounded,
@@ -223,7 +222,7 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                             ),
                           ),
                           IconButton(
-                            onPressed: () => Navigator.of(context).pop(colors),
+                            onPressed: () => context.pop(colors),
                             tooltip: 'Accept',
                             icon: Icon(
                               Icons.check_circle_outline_outlined,

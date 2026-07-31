@@ -10,10 +10,6 @@ class HomeController extends ChangeNotifier {
   final pipeline = FDoGShaderPipeline();
   final shaderControls = GlobalKey<ShaderControlsState>();
 
-  HomeController() {
-    initialize();
-  }
-
   Future<void> initialize() async {
     try {
       await pipeline.initialize();
@@ -24,7 +20,10 @@ class HomeController extends ChangeNotifier {
 
       await pipeline.setImage(image);
 
-      final state = shaderControls.currentState!;
+      final state = shaderControls.currentState;
+
+      if (state == null) return;
+
       final colors = state.useColorMapping ? state.colors : <Color>[];
 
       pipeline.useColorQuantization = state.useColorQuantization;

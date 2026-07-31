@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shaders/app/app_controller.dart';
-import 'package:flutter_shaders/app/core/theme/app_theme.dart';
-import 'package:flutter_shaders/app/modules/home/home_module.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:portfolio_design_system/portfolio_design_system.dart';
+
+import 'app_controller.dart';
+import 'core/router/router.dart';
 
 class AppView extends StatelessWidget {
   final AppController controller;
@@ -12,12 +14,22 @@ class AppView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: controller,
-      builder: (_, _) => MaterialApp(
-        title: 'Flutter Shaders',
+      builder: (_, _) => MaterialApp.router(
+        key: ValueKey(controller.locale),
+        title: 'Tiago Lacerda',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        home: HomeModule(),
+        theme: PortfolioTheme.light,
+        darkTheme: PortfolioTheme.dark,
+        themeMode: controller.themeMode,
+        locale: controller.locale,
+        supportedLocales: controller.supportedLocales,
+        localizationsDelegates: const [
+          // ModularLocalization.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        routerConfig: routerConfig,
       ),
     );
   }

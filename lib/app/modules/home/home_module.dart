@@ -17,6 +17,10 @@ class _HomeModuleState extends State<HomeModule> {
     super.initState();
 
     controller = HomeController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.initialize();
+    });
   }
 
   @override

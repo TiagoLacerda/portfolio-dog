@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio_design_system/portfolio_design_system.dart';
 
+import '../../app_controller.dart';
 import 'home_controller.dart';
 import 'widgets/shader_controls.dart';
 
 class HomeView extends StatefulWidget {
   final HomeController controller;
+  final double spacing;
 
   const HomeView({
     super.key,
     required this.controller,
+    this.spacing = 16.0,
   });
 
   @override
@@ -30,6 +34,77 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final brightnessSwitch = PortfolioBrightnessSwitch(
+      onPressed: () => AppController.instance.toggleThemeMode(),
+    );
+
+    // final localeButton = OverlayOptionsButton(
+    //   initialValue: AppController.instance.locale,
+    //   items: AppController.instance.supportedLocales,
+    //   onChanged: (value) => AppController.instance.locale = value,
+    //   itemBuilder: (context, index, value, select) {
+    //     final assetName = switch (value.languageCode) {
+    //       'pt' => PortfolioIcons.pt,
+    //       'en' => PortfolioIcons.en,
+    //       _ => PortfolioIcons.pt,
+    //     };
+
+    //     return IconButton(
+    //       onPressed: () => select(),
+    //       icon: SizedBox.square(
+    //         dimension: 24.0,
+    //         child: ClipOval(
+    //           child: SvgPicture.asset(
+    //             assetName,
+    //             fit: BoxFit.cover,
+    //           ),
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
+
+    final style = TextTheme.of(context).bodyMedium;
+
+    final styleBold = style?.copyWith(
+      fontWeight: FontWeight.bold,
+    );
+
+    final text = Text.rich(
+      textAlign: TextAlign.justify,
+      TextSpan(
+        children: [
+          TextSpan(
+            style: style,
+            children: [
+              TextSpan(
+                text: 'The ',
+              ),
+              TextSpan(
+                text: 'Flow-Based Difference of Gaussians (FDoG)',
+                style: styleBold,
+              ),
+              TextSpan(
+                text:
+                    ' is an image processing technique that enables a wide range of stylizations, including pencil, cross-hatching, watercolor, charcoal sketch, and stipple-brush effects.',
+              ),
+              TextSpan(
+                text: '\n\nProposed by ',
+              ),
+              TextSpan(
+                text: 'Holger Winnemöller and their team',
+                style: styleBold,
+              ),
+              TextSpan(
+                text:
+                    ', it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image\'s features.',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+
     final controls = Card(
       elevation: 8.0,
       color: ColorScheme.of(context).surfaceContainerHigh,
@@ -85,85 +160,88 @@ class _HomeViewState extends State<HomeView> {
       },
     );
 
-    final style = TextTheme.of(context).bodyMedium;
-    final styleBold = style?.copyWith(
-      fontWeight: FontWeight.bold,
-    );
+    final width = MediaQuery.sizeOf(context).width;
+    final height = MediaQuery.sizeOf(context).height;
+
+    final child = width < 600
+        ? Column(
+            spacing: widget.spacing,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              text,
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: height),
+                child: controls,
+              ),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: height),
+                child: canvas,
+              ),
+            ],
+          )
+        : Row(
+            spacing: widget.spacing,
+            children: [
+              Expanded(
+                flex: 1,
+                child: text,
+              ),
+              Expanded(
+                flex: 2,
+                child: controls,
+              ),
+              Expanded(
+                flex: 1,
+                child: canvas,
+              ),
+            ],
+          );
+
+    final widthAtViewportEnd = 1200.0;
 
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: 16.0,
-          horizontal: 32.0,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Center(
-                child: RichText(
-                  textAlign: TextAlign.justify,
-                  text: TextSpan(
-                    style: style,
+      appBar: AppBar(
+        toolbarHeight: 80.0,
+        actions: [
+          Expanded(
+            child: Center(
+              child: PortfolioResponsiveBox(
+                widthAtViewportEnd: widthAtViewportEnd,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: widget.spacing,
+                  ),
+                  child: Row(
                     children: [
-                      TextSpan(
-                        text: 'The ',
-                      ),
-                      TextSpan(
-                        text: 'Flow-Based Difference of Gaussians (FDoG)',
-                        style: styleBold,
-                      ),
-                      TextSpan(
-                        text:
-                            ' is an image processing technique that enables a wide range of stylizations, including pencil, cross-hatching, watercolor, charcoal sketch, and stipple-brush effects.',
-                      ),
-                      TextSpan(
-                        text: '\n\nProposed by ',
-                      ),
-                      TextSpan(
-                        text: 'Holger Winnemöller and their team',
-                        style: styleBold,
-                      ),
-                      TextSpan(
-                        text:
-                            ', it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image\'s features.',
-                      ),
+                      brightnessSwitch,
+                      // localeButton,
                     ],
                   ),
                 ),
               ),
             ),
-            SizedBox(
-              width: 16.0,
-            ),
-            Expanded(
-              flex: 4,
-              child: SingleChildScrollView(
-                child: controls,
+          ),
+        ],
+      ),
+      body: ValueListenableBuilder(
+        valueListenable: isHovering,
+        builder: (context, value, child) {
+          return SingleChildScrollView(
+            physics: isHovering.value ? NeverScrollableScrollPhysics() : null,
+            child: Center(
+              child: PortfolioResponsiveBox(
+                widthAtViewportEnd: widthAtViewportEnd,
+                child: Padding(
+                  padding: EdgeInsets.all(
+                    widget.spacing,
+                  ),
+                  child: child,
+                ),
               ),
             ),
-            SizedBox(
-              width: 16.0,
-            ),
-            Expanded(
-              flex: 3,
-              child: ValueListenableBuilder(
-                valueListenable: isHovering,
-                builder: (context, value, child) {
-                  return SingleChildScrollView(
-                    controller: scrollController,
-                    padding: EdgeInsets.only(
-                      right: 32.0,
-                    ),
-                    physics: isHovering.value ? NeverScrollableScrollPhysics() : null,
-                    child: child,
-                  );
-                },
-                child: canvas,
-              ),
-            ),
-          ],
-        ),
+          );
+        },
+        child: child,
       ),
     );
   }

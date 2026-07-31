@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shaders/app/app_controller.dart';
-import 'package:flutter_shaders/app/app_view.dart';
+
+import 'app_controller.dart';
+import 'app_view.dart';
 
 class AppModule extends StatefulWidget {
   const AppModule({super.key});

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'palette_widget.dart';
 
@@ -132,9 +133,7 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                             width: 16.0,
                           ),
                           IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
+                            onPressed: () => context.pop(),
                             tooltip: 'Close',
                             icon: Icon(
                               Icons.close_rounded,
@@ -182,7 +181,7 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           IconButton(
-                            onPressed: colors.length < 2 ? null : () => Navigator.of(context).pop(colors),
+                            onPressed: colors.length < 2 ? null : () => context.pop(colors),
                             tooltip: 'Accept',
                             icon: Icon(
                               Icons.check_circle_outline_outlined,
