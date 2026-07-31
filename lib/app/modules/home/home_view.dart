@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:overlay_options_button/overlay_options_button.dart';
 import 'package:portfolio_design_system/portfolio_design_system.dart';
 
+import '../../../l10n/generated/modular_localization.dart';
 import '../../app_controller.dart';
 import 'home_controller.dart';
 import 'widgets/shader_controls.dart';
@@ -38,31 +41,31 @@ class _HomeViewState extends State<HomeView> {
       onPressed: () => AppController.instance.toggleThemeMode(),
     );
 
-    // final localeButton = OverlayOptionsButton(
-    //   initialValue: AppController.instance.locale,
-    //   items: AppController.instance.supportedLocales,
-    //   onChanged: (value) => AppController.instance.locale = value,
-    //   itemBuilder: (context, index, value, select) {
-    //     final assetName = switch (value.languageCode) {
-    //       'pt' => PortfolioIcons.pt,
-    //       'en' => PortfolioIcons.en,
-    //       _ => PortfolioIcons.pt,
-    //     };
+    final localeButton = OverlayOptionsButton(
+      initialValue: AppController.instance.locale,
+      items: AppController.instance.supportedLocales,
+      onChanged: (value) => AppController.instance.locale = value,
+      itemBuilder: (context, index, value, select) {
+        final assetName = switch (value.languageCode) {
+          'pt' => PortfolioIcons.pt,
+          'en' => PortfolioIcons.en,
+          _ => PortfolioIcons.pt,
+        };
 
-    //     return IconButton(
-    //       onPressed: () => select(),
-    //       icon: SizedBox.square(
-    //         dimension: 24.0,
-    //         child: ClipOval(
-    //           child: SvgPicture.asset(
-    //             assetName,
-    //             fit: BoxFit.cover,
-    //           ),
-    //         ),
-    //       ),
-    //     );
-    //   },
-    // );
+        return IconButton(
+          onPressed: () => select(),
+          icon: SizedBox.square(
+            dimension: 24.0,
+            child: ClipOval(
+              child: SvgPicture.asset(
+                assetName,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        );
+      },
+    );
 
     final style = TextTheme.of(context).bodyMedium;
 
@@ -70,38 +73,38 @@ class _HomeViewState extends State<HomeView> {
       fontWeight: FontWeight.bold,
     );
 
-    final text = Text.rich(
-      textAlign: TextAlign.justify,
-      TextSpan(
-        children: [
-          TextSpan(
-            style: style,
-            children: [
-              TextSpan(
-                text: 'The ',
-              ),
-              TextSpan(
-                text: 'Flow-Based Difference of Gaussians (FDoG)',
-                style: styleBold,
-              ),
-              TextSpan(
-                text:
-                    ' is an image processing technique that enables a wide range of stylizations, including pencil, cross-hatching, watercolor, charcoal sketch, and stipple-brush effects.',
-              ),
-              TextSpan(
-                text: '\n\nProposed by ',
-              ),
-              TextSpan(
-                text: 'Holger Winnemöller and their team',
-                style: styleBold,
-              ),
-              TextSpan(
-                text:
-                    ', it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image\'s features.',
-              ),
-            ],
-          ),
-        ],
+    final text = SelectionArea(
+      child: Text.rich(
+        textAlign: TextAlign.justify,
+        TextSpan(
+          children: [
+            TextSpan(
+              style: style,
+              children: [
+                TextSpan(
+                  text: ModularLocalization.localizations.modules.home.homeView.text0,
+                ),
+                TextSpan(
+                  text: ModularLocalization.localizations.modules.home.homeView.text1,
+                  style: styleBold,
+                ),
+                TextSpan(
+                  text: ModularLocalization.localizations.modules.home.homeView.text2,
+                ),
+                TextSpan(
+                  text: ModularLocalization.localizations.modules.home.homeView.text3,
+                ),
+                TextSpan(
+                  text: ModularLocalization.localizations.modules.home.homeView.text4,
+                  style: styleBold,
+                ),
+                TextSpan(
+                  text: ModularLocalization.localizations.modules.home.homeView.text5,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
 
@@ -214,7 +217,7 @@ class _HomeViewState extends State<HomeView> {
                   child: Row(
                     children: [
                       brightnessSwitch,
-                      // localeButton,
+                      localeButton,
                     ],
                   ),
                 ),

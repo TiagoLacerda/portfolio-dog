@@ -40,6 +40,7 @@ dependencies:
     # git:
     #   url: git@github.com/tiagolacerda/portfolio-design-system      
 
+  modular_localization: ^1.0.0
   overflow_fallback_widget: ^0.0.2
   overlay_options_button: ^0.0.1
 

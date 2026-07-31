@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 
+import '../../../../l10n/generated/modular_localization.dart';
+
 class SoundButton extends StatefulWidget {
   const SoundButton({super.key});
 
@@ -69,7 +71,7 @@ class _SoundButtonState extends State<SoundButton> {
         if (!soloud.isInitialized) return;
         setState(() => soloud.setPause(handle!, playing));
       },
-      tooltip: 'Toggle music',
+      tooltip: ModularLocalization.localizations.modules.home.widgets.soundButton.toggleMusic,
       style: IconButton.styleFrom(
         backgroundColor: ColorScheme.of(context).primary,
         foregroundColor: ColorScheme.of(context).surface,

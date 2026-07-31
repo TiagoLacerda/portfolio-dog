@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart' hide Image;
 
+import '../../../../l10n/generated/modular_localization.dart';
 import '../../../core/adapters/webgl/fdog_shader_pipeline.dart';
 import '../../../core/utils/utils.dart';
 import 'palette_generate_dialog.dart';
@@ -220,7 +221,7 @@ class ShaderControlsState extends State<ShaderControls> {
 
                           draw();
                         },
-                        tooltip: 'Decrease',
+                        tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.decrease,
                         icon: Icon(
                           Icons.remove_circle_outline_rounded,
                         ),
@@ -237,7 +238,7 @@ class ShaderControlsState extends State<ShaderControls> {
 
                           draw();
                         },
-                        tooltip: 'Increase',
+                        tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.increase,
                         icon: Icon(
                           Icons.add_circle_outline_rounded,
                         ),
@@ -286,7 +287,7 @@ class ShaderControlsState extends State<ShaderControls> {
                           widget.pipeline.setColorMap(colors);
                           draw();
                         },
-                        tooltip: 'Generate palette',
+                        tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.generatePalette,
                         icon: Icon(
                           Icons.palette,
                         ),
@@ -309,7 +310,7 @@ class ShaderControlsState extends State<ShaderControls> {
                           widget.pipeline.setColorMap(colors);
                           draw();
                         },
-                        tooltip: 'Import palette',
+                        tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.importPalette,
                         icon: Icon(
                           Icons.paste_rounded,
                         ),
@@ -358,7 +359,7 @@ class ShaderControlsState extends State<ShaderControls> {
 
                 draw();
               },
-              tooltip: 'Change image',
+              tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.changeImage,
               style: IconButton.styleFrom(
                 backgroundColor: ColorScheme.of(context).primary,
                 foregroundColor: ColorScheme.of(context).surface,
@@ -372,7 +373,7 @@ class ShaderControlsState extends State<ShaderControls> {
             ),
             IconButton(
               onPressed: () => widget.pipeline.saveImage('download.png'),
-              tooltip: 'Download image',
+              tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.downloadImage,
               style: IconButton.styleFrom(
                 backgroundColor: ColorScheme.of(context).primary,
                 foregroundColor: ColorScheme.of(context).surface,

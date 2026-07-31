@@ -51,3 +51,14 @@ samples, guidance on mobile development, and a full API reference.
 
 
 The Flow-Based Difference of Gaussians (FDoG) is an image processing technique that enables a wide range of stylizations, including pencil, hatching, watercolor, charcoal sketch, and stipple-brush effects. Proposed by Holger Winnemöller, it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features.
+
+
+
+
+- localizations
+- html icons and metadata setup to match portfolio
+- register subdomain in squarespace
+- create page in firebase
+- flesh out descriptive text
+- (optional) setup canvas in popup window
+- show unchanged image side by side

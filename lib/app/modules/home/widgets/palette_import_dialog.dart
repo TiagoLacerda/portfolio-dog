@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../l10n/generated/modular_localization.dart';
 import 'palette_widget.dart';
 
 class PaletteImportDialog extends StatefulWidget {
@@ -123,7 +124,7 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                         children: [
                           Expanded(
                             child: Text(
-                              'Import Palette',
+                              ModularLocalization.localizations.modules.home.widgets.paletteImportDialog.title,
                               style: TextTheme.of(context).titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -134,7 +135,7 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                           ),
                           IconButton(
                             onPressed: () => context.pop(),
-                            tooltip: 'Close',
+                            tooltip: ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.close,
                             icon: Icon(
                               Icons.close_rounded,
                             ),
@@ -145,7 +146,7 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                         height: 16.0,
                       ),
                       Text(
-                        'Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette.',
+                        ModularLocalization.localizations.modules.home.widgets.paletteImportDialog.body,
                         style: TextTheme.of(context).bodyMedium,
                       ),
                       SizedBox(
@@ -167,8 +168,7 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                         minLines: 4,
                         keyboardType: TextInputType.multiline,
                         decoration: InputDecoration(
-                          hintText:
-                              'Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF',
+                          hintText: ModularLocalization.localizations.modules.home.widgets.paletteImportDialog.hint,
                           hintStyle: hintStyle,
                           alignLabelWithHint: true,
                           border: OutlineInputBorder(),
@@ -182,7 +182,8 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                         children: [
                           IconButton(
                             onPressed: colors.length < 2 ? null : () => context.pop(colors),
-                            tooltip: 'Accept',
+                            tooltip:
+                                ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.accept,
                             icon: Icon(
                               Icons.check_circle_outline_outlined,
                             ),

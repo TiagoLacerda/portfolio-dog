@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../l10n/generated/modular_localization.dart';
 import '../../../core/adapters/oklab/oklab.dart';
 import 'palette_widget.dart';
 
@@ -80,7 +81,7 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                         children: [
                           Expanded(
                             child: Text(
-                              'Generate Palette',
+                              ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.title,
                               style: TextTheme.of(context).titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -91,7 +92,7 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                           ),
                           IconButton(
                             onPressed: () => context.pop(),
-                            tooltip: 'Close',
+                            tooltip: ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.close,
                             icon: Icon(
                               Icons.close_rounded,
                             ),
@@ -102,14 +103,14 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                         height: 16.0,
                       ),
                       Text(
-                        'Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors.',
+                        ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.body0,
                         style: TextTheme.of(context).bodyMedium,
                       ),
                       SizedBox(
                         height: 16.0,
                       ),
                       Text(
-                        'However, since there are many more robust palette generators available, you may prefer using the import tool instead.',
+                        ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.body1,
                         style: TextTheme.of(context).bodyMedium,
                       ),
                       SizedBox(
@@ -194,7 +195,8 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                               b = rng.nextDouble() - 0.5;
                               refresh();
                             },
-                            tooltip: 'Random',
+                            tooltip:
+                                ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.random,
                             icon: Icon(
                               Icons.shuffle_rounded,
                             ),
@@ -206,7 +208,8 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                                     colors.removeLast();
                                     refresh();
                                   },
-                            tooltip: 'Decrease',
+                            tooltip:
+                                ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.decrease,
                             icon: Icon(
                               Icons.remove_circle_outline_rounded,
                             ),
@@ -216,14 +219,16 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                               colors.add(Colors.white);
                               refresh();
                             },
-                            tooltip: 'Increase',
+                            tooltip:
+                                ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.increase,
                             icon: Icon(
                               Icons.add_circle_outline_rounded,
                             ),
                           ),
                           IconButton(
                             onPressed: () => context.pop(colors),
-                            tooltip: 'Accept',
+                            tooltip:
+                                ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.accept,
                             icon: Icon(
                               Icons.check_circle_outline_outlined,
                             ),

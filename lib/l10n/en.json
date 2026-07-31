@@ -1,0 +1,44 @@
+{
+    "modules": {
+        "home": {
+            "homeView": {
+                "text0": "The ",
+                "text1": "Flow-Based Difference of Gaussians (FDoG)",
+                "text2": " is an image processing technique that enables a wide range of stylizations, like pencil, cross-hatching, watercolor, charcoal sketch and stipple-brush effects.",
+                "text3": "\n\nProposed by ",
+                "text4": "Holger Winnemöller and his team",
+                "text5": ", it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features."
+            },
+            "widgets": {
+                "paletteGenerateDialog": {
+                    "title": "Generate Palette",
+                    "body0": "Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors.",
+                    "body1": "However, since there are many more robust palette generators available, you may prefer using the import tool instead.",
+                    "random": "Random",
+                    "decrease": "Decrease",
+                    "increase": "Increase",
+                    "close": "Close",
+                    "accept": "Accept"
+                },
+                "paletteImportDialog": {
+                    "title": "Import Palette",
+                    "body": "Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette.",
+                    "hint": "Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF",
+                    "close": "Close",
+                    "accept": "Accept"
+                },
+                "shaderControls": {
+                    "decrease": "Decrease",
+                    "increase": "Increase",
+                    "generatePalette": "Generate palette",
+                    "importPalette": "Import palette",
+                    "changeImage": "Change image",
+                    "downloadImage": "Download image"
+                },
+                "soundButton": {
+                    "toggleMusic": "Toggle music"
+                }
+            }
+        }
+    }
+}

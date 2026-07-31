@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:portfolio_design_system/portfolio_design_system.dart';
 
+import '../l10n/generated/modular_localization.dart';
 import 'app_controller.dart';
 import 'core/router/router.dart';
 
@@ -24,7 +25,7 @@ class AppView extends StatelessWidget {
         locale: controller.locale,
         supportedLocales: controller.supportedLocales,
         localizationsDelegates: const [
-          // ModularLocalization.delegate,
+          ModularLocalization.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
