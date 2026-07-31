@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "portfolio-8b527"
+  },
+  "targets": {
+    "portfolio-8b527": {
+      "hosting": {
+        "dog": [
+          "portfolio-8b527-dog"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
