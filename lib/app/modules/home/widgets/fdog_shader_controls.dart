@@ -12,21 +12,21 @@ import 'shader_checkbox.dart';
 import 'shader_slider.dart';
 import 'sound_button.dart';
 
-class ShaderControls extends StatefulWidget {
+class FDoGShaderControls extends StatefulWidget {
   final FDoGShaderPipeline pipeline;
   final void Function()? onSetScale;
 
-  const ShaderControls({
+  const FDoGShaderControls({
     super.key,
     required this.pipeline,
     this.onSetScale,
   });
 
   @override
-  State<ShaderControls> createState() => ShaderControlsState();
+  State<FDoGShaderControls> createState() => FDoGShaderControlsState();
 }
 
-class ShaderControlsState extends State<ShaderControls> {
+class FDoGShaderControlsState extends State<FDoGShaderControls> {
   double sigmaC = 0.075;
   double sigmaE = 0.5;
   double sigmaM = 10.0;
@@ -221,7 +221,7 @@ class ShaderControlsState extends State<ShaderControls> {
 
                           draw();
                         },
-                        tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.decrease,
+                        tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.decrease,
                         icon: Icon(
                           Icons.remove_circle_outline_rounded,
                         ),
@@ -238,7 +238,7 @@ class ShaderControlsState extends State<ShaderControls> {
 
                           draw();
                         },
-                        tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.increase,
+                        tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.increase,
                         icon: Icon(
                           Icons.add_circle_outline_rounded,
                         ),
@@ -287,7 +287,8 @@ class ShaderControlsState extends State<ShaderControls> {
                           widget.pipeline.setColorMap(colors);
                           draw();
                         },
-                        tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.generatePalette,
+                        tooltip:
+                            ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.generatePalette,
                         icon: Icon(
                           Icons.palette,
                         ),
@@ -310,7 +311,8 @@ class ShaderControlsState extends State<ShaderControls> {
                           widget.pipeline.setColorMap(colors);
                           draw();
                         },
-                        tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.importPalette,
+                        tooltip:
+                            ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.importPalette,
                         icon: Icon(
                           Icons.paste_rounded,
                         ),
@@ -359,7 +361,7 @@ class ShaderControlsState extends State<ShaderControls> {
 
                 draw();
               },
-              tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.changeImage,
+              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.changeImage,
               style: IconButton.styleFrom(
                 backgroundColor: ColorScheme.of(context).primary,
                 foregroundColor: ColorScheme.of(context).surface,
@@ -373,7 +375,7 @@ class ShaderControlsState extends State<ShaderControls> {
             ),
             IconButton(
               onPressed: () => widget.pipeline.saveImage('download.png'),
-              tooltip: ModularLocalization.localizations.modules.home.widgets.shaderControls.downloadImage,
+              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.downloadImage,
               style: IconButton.styleFrom(
                 backgroundColor: ColorScheme.of(context).primary,
                 foregroundColor: ColorScheme.of(context).surface,

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart' hide Image;
 
 import '../../core/adapters/webgl/fdog_shader_pipeline.dart';
 import '../../core/utils/utils.dart';
-import 'widgets/shader_controls.dart';
+import 'widgets/fdog_shader_controls.dart';
 
 class HomeController extends ChangeNotifier {
   final pipeline = FDoGShaderPipeline();
-  final shaderControls = GlobalKey<ShaderControlsState>();
+  final shaderControls = GlobalKey<FDoGShaderControlsState>();
 
   Future<void> initialize() async {
     try {

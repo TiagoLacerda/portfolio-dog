@@ -10,6 +10,14 @@
                 "text5": ", ela amplia a técnica tradicional de Diferença de Gaussianas (DoG) ao aproximar o tensor de estrutura da imagem usando o operador de Sobel e, em seguida, orientar o processo de filtragem para que o desfoque e o realce de bordas ocorram ao longo do fluxo natural das características da imagem."
             },
             "widgets": {
+                "fdogShaderControls": {
+                    "decrease": "Diminuir",
+                    "increase": "Aumentar",
+                    "generatePalette": "Gerar paleta",
+                    "importPalette": "Importar paleta",
+                    "changeImage": "Alterar imagem",
+                    "downloadImage": "Baixar imagem"
+                },
                 "paletteGenerateDialog": {
                     "title": "Gerar Paleta",
                     "body0": "Gere uma paleta no espaço de cores Oklab, com luminosidade percebida aumentando de forma constante. Use os sliders para ajustar o equilíbrio entre verde e vermelho e entre azul e amarelo.",
@@ -26,14 +34,6 @@
                     "hint": "Insira uma lista de valores hexadecimais, um por linha, p. ex.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF",
                     "close": "Fechar",
                     "accept": "Confirmar"
-                },
-                "shaderControls": {
-                    "decrease": "Diminuir",
-                    "increase": "Aumentar",
-                    "generatePalette": "Gerar paleta",
-                    "importPalette": "Importar paleta",
-                    "changeImage": "Alterar imagem",
-                    "downloadImage": "Baixar imagem"
                 },
                 "soundButton": {
                     "toggleMusic": "Ligar/desligar música"

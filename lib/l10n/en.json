@@ -10,6 +10,14 @@
                 "text5": ", it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features."
             },
             "widgets": {
+                "fdogShaderControls": {
+                    "decrease": "Decrease",
+                    "increase": "Increase",
+                    "generatePalette": "Generate palette",
+                    "importPalette": "Import palette",
+                    "changeImage": "Change image",
+                    "downloadImage": "Download image"
+                },
                 "paletteGenerateDialog": {
                     "title": "Generate Palette",
                     "body0": "Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors.",
@@ -26,14 +34,6 @@
                     "hint": "Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF",
                     "close": "Close",
                     "accept": "Accept"
-                },
-                "shaderControls": {
-                    "decrease": "Decrease",
-                    "increase": "Increase",
-                    "generatePalette": "Generate palette",
-                    "importPalette": "Import palette",
-                    "changeImage": "Change image",
-                    "downloadImage": "Download image"
                 },
                 "soundButton": {
                     "toggleMusic": "Toggle music"

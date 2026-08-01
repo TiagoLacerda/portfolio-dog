@@ -28,80 +28,80 @@ class ModularLocalizationEntriesEn extends ModularLocalizationEntries {
   String get entry5 => ", it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features.";
 
   @override
-  /// **"Accept"**
-  String get entry6 => 'Accept';
-
-  @override
-  /// **"Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors."**
-  String get entry7 => 'Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors.';
-
-  @override
-  /// **"However, since there are many more robust palette generators available, you may prefer using the import tool instead."**
-  String get entry8 => 'However, since there are many more robust palette generators available, you may prefer using the import tool instead.';
-
-  @override
-  /// **"Close"**
-  String get entry9 => 'Close';
+  /// **"Change image"**
+  String get entry6 => 'Change image';
 
   @override
   /// **"Decrease"**
-  String get entry10 => 'Decrease';
+  String get entry7 => 'Decrease';
+
+  @override
+  /// **"Download image"**
+  String get entry8 => 'Download image';
+
+  @override
+  /// **"Generate palette"**
+  String get entry9 => 'Generate palette';
+
+  @override
+  /// **"Import palette"**
+  String get entry10 => 'Import palette';
 
   @override
   /// **"Increase"**
   String get entry11 => 'Increase';
 
   @override
-  /// **"Random"**
-  String get entry12 => 'Random';
-
-  @override
-  /// **"Generate Palette"**
-  String get entry13 => 'Generate Palette';
-
-  @override
   /// **"Accept"**
-  String get entry14 => 'Accept';
+  String get entry12 => 'Accept';
 
   @override
-  /// **"Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette."**
-  String get entry15 => 'Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette.';
+  /// **"Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors."**
+  String get entry13 => 'Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors.';
+
+  @override
+  /// **"However, since there are many more robust palette generators available, you may prefer using the import tool instead."**
+  String get entry14 => 'However, since there are many more robust palette generators available, you may prefer using the import tool instead.';
 
   @override
   /// **"Close"**
-  String get entry16 => 'Close';
-
-  @override
-  /// **"Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
-  String get entry17 => 'Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF';
-
-  @override
-  /// **"Import Palette"**
-  String get entry18 => 'Import Palette';
-
-  @override
-  /// **"Change image"**
-  String get entry19 => 'Change image';
+  String get entry15 => 'Close';
 
   @override
   /// **"Decrease"**
-  String get entry20 => 'Decrease';
-
-  @override
-  /// **"Download image"**
-  String get entry21 => 'Download image';
-
-  @override
-  /// **"Generate palette"**
-  String get entry22 => 'Generate palette';
-
-  @override
-  /// **"Import palette"**
-  String get entry23 => 'Import palette';
+  String get entry16 => 'Decrease';
 
   @override
   /// **"Increase"**
-  String get entry24 => 'Increase';
+  String get entry17 => 'Increase';
+
+  @override
+  /// **"Random"**
+  String get entry18 => 'Random';
+
+  @override
+  /// **"Generate Palette"**
+  String get entry19 => 'Generate Palette';
+
+  @override
+  /// **"Accept"**
+  String get entry20 => 'Accept';
+
+  @override
+  /// **"Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette."**
+  String get entry21 => 'Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette.';
+
+  @override
+  /// **"Close"**
+  String get entry22 => 'Close';
+
+  @override
+  /// **"Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
+  String get entry23 => 'Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF';
+
+  @override
+  /// **"Import Palette"**
+  String get entry24 => 'Import Palette';
 
   @override
   /// **"Toggle music"**

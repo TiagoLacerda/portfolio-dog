@@ -6,7 +6,7 @@ import 'package:portfolio_design_system/portfolio_design_system.dart';
 import '../../../l10n/generated/modular_localization.dart';
 import '../../app_controller.dart';
 import 'home_controller.dart';
-import 'widgets/shader_controls.dart';
+import 'widgets/fdog_shader_controls.dart';
 
 class HomeView extends StatefulWidget {
   final HomeController controller;
@@ -116,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
           vertical: 24.0,
           horizontal: 32.0,
         ),
-        child: ShaderControls(
+        child: FDoGShaderControls(
           key: widget.controller.shaderControls,
           pipeline: widget.controller.pipeline,
           onSetScale: () => widget.controller.onSetScale(),
@@ -187,10 +187,6 @@ class _HomeViewState extends State<HomeView> {
             children: [
               Expanded(
                 flex: 1,
-                child: text,
-              ),
-              Expanded(
-                flex: 2,
                 child: controls,
               ),
               Expanded(

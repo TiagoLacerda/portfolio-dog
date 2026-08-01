@@ -55,29 +55,29 @@ abstract class ModularLocalizationEntries {
   /// `pt`: **", ela amplia a técnica tradicional de Diferença de Gaussianas (DoG) ao aproximar o tensor de estrutura da imagem usando o operador de Sobel e, em seguida, orientar o processo de filtragem para que o desfoque e o realce de bordas ocorram ao longo do fluxo natural das características da imagem."**
   String get entry5;
 
-  /// `en`: **"Accept"**
+  /// `en`: **"Change image"**
   ///
-  /// `pt`: **"Confirmar"**
+  /// `pt`: **"Alterar imagem"**
   String get entry6;
-
-  /// `en`: **"Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors."**
-  ///
-  /// `pt`: **"Gere uma paleta no espaço de cores Oklab, com luminosidade percebida aumentando de forma constante. Use os sliders para ajustar o equilíbrio entre verde e vermelho e entre azul e amarelo."**
-  String get entry7;
-
-  /// `en`: **"However, since there are many more robust palette generators available, you may prefer using the import tool instead."**
-  ///
-  /// `pt`: **"No entanto, como existem geradores de paletas muito mais robustos disponíveis, você pode preferir usar a ferramenta de importação."**
-  String get entry8;
-
-  /// `en`: **"Close"**
-  ///
-  /// `pt`: **"Fechar"**
-  String get entry9;
 
   /// `en`: **"Decrease"**
   ///
   /// `pt`: **"Diminuir"**
+  String get entry7;
+
+  /// `en`: **"Download image"**
+  ///
+  /// `pt`: **"Baixar imagem"**
+  String get entry8;
+
+  /// `en`: **"Generate palette"**
+  ///
+  /// `pt`: **"Gerar paleta"**
+  String get entry9;
+
+  /// `en`: **"Import palette"**
+  ///
+  /// `pt`: **"Importar paleta"**
   String get entry10;
 
   /// `en`: **"Increase"**
@@ -85,69 +85,69 @@ abstract class ModularLocalizationEntries {
   /// `pt`: **"Aumentar"**
   String get entry11;
 
-  /// `en`: **"Random"**
-  ///
-  /// `pt`: **"Aleatório"**
-  String get entry12;
-
-  /// `en`: **"Generate Palette"**
-  ///
-  /// `pt`: **"Gerar Paleta"**
-  String get entry13;
-
   /// `en`: **"Accept"**
   ///
   /// `pt`: **"Confirmar"**
-  String get entry14;
+  String get entry12;
 
-  /// `en`: **"Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette."**
+  /// `en`: **"Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors."**
   ///
-  /// `pt`: **"Importe uma paleta personalizada inserindo valores de cor hexadecimais, um por linha. Você deve fornecer pelo menos duas cores para uma paleta válida."**
-  String get entry15;
+  /// `pt`: **"Gere uma paleta no espaço de cores Oklab, com luminosidade percebida aumentando de forma constante. Use os sliders para ajustar o equilíbrio entre verde e vermelho e entre azul e amarelo."**
+  String get entry13;
+
+  /// `en`: **"However, since there are many more robust palette generators available, you may prefer using the import tool instead."**
+  ///
+  /// `pt`: **"No entanto, como existem geradores de paletas muito mais robustos disponíveis, você pode preferir usar a ferramenta de importação."**
+  String get entry14;
 
   /// `en`: **"Close"**
   ///
   /// `pt`: **"Fechar"**
-  String get entry16;
-
-  /// `en`: **"Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
-  ///
-  /// `pt`: **"Insira uma lista de valores hexadecimais, um por linha, p. ex.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
-  String get entry17;
-
-  /// `en`: **"Import Palette"**
-  ///
-  /// `pt`: **"Importar Paleta"**
-  String get entry18;
-
-  /// `en`: **"Change image"**
-  ///
-  /// `pt`: **"Alterar imagem"**
-  String get entry19;
+  String get entry15;
 
   /// `en`: **"Decrease"**
   ///
   /// `pt`: **"Diminuir"**
-  String get entry20;
-
-  /// `en`: **"Download image"**
-  ///
-  /// `pt`: **"Baixar imagem"**
-  String get entry21;
-
-  /// `en`: **"Generate palette"**
-  ///
-  /// `pt`: **"Gerar paleta"**
-  String get entry22;
-
-  /// `en`: **"Import palette"**
-  ///
-  /// `pt`: **"Importar paleta"**
-  String get entry23;
+  String get entry16;
 
   /// `en`: **"Increase"**
   ///
   /// `pt`: **"Aumentar"**
+  String get entry17;
+
+  /// `en`: **"Random"**
+  ///
+  /// `pt`: **"Aleatório"**
+  String get entry18;
+
+  /// `en`: **"Generate Palette"**
+  ///
+  /// `pt`: **"Gerar Paleta"**
+  String get entry19;
+
+  /// `en`: **"Accept"**
+  ///
+  /// `pt`: **"Confirmar"**
+  String get entry20;
+
+  /// `en`: **"Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette."**
+  ///
+  /// `pt`: **"Importe uma paleta personalizada inserindo valores de cor hexadecimais, um por linha. Você deve fornecer pelo menos duas cores para uma paleta válida."**
+  String get entry21;
+
+  /// `en`: **"Close"**
+  ///
+  /// `pt`: **"Fechar"**
+  String get entry22;
+
+  /// `en`: **"Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
+  ///
+  /// `pt`: **"Insira uma lista de valores hexadecimais, um por linha, p. ex.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
+  String get entry23;
+
+  /// `en`: **"Import Palette"**
+  ///
+  /// `pt`: **"Importar Paleta"**
   String get entry24;
 
   /// `en`: **"Toggle music"**

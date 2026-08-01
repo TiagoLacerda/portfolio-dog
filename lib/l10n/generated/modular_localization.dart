@@ -73,11 +73,11 @@ class ModularLocalizationInternalClass2 implements ModularLocalization {
   /// `pt`: **", ela amplia a técnica tradicional de Diferença de Gaussianas (DoG) ao aproximar o tensor de estrutura da imagem usando o operador de Sobel e, em seguida, orientar o processo de filtragem para que o desfoque e o realce de bordas ocorram ao longo do fluxo natural das características da imagem."**
   ///
   ModularLocalizationInternalClass3 get homeView => const ModularLocalizationInternalClass3();
+  /// **.fdogShaderControls**: `...`
+  ///
   /// **.paletteGenerateDialog**: `...`
   ///
   /// **.paletteImportDialog**: `...`
-  ///
-  /// **.shaderControls**: `...`
   ///
   /// **.soundButton**: `...`
   ///
@@ -128,6 +128,43 @@ class ModularLocalizationInternalClass3 implements ModularLocalization {
 class ModularLocalizationInternalClass4 implements ModularLocalization {
   const ModularLocalizationInternalClass4();
 
+  /// **.changeImage**
+  ///
+  /// `en`: **"Change image"**
+  ///
+  /// `pt`: **"Alterar imagem"**
+  ///
+  /// **.decrease**
+  ///
+  /// `en`: **"Decrease"**
+  ///
+  /// `pt`: **"Diminuir"**
+  ///
+  /// **.downloadImage**
+  ///
+  /// `en`: **"Download image"**
+  ///
+  /// `pt`: **"Baixar imagem"**
+  ///
+  /// **.generatePalette**
+  ///
+  /// `en`: **"Generate palette"**
+  ///
+  /// `pt`: **"Gerar paleta"**
+  ///
+  /// **.importPalette**
+  ///
+  /// `en`: **"Import palette"**
+  ///
+  /// `pt`: **"Importar paleta"**
+  ///
+  /// **.increase**
+  ///
+  /// `en`: **"Increase"**
+  ///
+  /// `pt`: **"Aumentar"**
+  ///
+  ModularLocalizationInternalClass5 get fdogShaderControls => const ModularLocalizationInternalClass5();
   /// **.accept**
   ///
   /// `en`: **"Accept"**
@@ -176,7 +213,7 @@ class ModularLocalizationInternalClass4 implements ModularLocalization {
   ///
   /// `pt`: **"Gerar Paleta"**
   ///
-  ModularLocalizationInternalClass5 get paletteGenerateDialog => const ModularLocalizationInternalClass5();
+  ModularLocalizationInternalClass6 get paletteGenerateDialog => const ModularLocalizationInternalClass6();
   /// **.accept**
   ///
   /// `en`: **"Accept"**
@@ -207,44 +244,7 @@ class ModularLocalizationInternalClass4 implements ModularLocalization {
   ///
   /// `pt`: **"Importar Paleta"**
   ///
-  ModularLocalizationInternalClass6 get paletteImportDialog => const ModularLocalizationInternalClass6();
-  /// **.changeImage**
-  ///
-  /// `en`: **"Change image"**
-  ///
-  /// `pt`: **"Alterar imagem"**
-  ///
-  /// **.decrease**
-  ///
-  /// `en`: **"Decrease"**
-  ///
-  /// `pt`: **"Diminuir"**
-  ///
-  /// **.downloadImage**
-  ///
-  /// `en`: **"Download image"**
-  ///
-  /// `pt`: **"Baixar imagem"**
-  ///
-  /// **.generatePalette**
-  ///
-  /// `en`: **"Generate palette"**
-  ///
-  /// `pt`: **"Gerar paleta"**
-  ///
-  /// **.importPalette**
-  ///
-  /// `en`: **"Import palette"**
-  ///
-  /// `pt`: **"Importar paleta"**
-  ///
-  /// **.increase**
-  ///
-  /// `en`: **"Increase"**
-  ///
-  /// `pt`: **"Aumentar"**
-  ///
-  ModularLocalizationInternalClass7 get shaderControls => const ModularLocalizationInternalClass7();
+  ModularLocalizationInternalClass7 get paletteImportDialog => const ModularLocalizationInternalClass7();
   /// **.toggleMusic**
   ///
   /// `en`: **"Toggle music"**
@@ -257,53 +257,41 @@ class ModularLocalizationInternalClass4 implements ModularLocalization {
 class ModularLocalizationInternalClass5 implements ModularLocalization {
   const ModularLocalizationInternalClass5();
 
-  /// `en`: **"Accept"**
+  /// `en`: **"Change image"**
   ///
-  /// `pt`: **"Confirmar"**
+  /// `pt`: **"Alterar imagem"**
   ///
-  String get accept => ModularLocalization.entries.entry6;
-
-  /// `en`: **"Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors."**
-  ///
-  /// `pt`: **"Gere uma paleta no espaço de cores Oklab, com luminosidade percebida aumentando de forma constante. Use os sliders para ajustar o equilíbrio entre verde e vermelho e entre azul e amarelo."**
-  ///
-  String get body0 => ModularLocalization.entries.entry7;
-
-  /// `en`: **"However, since there are many more robust palette generators available, you may prefer using the import tool instead."**
-  ///
-  /// `pt`: **"No entanto, como existem geradores de paletas muito mais robustos disponíveis, você pode preferir usar a ferramenta de importação."**
-  ///
-  String get body1 => ModularLocalization.entries.entry8;
-
-  /// `en`: **"Close"**
-  ///
-  /// `pt`: **"Fechar"**
-  ///
-  String get close => ModularLocalization.entries.entry9;
+  String get changeImage => ModularLocalization.entries.entry6;
 
   /// `en`: **"Decrease"**
   ///
   /// `pt`: **"Diminuir"**
   ///
-  String get decrease => ModularLocalization.entries.entry10;
+  String get decrease => ModularLocalization.entries.entry7;
+
+  /// `en`: **"Download image"**
+  ///
+  /// `pt`: **"Baixar imagem"**
+  ///
+  String get downloadImage => ModularLocalization.entries.entry8;
+
+  /// `en`: **"Generate palette"**
+  ///
+  /// `pt`: **"Gerar paleta"**
+  ///
+  String get generatePalette => ModularLocalization.entries.entry9;
+
+  /// `en`: **"Import palette"**
+  ///
+  /// `pt`: **"Importar paleta"**
+  ///
+  String get importPalette => ModularLocalization.entries.entry10;
 
   /// `en`: **"Increase"**
   ///
   /// `pt`: **"Aumentar"**
   ///
   String get increase => ModularLocalization.entries.entry11;
-
-  /// `en`: **"Random"**
-  ///
-  /// `pt`: **"Aleatório"**
-  ///
-  String get random => ModularLocalization.entries.entry12;
-
-  /// `en`: **"Generate Palette"**
-  ///
-  /// `pt`: **"Gerar Paleta"**
-  ///
-  String get title => ModularLocalization.entries.entry13;
 
 }
 
@@ -314,72 +302,84 @@ class ModularLocalizationInternalClass6 implements ModularLocalization {
   ///
   /// `pt`: **"Confirmar"**
   ///
-  String get accept => ModularLocalization.entries.entry14;
+  String get accept => ModularLocalization.entries.entry12;
 
-  /// `en`: **"Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette."**
+  /// `en`: **"Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors."**
   ///
-  /// `pt`: **"Importe uma paleta personalizada inserindo valores de cor hexadecimais, um por linha. Você deve fornecer pelo menos duas cores para uma paleta válida."**
+  /// `pt`: **"Gere uma paleta no espaço de cores Oklab, com luminosidade percebida aumentando de forma constante. Use os sliders para ajustar o equilíbrio entre verde e vermelho e entre azul e amarelo."**
   ///
-  String get body => ModularLocalization.entries.entry15;
+  String get body0 => ModularLocalization.entries.entry13;
+
+  /// `en`: **"However, since there are many more robust palette generators available, you may prefer using the import tool instead."**
+  ///
+  /// `pt`: **"No entanto, como existem geradores de paletas muito mais robustos disponíveis, você pode preferir usar a ferramenta de importação."**
+  ///
+  String get body1 => ModularLocalization.entries.entry14;
 
   /// `en`: **"Close"**
   ///
   /// `pt`: **"Fechar"**
   ///
-  String get close => ModularLocalization.entries.entry16;
+  String get close => ModularLocalization.entries.entry15;
 
-  /// `en`: **"Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
+  /// `en`: **"Decrease"**
   ///
-  /// `pt`: **"Insira uma lista de valores hexadecimais, um por linha, p. ex.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
+  /// `pt`: **"Diminuir"**
   ///
-  String get hint => ModularLocalization.entries.entry17;
+  String get decrease => ModularLocalization.entries.entry16;
 
-  /// `en`: **"Import Palette"**
+  /// `en`: **"Increase"**
   ///
-  /// `pt`: **"Importar Paleta"**
+  /// `pt`: **"Aumentar"**
   ///
-  String get title => ModularLocalization.entries.entry18;
+  String get increase => ModularLocalization.entries.entry17;
+
+  /// `en`: **"Random"**
+  ///
+  /// `pt`: **"Aleatório"**
+  ///
+  String get random => ModularLocalization.entries.entry18;
+
+  /// `en`: **"Generate Palette"**
+  ///
+  /// `pt`: **"Gerar Paleta"**
+  ///
+  String get title => ModularLocalization.entries.entry19;
 
 }
 
 class ModularLocalizationInternalClass7 implements ModularLocalization {
   const ModularLocalizationInternalClass7();
 
-  /// `en`: **"Change image"**
+  /// `en`: **"Accept"**
   ///
-  /// `pt`: **"Alterar imagem"**
+  /// `pt`: **"Confirmar"**
   ///
-  String get changeImage => ModularLocalization.entries.entry19;
+  String get accept => ModularLocalization.entries.entry20;
 
-  /// `en`: **"Decrease"**
+  /// `en`: **"Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette."**
   ///
-  /// `pt`: **"Diminuir"**
+  /// `pt`: **"Importe uma paleta personalizada inserindo valores de cor hexadecimais, um por linha. Você deve fornecer pelo menos duas cores para uma paleta válida."**
   ///
-  String get decrease => ModularLocalization.entries.entry20;
+  String get body => ModularLocalization.entries.entry21;
 
-  /// `en`: **"Download image"**
+  /// `en`: **"Close"**
   ///
-  /// `pt`: **"Baixar imagem"**
+  /// `pt`: **"Fechar"**
   ///
-  String get downloadImage => ModularLocalization.entries.entry21;
+  String get close => ModularLocalization.entries.entry22;
 
-  /// `en`: **"Generate palette"**
+  /// `en`: **"Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
   ///
-  /// `pt`: **"Gerar paleta"**
+  /// `pt`: **"Insira uma lista de valores hexadecimais, um por linha, p. ex.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
   ///
-  String get generatePalette => ModularLocalization.entries.entry22;
+  String get hint => ModularLocalization.entries.entry23;
 
-  /// `en`: **"Import palette"**
+  /// `en`: **"Import Palette"**
   ///
-  /// `pt`: **"Importar paleta"**
+  /// `pt`: **"Importar Paleta"**
   ///
-  String get importPalette => ModularLocalization.entries.entry23;
-
-  /// `en`: **"Increase"**
-  ///
-  /// `pt`: **"Aumentar"**
-  ///
-  String get increase => ModularLocalization.entries.entry24;
+  String get title => ModularLocalization.entries.entry24;
 
 }
 
