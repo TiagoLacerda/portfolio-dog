@@ -5,6 +5,7 @@ import 'package:flutter/material.dart' hide Image;
 import '../../../../l10n/generated/modular_localization.dart';
 import '../../../core/adapters/webgl/fdog_shader_pipeline.dart';
 import '../../../core/utils/utils.dart';
+import 'fdog_shader_settings.dart';
 import 'palette_generate_dialog.dart';
 import 'palette_import_dialog.dart';
 import 'palette_widget.dart';
@@ -13,11 +14,13 @@ import 'shader_slider.dart';
 import 'sound_button.dart';
 
 class FDoGShaderControls extends StatefulWidget {
+  final FDoGShaderSettings settings;
   final FDoGShaderPipeline pipeline;
   final void Function()? onSetScale;
 
   const FDoGShaderControls({
     super.key,
+    required this.settings,
     required this.pipeline,
     this.onSetScale,
   });
@@ -27,367 +30,377 @@ class FDoGShaderControls extends StatefulWidget {
 }
 
 class FDoGShaderControlsState extends State<FDoGShaderControls> {
-  double sigmaC = 0.075;
-  double sigmaE = 0.5;
-  double sigmaM = 10.0;
-  double sigmaA = 4.8;
-  double k = 1.6;
-  double tau = 100.0;
-  double epsilon = 0.3;
-  double phi = 0.9;
-  double scale = 0.347;
-
-  bool useColorQuantization = true;
-  bool useColorMapping = true;
-  bool useColorBlending = true;
-
-  late int numColors;
-
-  List<Color> colors = [
-    Color(0xFF0E3738),
-    Color(0xFF1B3F5D),
-    Color(0xFF3B4479),
-    Color(0xFF694A7E),
-    Color(0xFF9C556E),
-    Color(0xFFBF6A5C),
-    Color(0xFFC78C56),
-    Color(0xFFB5B96A),
-  ];
-
   List<Color> get grayscale => List.generate(
-    numColors,
+    widget.settings.numColors,
     (i) {
-      final l = i / (numColors - 1);
+      final l = i / (widget.settings.numColors - 1);
       return Color.from(alpha: 1, red: l, green: l, blue: l);
     },
   );
 
   void draw() {
     widget.pipeline.draw(
-      sigmaC,
-      sigmaM,
-      sigmaE,
-      sigmaA,
-      k,
-      tau,
-      epsilon,
-      phi,
-      numColors,
+      widget.settings.sigmaC,
+      widget.settings.sigmaE,
+      widget.settings.sigmaM,
+      widget.settings.sigmaA,
+      widget.settings.k,
+      widget.settings.tau,
+      widget.settings.epsilon,
+      widget.settings.phi,
+      widget.settings.numColors,
     );
   }
 
   @override
   void initState() {
     super.initState();
-
-    numColors = max(2, colors.length);
+    widget.settings.numColors = max(2, widget.settings.colors.length);
   }
 
   @override
   Widget build(BuildContext context) {
+    final sliderSigmaC = ShaderSlider(
+      title: 'σ c',
+      subtitle: 'Structure-tensor blur',
+      value: widget.settings.sigmaC,
+      min: widget.settings.sigmaCMin,
+      max: widget.settings.sigmaCMax,
+      onChanged: (value) {
+        widget.settings.sigmaC = value;
+        draw();
+      },
+    );
+
+    final sliderSigmaE = ShaderSlider(
+      title: 'σ e',
+      subtitle: 'Orthogonal blur',
+      value: widget.settings.sigmaE,
+      min: widget.settings.sigmaEMin,
+      max: widget.settings.sigmaEMax,
+      onChanged: (value) {
+        widget.settings.sigmaE = value;
+        draw();
+      },
+    );
+
+    final sliderSigmaM = ShaderSlider(
+      title: 'σ m',
+      subtitle: 'Tangent blur',
+      value: widget.settings.sigmaM,
+      min: widget.settings.sigmaMMin,
+      max: widget.settings.sigmaMMax,
+      onChanged: (value) {
+        widget.settings.sigmaM = value;
+        draw();
+      },
+    );
+
+    final sliderSigmaA = ShaderSlider(
+      title: 'σ a',
+      subtitle: 'Second LIC pass',
+      value: widget.settings.sigmaA,
+      min: widget.settings.sigmaAMin,
+      max: widget.settings.sigmaAMax,
+      onChanged: (value) {
+        widget.settings.sigmaA = value;
+        draw();
+      },
+    );
+
+    final sliderK = ShaderSlider(
+      title: 'k',
+      subtitle: 'DoG σ difference',
+      value: widget.settings.k,
+      min: widget.settings.kMin,
+      max: widget.settings.kMax,
+      onChanged: (value) {
+        widget.settings.k = value;
+        draw();
+      },
+    );
+
+    final sliderTau = ShaderSlider(
+      title: 'τ',
+      subtitle: 'DoG scaler',
+      value: widget.settings.tau,
+      min: widget.settings.tauMin,
+      max: widget.settings.tauMax,
+      onChanged: (value) {
+        widget.settings.tau = value;
+        draw();
+      },
+    );
+
+    final sliderEpsilon = ShaderSlider(
+      title: 'ε',
+      subtitle: 'DoG threshold',
+      value: widget.settings.epsilon,
+      min: widget.settings.epsilonMin,
+      max: widget.settings.epsilonMax,
+      onChanged: (value) {
+        widget.settings.epsilon = value;
+        draw();
+      },
+    );
+
+    final sliderPhi = ShaderSlider(
+      title: 'φ',
+      subtitle: 'DoG threshold smoothing',
+      value: widget.settings.phi,
+      min: widget.settings.phiMin,
+      max: widget.settings.phiMax,
+      onChanged: (value) {
+        widget.settings.phi = value;
+        draw();
+      },
+    );
+
+    final sliderScale = ShaderSlider(
+      title: 'scale',
+      subtitle: 'Rescale the image',
+      value: widget.settings.scale,
+      min: widget.settings.scaleMin,
+      max: widget.settings.scaleMax,
+      onChanged: (value) {
+        widget.settings.scale = value;
+        widget.pipeline.setScale(widget.settings.scale);
+        widget.onSetScale?.call();
+        draw();
+      },
+    );
+
+    final checkboxColorBlending = ShaderCheckbox(
+      subtitle: 'Color-blending',
+      initialValue: widget.settings.useColorBlending,
+      onChanged: (value) {
+        widget.settings.useColorBlending = value;
+        widget.pipeline.useColorBlending = value;
+        draw();
+      },
+    );
+
+    final changeImageButton = IconButton(
+      onPressed: () async {
+        final image = await Utils.pickImage();
+
+        if (image == null) return;
+
+        setState(() => widget.settings.scale = 1.0);
+
+        widget.pipeline.setScale(widget.settings.scale);
+        widget.onSetScale?.call();
+
+        await widget.pipeline.setImage(image);
+
+        draw();
+      },
+      tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.changeImage,
+      style: IconButton.styleFrom(
+        backgroundColor: ColorScheme.of(context).primary,
+        foregroundColor: ColorScheme.of(context).surface,
+      ),
+      icon: Icon(
+        Icons.add_photo_alternate_outlined,
+      ),
+    );
+
+    final downloadImageButton = IconButton(
+      onPressed: () => widget.pipeline.saveImage('download.png'),
+      tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.downloadImage,
+      style: IconButton.styleFrom(
+        backgroundColor: ColorScheme.of(context).primary,
+        foregroundColor: ColorScheme.of(context).surface,
+      ),
+      icon: Icon(
+        Icons.file_download_outlined,
+      ),
+    );
+
+    final soundButton = SoundButton();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        ShaderSlider(
-          title: 'σ c',
-          subtitle: 'Structure-tensor blur',
-          value: sigmaC,
-          min: 0.001,
-          max: 10.0,
-          onChanged: (value) {
-            sigmaC = value;
-            draw();
-          },
-        ),
-        ShaderSlider(
-          title: 'σ e',
-          subtitle: 'Orthogonal blur',
-          value: sigmaE,
-          min: 0.001,
-          max: 10.0,
-          onChanged: (value) {
-            sigmaE = value;
-            draw();
-          },
-        ),
-        ShaderSlider(
-          title: 'σ m',
-          subtitle: 'Tangent blur',
-          value: sigmaM,
-          min: 0.001,
-          max: 10.0,
-          onChanged: (value) {
-            sigmaM = value;
-            draw();
-          },
-        ),
-        ShaderSlider(
-          title: 'σ a',
-          subtitle: 'Second LIC pass',
-          value: sigmaA,
-          min: 0.001,
-          max: 10.0,
-          onChanged: (value) {
-            sigmaA = value;
-            draw();
-          },
-        ),
-        ShaderSlider(
-          title: 'k',
-          subtitle: 'DoG σ difference',
-          value: k,
-          min: 1.0,
-          max: 10.0,
-          onChanged: (value) {
-            k = value;
-            draw();
-          },
-        ),
-        ShaderSlider(
-          title: 'τ',
-          subtitle: 'DoG scaler',
-          value: tau,
-          min: 0.0,
-          max: 100.0,
-          onChanged: (value) {
-            tau = value;
-            draw();
-          },
-        ),
-        ShaderSlider(
-          title: 'ε',
-          subtitle: 'DoG threshold',
-          value: epsilon,
-          min: 0.0,
-          max: 1.0,
-          onChanged: (value) {
-            epsilon = value;
-            draw();
-          },
-        ),
-        ShaderSlider(
-          title: 'φ',
-          subtitle: 'DoG threshold smoothing',
-          value: phi,
-          min: 0.0,
-          max: 10.0,
-          onChanged: (value) {
-            phi = value;
-            draw();
-          },
-        ),
-        ShaderSlider(
-          title: 'scale',
-          subtitle: 'Rescale the image',
-          value: scale,
-          min: 0.0,
-          max: 1.0,
-          onChanged: (value) {
-            scale = value;
-            widget.pipeline.setScale(scale);
-            widget.onSetScale?.call();
-            draw();
-          },
-        ),
+        sliderSigmaC,
+        sliderSigmaE,
+        sliderSigmaM,
+        sliderSigmaA,
+        sliderK,
+        sliderTau,
+        sliderEpsilon,
+        sliderPhi,
+        sliderScale,
         StatefulBuilder(
-          builder: (context, setState) => Column(
-            children: [
-              ShaderCheckbox(
-                prefixText: 'colors: ',
-                title: numColors.toString(),
-                subtitle: 'Color-quantization',
-                initialValue: useColorQuantization,
-                onChanged: (value) {
-                  setState(() {
-                    useColorQuantization = value;
-                  });
+          builder: (context, setState) {
+            final decreaseButton = IconButton(
+              onPressed: () {
+                setState(() {
+                  widget.settings.numColors = max(2, widget.settings.numColors - 1);
+                });
 
-                  widget.pipeline.useColorQuantization = useColorQuantization;
-                  draw();
-                },
-                trailing: Expanded(
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            numColors = max(2, numColors - 1);
-                          });
+                if (widget.settings.numColors <= widget.settings.colors.length) {
+                  widget.pipeline.setColorMap(
+                    widget.settings.colors.sublist(0, min(widget.settings.numColors, widget.settings.colors.length)),
+                  );
+                }
 
-                          if (numColors <= colors.length) {
-                            widget.pipeline.setColorMap(colors.sublist(0, min(numColors, colors.length)));
-                          }
+                draw();
+              },
+              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.decrease,
+              icon: Icon(
+                Icons.remove_circle_outline_rounded,
+              ),
+            );
 
-                          draw();
-                        },
-                        tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.decrease,
-                        icon: Icon(
-                          Icons.remove_circle_outline_rounded,
-                        ),
+            final increaseButton = IconButton(
+              onPressed: () {
+                setState(() {
+                  widget.settings.numColors = widget.settings.numColors + 1;
+                });
+
+                if (widget.settings.numColors <= widget.settings.colors.length) {
+                  widget.pipeline.setColorMap(
+                    widget.settings.colors.sublist(0, min(widget.settings.numColors, widget.settings.colors.length)),
+                  );
+                }
+
+                draw();
+              },
+              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.increase,
+              icon: Icon(
+                Icons.add_circle_outline_rounded,
+              ),
+            );
+
+            final checkboxColorQuantization = ShaderCheckbox(
+              prefixText: 'colors: ',
+              title: widget.settings.numColors.toString(),
+              subtitle: 'Color-quantization',
+              initialValue: widget.settings.useColorQuantization,
+              onChanged: (value) {
+                setState(() {
+                  widget.settings.useColorQuantization = value;
+                });
+
+                widget.pipeline.useColorQuantization = widget.settings.useColorQuantization;
+                draw();
+              },
+              trailing: Expanded(
+                child: Row(
+                  children: [
+                    decreaseButton,
+                    increaseButton,
+                    SizedBox(
+                      width: 16.0,
+                    ),
+                    Expanded(
+                      child: PaletteWidget(
+                        colors: grayscale,
+                        divider: min(widget.settings.colors.length, widget.settings.numColors),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            numColors = numColors + 1;
-                          });
-
-                          if (numColors <= colors.length) {
-                            widget.pipeline.setColorMap(colors.sublist(0, min(numColors, colors.length)));
-                          }
-
-                          draw();
-                        },
-                        tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.increase,
-                        icon: Icon(
-                          Icons.add_circle_outline_rounded,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 16.0,
-                      ),
-                      Expanded(
-                        child: PaletteWidget(
-                          colors: grayscale,
-                          divider: min(colors.length, numColors),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              ShaderCheckbox(
-                subtitle: 'Color-mapping',
-                initialValue: useColorMapping,
-                enabled: useColorQuantization,
-                onChanged: (value) {
-                  setState(() {
-                    useColorMapping = value;
-                  });
+            );
 
-                  widget.pipeline.useColorMapping = useColorMapping;
-                  draw();
-                },
-                trailing: Expanded(
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          final palette = await showDialog<List<Color>>(
-                            context: context,
-                            builder: (_) => PaletteGenerateDialog(),
-                          );
+            final generatePaletteButton = IconButton(
+              onPressed: () async {
+                final palette = await showDialog<List<Color>>(
+                  context: context,
+                  builder: (_) => PaletteGenerateDialog(),
+                );
 
-                          if (palette == null) return;
+                if (palette == null) return;
 
-                          setState(() {
-                            colors = palette;
-                          });
+                setState(() {
+                  widget.settings.colors = palette;
+                });
 
-                          widget.pipeline.setColorMap(colors);
-                          draw();
-                        },
-                        tooltip:
-                            ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.generatePalette,
-                        icon: Icon(
-                          Icons.palette,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          final palette = await showDialog<List<Color>>(
-                            context: context,
-                            builder: (_) => PaletteImportDialog(
-                              colors: colors,
-                            ),
-                          );
+                widget.pipeline.setColorMap(widget.settings.colors);
+                draw();
+              },
+              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.generatePalette,
+              icon: Icon(
+                Icons.palette,
+              ),
+            );
 
-                          if (palette == null) return;
-
-                          setState(() {
-                            colors = palette;
-                          });
-
-                          widget.pipeline.setColorMap(colors);
-                          draw();
-                        },
-                        tooltip:
-                            ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.importPalette,
-                        icon: Icon(
-                          Icons.paste_rounded,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 16.0,
-                      ),
-                      Expanded(
-                        child: PaletteWidget(
-                          colors: colors,
-                          divider: min(colors.length, numColors),
-                        ),
-                      ),
-                    ],
+            final importPaletteButton = IconButton(
+              onPressed: () async {
+                final palette = await showDialog<List<Color>>(
+                  context: context,
+                  builder: (_) => PaletteImportDialog(
+                    colors: widget.settings.colors,
                   ),
+                );
+
+                if (palette == null) return;
+
+                setState(() {
+                  widget.settings.colors = palette;
+                });
+
+                widget.pipeline.setColorMap(widget.settings.colors);
+                draw();
+              },
+              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.importPalette,
+              icon: Icon(
+                Icons.paste_rounded,
+              ),
+            );
+
+            final checkboxColorMapping = ShaderCheckbox(
+              subtitle: 'Color-mapping',
+              initialValue: widget.settings.useColorMapping,
+              enabled: widget.settings.useColorQuantization,
+              onChanged: (value) {
+                setState(() {
+                  widget.settings.useColorMapping = value;
+                });
+
+                widget.pipeline.useColorMapping = widget.settings.useColorMapping;
+                draw();
+              },
+              trailing: Expanded(
+                child: Row(
+                  children: [
+                    generatePaletteButton,
+                    importPaletteButton,
+                    SizedBox(
+                      width: 16.0,
+                    ),
+                    Expanded(
+                      child: PaletteWidget(
+                        colors: widget.settings.colors,
+                        divider: min(widget.settings.colors.length, widget.settings.numColors),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-        ShaderCheckbox(
-          subtitle: 'Color-blending',
-          initialValue: useColorBlending,
-          onChanged: (value) {
-            useColorBlending = value;
-            widget.pipeline.useColorBlending = useColorBlending;
-            draw();
+            );
+
+            return Column(
+              children: [
+                checkboxColorQuantization,
+                checkboxColorMapping,
+              ],
+            );
           },
         ),
+        checkboxColorBlending,
         SizedBox(
           height: 16.0,
         ),
         Row(
+          spacing: 8.0,
           children: [
-            IconButton(
-              onPressed: () async {
-                final image = await Utils.pickImage();
-
-                if (image == null) return;
-
-                setState(() => scale = 1.0);
-
-                widget.pipeline.setScale(scale);
-                widget.onSetScale?.call();
-                await widget.pipeline.setImage(image);
-
-                draw();
-              },
-              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.changeImage,
-              style: IconButton.styleFrom(
-                backgroundColor: ColorScheme.of(context).primary,
-                foregroundColor: ColorScheme.of(context).surface,
-              ),
-              icon: Icon(
-                Icons.add_photo_alternate_outlined,
-              ),
-            ),
-            SizedBox(
-              width: 8.0,
-            ),
-            IconButton(
-              onPressed: () => widget.pipeline.saveImage('download.png'),
-              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.downloadImage,
-              style: IconButton.styleFrom(
-                backgroundColor: ColorScheme.of(context).primary,
-                foregroundColor: ColorScheme.of(context).surface,
-              ),
-              icon: Icon(
-                Icons.file_download_outlined,
-              ),
-            ),
-            SizedBox(
-              width: 8.0,
-            ),
-            SoundButton(),
+            changeImageButton,
+            downloadImageButton,
+            soundButton,
           ],
         ),
       ],

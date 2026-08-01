@@ -117,7 +117,7 @@ class _HomeViewState extends State<HomeView> {
           horizontal: 32.0,
         ),
         child: FDoGShaderControls(
-          key: widget.controller.shaderControls,
+          settings: widget.controller.settings,
           pipeline: widget.controller.pipeline,
           onSetScale: () => widget.controller.onSetScale(),
         ),

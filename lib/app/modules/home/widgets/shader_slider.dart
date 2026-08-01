@@ -183,13 +183,13 @@ class _ShaderSliderState extends State<ShaderSlider> {
 
   @override
   void dispose() {
-    super.dispose();
     textEditingController0.dispose();
     textEditingController1.dispose();
     textEditingController2.dispose();
     focusNode0.dispose();
     focusNode1.dispose();
     focusNode2.dispose();
+    super.dispose();
   }
 
   Widget buildTextField({

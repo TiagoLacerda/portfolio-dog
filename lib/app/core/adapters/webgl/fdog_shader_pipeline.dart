@@ -50,8 +50,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
   int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
 
-
-
   void setScale(double scale) {
     this.scale = scale;
 
@@ -212,8 +210,8 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
   void draw(
     double sigmaC,
-    double sigmaM,
     double sigmaE,
+    double sigmaM,
     double sigmaA,
     double k,
     double tau,
