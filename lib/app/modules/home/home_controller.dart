@@ -1,55 +1,15 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart' hide Image;
 
 import '../../core/adapters/webgl/fdog_shader_pipeline.dart';
 import '../../core/utils/utils.dart';
+import 'widgets/fdog_shader_presets.dart';
 import 'widgets/fdog_shader_settings.dart';
 
 class HomeController extends ChangeNotifier {
-  final settings = FDoGShaderSettings(
-    sigmaC: 0.075,
-    sigmaCMin: 0.0,
-    sigmaCMax: 10.0,
-    sigmaE: 0.5,
-    sigmaEMin: 0.0,
-    sigmaEMax: 10.0,
-    sigmaM: 10.0,
-    sigmaMMin: 0.0,
-    sigmaMMax: 10.0,
-    sigmaA: 4.8,
-    sigmaAMin: 0.0,
-    sigmaAMax: 10.0,
-    k: 1.6,
-    kMin: 1.0,
-    kMax: 10.0,
-    tau: 100.0,
-    tauMin: 0.0,
-    tauMax: 100.0,
-    epsilon: 0.3,
-    epsilonMin: 0.0,
-    epsilonMax: 1.0,
-    phi: 0.9,
-    phiMin: 0.0,
-    phiMax: 10.0,
-    scale: 0.347,
-    scaleMin: 0.0,
-    scaleMax: 1.0,
-    useColorQuantization: true,
-    useColorMapping: true,
-    useColorBlending: true,
-    numColors: 8,
-    colors: [
-      Color(0xFF0E3738),
-      Color(0xFF1B3F5D),
-      Color(0xFF3B4479),
-      Color(0xFF694A7E),
-      Color(0xFF9C556E),
-      Color(0xFFBF6A5C),
-      Color(0xFFC78C56),
-      Color(0xFFB5B96A),
-    ],
-  );
+  final settings = FdogShaderPresets.preset;
 
   final pipeline = FDoGShaderPipeline();
 
@@ -86,6 +46,67 @@ class HomeController extends ChangeNotifier {
     } finally {
       notifyListeners();
     }
+  }
+
+  /// Interpolates change from current to [newSettings]. Make sure to signal UI refreshes with [onChangedSettings].
+  void animateToShaderSettings(FDoGShaderSettings newSettings, VoidCallback onChangedSettings) {
+    final from = settings;
+    final to = newSettings;
+
+    const duration = Duration(milliseconds: 250);
+    final start = DateTime.now();
+
+    var oldSettings = settings;
+
+    Timer.periodic(const Duration(milliseconds: 16), (timer) {
+      final t = (DateTime.now().difference(start).inMilliseconds / duration.inMilliseconds).clamp(0.0, 1.0);
+
+      settings.setFrom(from.lerp(to, t));
+
+      onChangedSettings();
+
+      if (settings.scale != oldSettings.scale) {
+        pipeline.setScale(
+          settings.scale,
+        );
+      }
+
+      if (settings.useColorQuantization != oldSettings.useColorQuantization) {
+        pipeline.useColorQuantization = settings.useColorQuantization;
+      }
+
+      if (settings.useColorMapping != oldSettings.useColorMapping) {
+        pipeline.useColorMapping = settings.useColorMapping;
+      }
+
+      if (settings.useColorBlending != oldSettings.useColorBlending) {
+        pipeline.useColorBlending = settings.useColorBlending;
+      }
+
+      if (settings.colors != oldSettings.colors) {
+        pipeline.setColorMap(
+          settings.colors,
+        );
+      }
+
+      pipeline.draw(
+        settings.sigmaC,
+        settings.sigmaE,
+        settings.sigmaM,
+        settings.sigmaA,
+        settings.k,
+        settings.tau,
+        settings.epsilon,
+        settings.phi,
+        settings.numColors,
+      );
+
+      oldSettings = settings;
+
+      if (t >= 1.0) {
+        timer.cancel();
+      }
+    });
   }
 
   void onSetScale() => notifyListeners();

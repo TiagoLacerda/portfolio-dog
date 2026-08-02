@@ -13,7 +13,7 @@ An implementation of the Flow-based Difference of Gaussians using WebGL on a Flu
 - Parameterize shader asset locations.
 - ~~Add option to define colors used for color-mapping.~~
     - Add option to choose between monochromatic, complimentary and tertiary palettes.
-- Implement presets, which on selection would animate controls and canvas status towards a defined collection of values.
+- ~~Implement presets, which on selection would animate controls and canvas status towards a defined collection of values.~~
 - ~~Add brief contextualization text ("The Difference of Gaussians is a post-processing effect that ... in Winnemollers paper [link]...").~~
     - For now it's fine, but feels a little stiff. Make it more shitposty like acerola's stuff?
     - When moving to portfolio, add hyperlink to the paper (which can be found in acerola's video).

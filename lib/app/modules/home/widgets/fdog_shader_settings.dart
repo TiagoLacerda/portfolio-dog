@@ -79,4 +79,78 @@ class FDoGShaderSettings {
     required this.numColors,
     required this.colors,
   });
+
+  FDoGShaderSettings lerp(FDoGShaderSettings other, double t) {
+    double lerpDouble(double a, double b) => a + (b - a) * t;
+
+    return FDoGShaderSettings(
+      sigmaC: lerpDouble(sigmaC, other.sigmaC),
+      sigmaCMin: lerpDouble(sigmaCMin, other.sigmaCMin),
+      sigmaCMax: lerpDouble(sigmaCMax, other.sigmaCMax),
+      sigmaE: lerpDouble(sigmaE, other.sigmaE),
+      sigmaEMin: lerpDouble(sigmaEMin, other.sigmaEMin),
+      sigmaEMax: lerpDouble(sigmaEMax, other.sigmaEMax),
+      sigmaM: lerpDouble(sigmaM, other.sigmaM),
+      sigmaMMin: lerpDouble(sigmaMMin, other.sigmaMMin),
+      sigmaMMax: lerpDouble(sigmaMMax, other.sigmaMMax),
+      sigmaA: lerpDouble(sigmaA, other.sigmaA),
+      sigmaAMin: lerpDouble(sigmaAMin, other.sigmaAMin),
+      sigmaAMax: lerpDouble(sigmaAMax, other.sigmaAMax),
+      k: lerpDouble(k, other.k),
+      kMin: lerpDouble(kMin, other.kMin),
+      kMax: lerpDouble(kMax, other.kMax),
+      tau: lerpDouble(tau, other.tau),
+      tauMin: lerpDouble(tauMin, other.tauMin),
+      tauMax: lerpDouble(tauMax, other.tauMax),
+      epsilon: lerpDouble(epsilon, other.epsilon),
+      epsilonMin: lerpDouble(epsilonMin, other.epsilonMin),
+      epsilonMax: lerpDouble(epsilonMax, other.epsilonMax),
+      phi: lerpDouble(phi, other.phi),
+      phiMin: lerpDouble(phiMin, other.phiMin),
+      phiMax: lerpDouble(phiMax, other.phiMax),
+      scale: lerpDouble(scale, other.scale),
+      scaleMin: lerpDouble(scaleMin, other.scaleMin),
+      scaleMax: lerpDouble(scaleMax, other.scaleMax),
+      useColorQuantization: t < 0.5 ? useColorQuantization : other.useColorQuantization,
+      useColorMapping: t < 0.5 ? useColorMapping : other.useColorMapping,
+      useColorBlending: t < 0.5 ? useColorBlending : other.useColorBlending,
+      numColors: t < 0.5 ? numColors : other.numColors,
+      colors: t < 0.5 ? colors : other.colors,
+    );
+  }
+
+  void setFrom(FDoGShaderSettings other) {
+    sigmaC = other.sigmaC;
+    sigmaCMin = other.sigmaCMin;
+    sigmaCMax = other.sigmaCMax;
+    sigmaE = other.sigmaE;
+    sigmaEMin = other.sigmaEMin;
+    sigmaEMax = other.sigmaEMax;
+    sigmaM = other.sigmaM;
+    sigmaMMin = other.sigmaMMin;
+    sigmaMMax = other.sigmaMMax;
+    sigmaA = other.sigmaA;
+    sigmaAMin = other.sigmaAMin;
+    sigmaAMax = other.sigmaAMax;
+    k = other.k;
+    kMin = other.kMin;
+    kMax = other.kMax;
+    tau = other.tau;
+    tauMin = other.tauMin;
+    tauMax = other.tauMax;
+    epsilon = other.epsilon;
+    epsilonMin = other.epsilonMin;
+    epsilonMax = other.epsilonMax;
+    phi = other.phi;
+    phiMin = other.phiMin;
+    phiMax = other.phiMax;
+    scale = other.scale;
+    scaleMin = other.scaleMin;
+    scaleMax = other.scaleMax;
+    useColorQuantization = other.useColorQuantization;
+    useColorMapping = other.useColorMapping;
+    useColorBlending = other.useColorBlending;
+    numColors = other.numColors;
+    colors = other.colors;
+  }
 }
