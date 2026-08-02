@@ -1,10 +1,10 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Image;
 
 import '../../../../l10n/generated/modular_localization.dart';
 import '../../../core/adapters/webgl/fdog_shader_pipeline.dart';
-import '../../../core/utils/utils.dart';
 import 'fdog_shader_settings.dart';
 import 'palette_generate_dialog.dart';
 import 'palette_import_dialog.dart';
@@ -16,13 +16,15 @@ import 'sound_button.dart';
 class FDoGShaderControls extends StatefulWidget {
   final FDoGShaderSettings settings;
   final FDoGShaderPipeline pipeline;
-  final void Function()? onSetScale;
+  final VoidCallback? onSetScale;
+  final AsyncCallback? onChangeImage;
 
   const FDoGShaderControls({
     super.key,
     required this.settings,
     required this.pipeline,
     this.onSetScale,
+    this.onChangeImage,
   });
 
   @override
@@ -181,20 +183,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
     );
 
     final changeImageButton = IconButton(
-      onPressed: () async {
-        final image = await Utils.pickImage();
-
-        if (image == null) return;
-
-        setState(() => widget.settings.scale = 1.0);
-
-        widget.pipeline.setScale(widget.settings.scale);
-        widget.onSetScale?.call();
-
-        await widget.pipeline.setImage(image);
-
-        draw();
-      },
+      onPressed: widget.onChangeImage,
       tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.changeImage,
       style: IconButton.styleFrom(
         backgroundColor: ColorScheme.of(context).primary,

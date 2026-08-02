@@ -31,7 +31,7 @@ An implementation of the Flow-based Difference of Gaussians using WebGL on a Flu
 - Implement stipple brush effect. (https://youtu.be/5EuYKEvugLU?t=767)
 - Implement option to blend final image onto a selection of textures, such as watercolor paper and wood.
 - Give option to show canvas in a popup window
-- Show unprocessed image beside canvas
+- ~~Show unprocessed image beside canvas~~
 - Change page icon to something akin to Marilyn Diptych
 
 ## TODO (maybe):

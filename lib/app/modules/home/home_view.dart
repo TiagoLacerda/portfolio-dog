@@ -6,6 +6,7 @@ import 'package:portfolio_design_system/portfolio_design_system.dart';
 import '../../../l10n/generated/modular_localization.dart';
 import '../../app_controller.dart';
 import 'home_controller.dart';
+import 'widgets/comparison_slider.dart';
 import 'widgets/fdog_shader_controls.dart';
 
 class HomeView extends StatefulWidget {
@@ -24,14 +25,15 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final scrollController = ScrollController();
+  final transformationController = TransformationController();
 
   final isHovering = ValueNotifier<bool>(false);
 
   @override
   void dispose() {
     scrollController.dispose();
+    transformationController.dispose();
     isHovering.dispose();
-
     super.dispose();
   }
 
@@ -120,6 +122,7 @@ class _HomeViewState extends State<HomeView> {
           settings: widget.controller.settings,
           pipeline: widget.controller.pipeline,
           onSetScale: () => widget.controller.onSetScale(),
+          onChangeImage: () => widget.controller.onChangeImage(),
         ),
       ),
     );
@@ -127,38 +130,88 @@ class _HomeViewState extends State<HomeView> {
     final canvas = ListenableBuilder(
       listenable: widget.controller,
       builder: (_, _) {
-        final width = widget.controller.pipeline.canvas.width.toDouble();
-        final height = widget.controller.pipeline.canvas.height.toDouble();
+        final image = widget.controller.image;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            MouseRegion(
-              onEnter: (_) => isHovering.value = true,
-              onExit: (_) => isHovering.value = false,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: SizedBox(
-                  width: width,
-                  height: height,
-                  child: ColoredBox(
-                    color: Colors.black,
-                    child: InteractiveViewer(
-                      minScale: 0.01,
-                      maxScale: 100.0,
-                      child: HtmlElementView(
-                        viewType: 'webgl-canvas',
-                      ),
+        if (image == null) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        final canvasWidth = widget.controller.pipeline.canvas.width.toDouble();
+        final canvasHeight = widget.controller.pipeline.canvas.height.toDouble();
+
+        final minScale = 0.01;
+        final maxScale = 100.0;
+
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            final height = width * (canvasHeight / canvasWidth);
+
+            final left = FittedBox(
+              fit: BoxFit.contain,
+              child: SizedBox(
+                width: canvasWidth,
+                height: canvasHeight,
+                child: InteractiveViewer(
+                  minScale: minScale,
+                  maxScale: maxScale,
+                  transformationController: transformationController,
+                  child: RawImage(
+                    key: ValueKey(
+                      widget.controller.image.hashCode,
                     ),
+                    image: widget.controller.image!,
+                    width: widget.controller.image!.width.toDouble(),
+                    height: widget.controller.image!.height.toDouble(),
+                    fit: BoxFit.contain,
+                    isAntiAlias: false,
+                    filterQuality: FilterQuality.none,
                   ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text('${width}x$height'),
-            ),
-          ],
+            );
+
+            final right = FittedBox(
+              fit: BoxFit.contain,
+              child: SizedBox(
+                width: canvasWidth,
+                height: canvasHeight,
+                child: InteractiveViewer(
+                  minScale: minScale,
+                  maxScale: maxScale,
+                  transformationController: transformationController,
+                  child: HtmlElementView(
+                    viewType: 'webgl-canvas',
+                  ),
+                ),
+              ),
+            );
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                MouseRegion(
+                  onEnter: (_) => isHovering.value = true,
+                  onExit: (_) => isHovering.value = false,
+                  child: ColoredBox(
+                    color: Colors.black,
+                    child: ComparisonSlider(
+                      width: width,
+                      height: height,
+                      left: left,
+                      right: right,
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text('${canvasWidth}x$canvasHeight'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -187,6 +240,10 @@ class _HomeViewState extends State<HomeView> {
             children: [
               Expanded(
                 flex: 1,
+                child: text,
+              ),
+              Expanded(
+                flex: 2,
                 child: controls,
               ),
               Expanded(

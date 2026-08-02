@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:flutter/material.dart' hide Image;
 
@@ -13,15 +14,24 @@ class HomeController extends ChangeNotifier {
 
   final pipeline = FDoGShaderPipeline();
 
+  Image? image;
+
+  @override
+  void dispose() {
+    image?.dispose();
+
+    super.dispose();
+  }
+
   Future<void> initialize() async {
     try {
       await pipeline.initialize();
 
-      final image = await Utils.loadImageFromAsset('images/samia.png');
+      image = await Utils.loadImageFromAsset('images/samia.png');
 
       if (image == null) return;
 
-      await pipeline.setImage(image);
+      await pipeline.setImage(image!);
 
       final colors = settings.useColorMapping ? settings.colors : <Color>[];
 
@@ -46,6 +56,31 @@ class HomeController extends ChangeNotifier {
     } finally {
       notifyListeners();
     }
+  }
+
+  Future<void> onChangeImage() async {
+    image?.dispose();
+    image = null;
+
+    image = await Utils.pickImage();
+
+    if (image == null) return;
+
+    await pipeline.setImage(image!);
+
+    pipeline.draw(
+      settings.sigmaC,
+      settings.sigmaE,
+      settings.sigmaM,
+      settings.sigmaA,
+      settings.k,
+      settings.tau,
+      settings.epsilon,
+      settings.phi,
+      settings.numColors,
+    );
+
+    notifyListeners();
   }
 
   /// Interpolates change from current to [newSettings]. Make sure to signal UI refreshes with [onChangedSettings].
