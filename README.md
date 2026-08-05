@@ -9,7 +9,7 @@ An implementation of the Flow-based Difference of Gaussians using WebGL on a Flu
     - https://www.youtube.com/watch?v=5EuYKEvugLU&t=388s&ab_channel=Acerola
 
 ## TODO:
-- Optimize pipeline by reducing number of intermediate textures (by reusing them).
+- ~~Optimize pipeline by reducing number of intermediate textures (by reusing them).~~
 - Parameterize shader asset locations.
 - ~~Add option to define colors used for color-mapping.~~
     - Add option to choose between monochromatic, complimentary and tertiary palettes.
@@ -22,7 +22,7 @@ An implementation of the Flow-based Difference of Gaussians using WebGL on a Flu
     - Math text stylization.
     - Make them less cluttered.
 
-- Prevent pipeline draw call before initialization.
+- ~~Prevent pipeline draw call before initialization.~~
 - Fine-tune music loop offset.
 - ~~Implement charcoal sketch effect.~~
 - Implement hatching effect.

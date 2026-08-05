@@ -1,17 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 
-class ShaderSlider extends StatefulWidget {
+class ShaderSlider<T extends num> extends StatefulWidget {
   final String title;
   final String subtitle;
-  final double value;
-  final double min;
-  final double max;
-  final int? divisions;
+  final T value;
+  final T min;
+  final T max;
+  final int? Function(T, T) getDivisions;
   final int decimals;
   final bool enabled;
-  final void Function(double)? onChanged;
+  final void Function(T)? onChanged;
 
   const ShaderSlider({
     super.key,
@@ -20,17 +22,19 @@ class ShaderSlider extends StatefulWidget {
     required this.value,
     required this.min,
     required this.max,
-    this.divisions,
+    this.getDivisions = _getDivisions,
     this.decimals = 3,
     this.enabled = true,
     this.onChanged,
   });
 
+  static int? _getDivisions(_, _) => null;
+
   @override
-  State<ShaderSlider> createState() => _ShaderSliderState();
+  State<ShaderSlider<T>> createState() => _ShaderSliderState<T>();
 }
 
-class _ShaderSliderState extends State<ShaderSlider> {
+class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
   final textEditingController0 = TextEditingController();
   final textEditingController1 = TextEditingController();
   final textEditingController2 = TextEditingController();
@@ -41,9 +45,23 @@ class _ShaderSliderState extends State<ShaderSlider> {
 
   final throttler = Throttler();
 
-  late double value;
-  late double min;
-  late double max;
+  late T value;
+  late T min;
+  late T max;
+
+  T? tryParse(String source) {
+    if (T == int) {
+      return int.tryParse(source) as T?;
+    }
+
+    if (T == double) {
+      return double.tryParse(source) as T?;
+    }
+
+    log('Unsupported numeric type: $T. Will return null.');
+
+    return null;
+  }
 
   /// Listen to changes to the value field and update the other accordingly.
   void valueListener() {
@@ -53,7 +71,7 @@ class _ShaderSliderState extends State<ShaderSlider> {
         extentOffset: textEditingController0.text.length,
       );
     } else {
-      final number = double.tryParse(textEditingController0.text);
+      final number = tryParse(textEditingController0.text);
 
       if (number == null || number == value) {
         textEditingController0.text = value.toStringAsFixed(widget.decimals);
@@ -85,7 +103,7 @@ class _ShaderSliderState extends State<ShaderSlider> {
         extentOffset: textEditingController1.text.length,
       );
     } else {
-      final number = double.tryParse(textEditingController1.text);
+      final number = tryParse(textEditingController1.text);
 
       if (number == null || number == min) {
         textEditingController1.text = min.toStringAsFixed(widget.decimals);
@@ -117,7 +135,7 @@ class _ShaderSliderState extends State<ShaderSlider> {
         extentOffset: textEditingController2.text.length,
       );
     } else {
-      final number = double.tryParse(textEditingController2.text);
+      final number = tryParse(textEditingController2.text);
 
       if (number == null || number == max) {
         textEditingController2.text = max.toStringAsFixed(widget.decimals);
@@ -164,7 +182,7 @@ class _ShaderSliderState extends State<ShaderSlider> {
   }
 
   @override
-  void didUpdateWidget(covariant ShaderSlider oldWidget) {
+  void didUpdateWidget(ShaderSlider<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     value = widget.value;
@@ -222,7 +240,7 @@ class _ShaderSliderState extends State<ShaderSlider> {
           FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
           TextInputFormatter.withFunction((oldValue, newValue) {
             if (newValue.text.isEmpty) return newValue;
-            return double.tryParse(newValue.text) == null ? oldValue : newValue;
+            return tryParse(newValue.text) == null ? oldValue : newValue;
           }),
         ],
         style: style,
@@ -270,19 +288,23 @@ class _ShaderSliderState extends State<ShaderSlider> {
     );
 
     final slider = Slider(
-      value: value,
-      min: min,
-      max: max,
-      divisions: widget.divisions,
+      value: value.toDouble(),
+      min: min.toDouble(),
+      max: max.toDouble(),
+      divisions: widget.getDivisions(min, max),
       onChanged: widget.enabled
           ? (value) {
-              setState(() => this.value = value);
-              textEditingController0.text = value.toStringAsFixed(widget.decimals);
+              final T t = (T == int ? value.toInt() : value) as T;
 
+              setState(() {
+                this.value = t;
+              });
+
+              textEditingController0.text = value.toStringAsFixed(widget.decimals);
               throttler.throttle(
                 duration: const Duration(milliseconds: 1),
                 onThrottle: () {
-                  widget.onChanged?.call(this.value);
+                  widget.onChanged?.call(t);
                 },
               );
             }

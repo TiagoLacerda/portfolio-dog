@@ -42,6 +42,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
 
   void draw() {
     widget.pipeline.draw(
+      widget.settings.radius,
       widget.settings.sigmaC,
       widget.settings.sigmaE,
       widget.settings.sigmaM,
@@ -62,6 +63,20 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
 
   @override
   Widget build(BuildContext context) {
+    final sliderRadius = ShaderSlider<int>(
+      title: 'radius',
+      subtitle: 'Gaussian blur radius',
+      value: widget.settings.radius,
+      min: widget.settings.radiusMin,
+      max: widget.settings.radiusMax,
+      getDivisions: (minValue, maxValue) => (maxValue - minValue).toInt(),
+      decimals: 0,
+      onChanged: (value) {
+        widget.settings.radius = value;
+        draw();
+      },
+    );
+
     final sliderSigmaC = ShaderSlider(
       title: 'σ c',
       subtitle: 'Structure-tensor blur',
@@ -212,6 +227,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
+        sliderRadius,
         sliderSigmaC,
         sliderSigmaE,
         sliderSigmaM,

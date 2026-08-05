@@ -4,6 +4,9 @@ import 'fdog_shader_settings.dart';
 
 abstract final class FdogShaderPresets {
   static FDoGShaderSettings get preset => FDoGShaderSettings(
+    radius: 3,
+    radiusMin: 1,
+    radiusMax: 10,
     sigmaC: 0.075,
     sigmaCMin: 0.0,
     sigmaCMax: 10.0,

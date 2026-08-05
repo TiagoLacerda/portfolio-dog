@@ -209,6 +209,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
   }
 
   void draw(
+    int radius,
     double sigmaC,
     double sigmaE,
     double sigmaM,
@@ -247,6 +248,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     useGaussianBlurProgram(
       resolution: (width, height),
+      radius: radius,
       sigma: sigmaC,
       sourceTexture: texture2,
       bufferTexture: texture4,
@@ -265,6 +267,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     useDifferenceOfGaussiansProgram(
       resolution: (width, height),
+      radius: radius,
       sigma: sigmaE,
       k: k,
       tau: tau,
@@ -279,6 +282,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     useLineIntegralConvolutionProgram(
       resolution: (width, height),
+      radius: radius,
       sigma: sigmaM,
       sourceTexture: texture5,
       vectorTexture: texture4,
@@ -300,6 +304,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     useLineIntegralConvolutionProgram(
       resolution: (width, height),
+      radius: radius,
       sigma: sigmaA,
       sourceTexture: useColorQuantization ? texture7 : texture6,
       vectorTexture: texture4,

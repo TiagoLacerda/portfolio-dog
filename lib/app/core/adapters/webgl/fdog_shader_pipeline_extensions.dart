@@ -75,13 +75,12 @@ extension ShaderCallers on FDoGShaderPipeline {
 
   void useGaussianBlurProgram({
     required (int, int) resolution,
+    required int radius,
     required double sigma,
     required web.WebGLTexture sourceTexture,
     required web.WebGLTexture bufferTexture,
     web.WebGLTexture? targetTexture,
   }) {
-    final radius = max(1.0, 4.0 * sigma).floor();
-
     gl.framebufferTexture2D(
       web.WebGL2RenderingContext.FRAMEBUFFER,
       web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
@@ -197,6 +196,7 @@ extension ShaderCallers on FDoGShaderPipeline {
 
   void useDifferenceOfGaussiansProgram({
     required (int, int) resolution,
+    required int radius,
     required double sigma,
     required double k,
     required double tau,
@@ -206,8 +206,6 @@ extension ShaderCallers on FDoGShaderPipeline {
     required web.WebGLTexture vectorTexture,
     web.WebGLTexture? targetTexture,
   }) {
-    final radius = max(1.0, 4.0 * sigma).floor();
-
     if (targetTexture == null) {
       gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
     } else {
@@ -269,13 +267,12 @@ extension ShaderCallers on FDoGShaderPipeline {
 
   void useLineIntegralConvolutionProgram({
     required (int, int) resolution,
+    required int radius,
     required double sigma,
     required web.WebGLTexture sourceTexture,
     required web.WebGLTexture vectorTexture,
     web.WebGLTexture? targetTexture,
   }) {
-    final radius = max(1.0, 4.0 * sigma).floor();
-
     if (targetTexture == null) {
       gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
     } else {
