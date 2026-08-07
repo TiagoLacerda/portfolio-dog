@@ -120,9 +120,14 @@ class _HomeViewState extends State<HomeView> {
         ),
         child: FDoGShaderControls(
           settings: widget.controller.settings,
-          pipeline: widget.controller.pipeline,
+          uploadImage: () => widget.controller.uploadImage(),
+          downloadImage: () => widget.controller.downloadImage(),
+          draw: () => widget.controller.draw(),
           onSetScale: () => widget.controller.onSetScale(),
-          onChangeImage: () => widget.controller.onChangeImage(),
+          onSetUseColorQuantization: () => widget.controller.onSetUseColorQuantization(),
+          onSetUseColorMapping: () => widget.controller.onSetUseColorMapping(),
+          onSetUseColorBlending: () => widget.controller.onSetUseColorBlending(),
+          onSetColorMap: (colors) => widget.controller.onSetColorMap(colors),
         ),
       ),
     );

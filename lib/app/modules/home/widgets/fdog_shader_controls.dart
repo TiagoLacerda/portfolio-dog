@@ -1,10 +1,8 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Image;
 
 import '../../../../l10n/generated/modular_localization.dart';
-import '../../../core/adapters/webgl/fdog_shader_pipeline.dart';
 import 'fdog_shader_settings.dart';
 import 'palette_generate_dialog.dart';
 import 'palette_import_dialog.dart';
@@ -15,16 +13,26 @@ import 'sound_button.dart';
 
 class FDoGShaderControls extends StatefulWidget {
   final FDoGShaderSettings settings;
-  final FDoGShaderPipeline pipeline;
-  final VoidCallback? onSetScale;
-  final AsyncCallback? onChangeImage;
+  final void Function() uploadImage;
+  final void Function() downloadImage;
+  final void Function() draw;
+  final void Function() onSetScale;
+  final void Function() onSetUseColorQuantization;
+  final void Function() onSetUseColorMapping;
+  final void Function() onSetUseColorBlending;
+  final void Function(List<Color> colors) onSetColorMap;
 
   const FDoGShaderControls({
     super.key,
     required this.settings,
-    required this.pipeline,
-    this.onSetScale,
-    this.onChangeImage,
+    required this.uploadImage,
+    required this.downloadImage,
+    required this.draw,
+    required this.onSetScale,
+    required this.onSetUseColorQuantization,
+    required this.onSetUseColorMapping,
+    required this.onSetUseColorBlending,
+    required this.onSetColorMap,
   });
 
   @override
@@ -39,21 +47,6 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       return Color.from(alpha: 1, red: l, green: l, blue: l);
     },
   );
-
-  void draw() {
-    widget.pipeline.draw(
-      widget.settings.radius,
-      widget.settings.sigmaC,
-      widget.settings.sigmaE,
-      widget.settings.sigmaM,
-      widget.settings.sigmaA,
-      widget.settings.k,
-      widget.settings.tau,
-      widget.settings.epsilon,
-      widget.settings.phi,
-      widget.settings.numColors,
-    );
-  }
 
   @override
   void initState() {
@@ -73,7 +66,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       decimals: 0,
       onChanged: (value) {
         widget.settings.radius = value;
-        draw();
+        widget.draw();
       },
     );
 
@@ -85,7 +78,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       max: widget.settings.sigmaCMax,
       onChanged: (value) {
         widget.settings.sigmaC = value;
-        draw();
+        widget.draw();
       },
     );
 
@@ -97,7 +90,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       max: widget.settings.sigmaEMax,
       onChanged: (value) {
         widget.settings.sigmaE = value;
-        draw();
+        widget.draw();
       },
     );
 
@@ -109,7 +102,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       max: widget.settings.sigmaMMax,
       onChanged: (value) {
         widget.settings.sigmaM = value;
-        draw();
+        widget.draw();
       },
     );
 
@@ -121,7 +114,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       max: widget.settings.sigmaAMax,
       onChanged: (value) {
         widget.settings.sigmaA = value;
-        draw();
+        widget.draw();
       },
     );
 
@@ -133,7 +126,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       max: widget.settings.kMax,
       onChanged: (value) {
         widget.settings.k = value;
-        draw();
+        widget.draw();
       },
     );
 
@@ -145,7 +138,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       max: widget.settings.tauMax,
       onChanged: (value) {
         widget.settings.tau = value;
-        draw();
+        widget.draw();
       },
     );
 
@@ -157,7 +150,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       max: widget.settings.epsilonMax,
       onChanged: (value) {
         widget.settings.epsilon = value;
-        draw();
+        widget.draw();
       },
     );
 
@@ -169,7 +162,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       max: widget.settings.phiMax,
       onChanged: (value) {
         widget.settings.phi = value;
-        draw();
+        widget.draw();
       },
     );
 
@@ -181,9 +174,8 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       max: widget.settings.scaleMax,
       onChanged: (value) {
         widget.settings.scale = value;
-        widget.pipeline.setScale(widget.settings.scale);
-        widget.onSetScale?.call();
-        draw();
+        widget.onSetScale();
+        widget.draw();
       },
     );
 
@@ -192,13 +184,13 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       initialValue: widget.settings.useColorBlending,
       onChanged: (value) {
         widget.settings.useColorBlending = value;
-        widget.pipeline.useColorBlending = value;
-        draw();
+        widget.onSetUseColorBlending();
+        widget.draw();
       },
     );
 
     final changeImageButton = IconButton(
-      onPressed: widget.onChangeImage,
+      onPressed: widget.uploadImage,
       tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.changeImage,
       style: IconButton.styleFrom(
         backgroundColor: ColorScheme.of(context).primary,
@@ -210,7 +202,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
     );
 
     final downloadImageButton = IconButton(
-      onPressed: () => widget.pipeline.saveImage('download.png'),
+      onPressed: () => widget.downloadImage(),
       tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.downloadImage,
       style: IconButton.styleFrom(
         backgroundColor: ColorScheme.of(context).primary,
@@ -241,17 +233,19 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
           builder: (context, setState) {
             final decreaseButton = IconButton(
               onPressed: () {
+                final numColors = max(2, widget.settings.numColors - 1);
+
                 setState(() {
-                  widget.settings.numColors = max(2, widget.settings.numColors - 1);
+                  widget.settings.numColors = numColors;
                 });
 
                 if (widget.settings.numColors <= widget.settings.colors.length) {
-                  widget.pipeline.setColorMap(
+                  widget.onSetColorMap(
                     widget.settings.colors.sublist(0, min(widget.settings.numColors, widget.settings.colors.length)),
                   );
                 }
 
-                draw();
+                widget.draw();
               },
               tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.decrease,
               icon: Icon(
@@ -266,12 +260,12 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
                 });
 
                 if (widget.settings.numColors <= widget.settings.colors.length) {
-                  widget.pipeline.setColorMap(
+                  widget.onSetColorMap(
                     widget.settings.colors.sublist(0, min(widget.settings.numColors, widget.settings.colors.length)),
                   );
                 }
 
-                draw();
+                widget.draw();
               },
               tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.increase,
               icon: Icon(
@@ -289,8 +283,8 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
                   widget.settings.useColorQuantization = value;
                 });
 
-                widget.pipeline.useColorQuantization = widget.settings.useColorQuantization;
-                draw();
+                widget.onSetUseColorQuantization();
+                widget.draw();
               },
               trailing: Expanded(
                 child: Row(
@@ -324,8 +318,8 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
                   widget.settings.colors = palette;
                 });
 
-                widget.pipeline.setColorMap(widget.settings.colors);
-                draw();
+                widget.onSetColorMap(widget.settings.colors);
+                widget.draw();
               },
               tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.generatePalette,
               icon: Icon(
@@ -348,8 +342,8 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
                   widget.settings.colors = palette;
                 });
 
-                widget.pipeline.setColorMap(widget.settings.colors);
-                draw();
+                widget.onSetColorMap(widget.settings.colors);
+                widget.draw();
               },
               tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.importPalette,
               icon: Icon(
@@ -366,8 +360,8 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
                   widget.settings.useColorMapping = value;
                 });
 
-                widget.pipeline.useColorMapping = widget.settings.useColorMapping;
-                draw();
+                widget.onSetUseColorMapping();
+                widget.draw();
               },
               trailing: Expanded(
                 child: Row(

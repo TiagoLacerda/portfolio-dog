@@ -59,7 +59,7 @@ class HomeController extends ChangeNotifier {
     }
   }
 
-  Future<void> onChangeImage() async {
+  Future<void> uploadImage() async {
     image?.dispose();
     image = null;
 
@@ -69,6 +69,42 @@ class HomeController extends ChangeNotifier {
 
     await pipeline.setImage(image!);
 
+    draw();
+
+    notifyListeners();
+  }
+
+  Future<void> downloadImage() async {
+    await pipeline.saveImage('download.png');
+  }
+
+  void onSetColorMap(List<Color> colors) {
+    pipeline.setColorMap(colors);
+    draw();
+  }
+
+  void onSetScale() {
+    pipeline.setScale(settings.scale);
+    draw();
+    notifyListeners();
+  }
+
+  void onSetUseColorQuantization() {
+    pipeline.useColorQuantization = settings.useColorQuantization;
+    draw();
+  }
+
+  void onSetUseColorMapping() {
+    pipeline.useColorMapping = settings.useColorMapping;
+    draw();
+  }
+
+  void onSetUseColorBlending() {
+    pipeline.useColorBlending = settings.useColorBlending;
+    draw();
+  }
+
+  void draw() {
     pipeline.draw(
       settings.radius,
       settings.sigmaC,
@@ -81,12 +117,11 @@ class HomeController extends ChangeNotifier {
       settings.phi,
       settings.numColors,
     );
-
-    notifyListeners();
   }
 
   /// Interpolates change from current to [newSettings]. Make sure to signal UI refreshes with [onChangedSettings].
-  void animateToShaderSettings(FDoGShaderSettings newSettings, VoidCallback onChangedSettings) {
+  // ignore: unused_element
+  void _animateToShaderSettings(FDoGShaderSettings newSettings, VoidCallback onChangedSettings) {
     final from = settings;
     final to = newSettings;
 
@@ -126,18 +161,7 @@ class HomeController extends ChangeNotifier {
         );
       }
 
-      pipeline.draw(
-        settings.radius,
-        settings.sigmaC,
-        settings.sigmaE,
-        settings.sigmaM,
-        settings.sigmaA,
-        settings.k,
-        settings.tau,
-        settings.epsilon,
-        settings.phi,
-        settings.numColors,
-      );
+      draw();
 
       oldSettings = settings;
 
@@ -146,6 +170,4 @@ class HomeController extends ChangeNotifier {
       }
     });
   }
-
-  void onSetScale() => notifyListeners();
 }
