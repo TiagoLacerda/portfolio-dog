@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart' hide Image;
 
 import '../../../../l10n/generated/modular_localization.dart';
-import 'fdog_shader_settings.dart';
+import '../../../core/adapters/webgl/fdog/fdog_shader_settings.dart';
 import 'palette_generate_dialog.dart';
 import 'palette_import_dialog.dart';
 import 'palette_widget.dart';

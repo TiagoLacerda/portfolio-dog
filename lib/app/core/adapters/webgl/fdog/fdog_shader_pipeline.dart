@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:web/web.dart' as web;
 
 import 'fdog_shader_pipeline_extensions.dart';
-import 'shader_pipeline.dart';
+import '../shader_pipeline.dart';
 
 class FDoGShaderPipeline extends ShaderPipeline {
   FDoGShaderPipeline({

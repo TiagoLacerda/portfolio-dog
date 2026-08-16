@@ -4,10 +4,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart' hide Image;
 
-import '../../core/adapters/webgl/fdog_shader_pipeline.dart';
+import '../../core/adapters/webgl/fdog/fdog_shader_pipeline.dart';
 import '../../core/utils/utils.dart';
-import 'widgets/fdog_shader_presets.dart';
-import 'widgets/fdog_shader_settings.dart';
+import '../../core/adapters/webgl/fdog/fdog_shader_presets.dart';
+import '../../core/adapters/webgl/fdog/fdog_shader_settings.dart';
 
 class HomeController extends ChangeNotifier {
   final settings = FdogShaderPresets.preset;
