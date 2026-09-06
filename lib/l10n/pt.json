@@ -2,6 +2,9 @@
     "modules": {
         "home": {
             "homeView": {
+                "homeButtonTooltip": "Página inicial",
+                "brightnessSwitchTooltip": "Modo claro/escuro",
+                "localeButtonTooltip": "Idioma",
                 "text0": "A ",
                 "text1": "Diferença de Gaussianas Baseada em Fluxo (FDoG)",
                 "text2": " é uma técnica de processamento de imagens que possibilita uma ampla variedade de estilizações, como efeitos de lápis, hachura cruzada, aquarela, desenho a carvão e pontilhismo com pincel.",

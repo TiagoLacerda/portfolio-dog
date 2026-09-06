@@ -2,6 +2,9 @@
     "modules": {
         "home": {
             "homeView": {
+                "homeButtonTooltip": "Homepage",
+                "brightnessSwitchTooltip": "Dark/light mode",
+                "localeButtonTooltip": "Language",
                 "text0": "The ",
                 "text1": "Flow-Based Difference of Gaussians (FDoG)",
                 "text2": " is an image processing technique that enables a wide range of stylizations, like pencil, cross-hatching, watercolor, charcoal sketch and stipple-brush effects.",

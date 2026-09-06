@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:overlay_options_button/overlay_options_button.dart';
 import 'package:portfolio_design_system/portfolio_design_system.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../l10n/generated/modular_localization.dart';
 import '../../app_controller.dart';
@@ -39,34 +40,51 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final brightnessSwitch = PortfolioBrightnessSwitch(
-      onPressed: () => AppController.instance.toggleThemeMode(),
+    final homeButton = IconButton(
+      onPressed: () => launchUrl(
+        Uri.parse('https://tiagomlbrasil.com'),
+        webOnlyWindowName: '_self',
+      ),
+      tooltip: ModularLocalization.localizations.modules.home.homeView.homeButtonTooltip,
+      icon: Icon(
+        Icons.arrow_back_rounded,
+      ),
     );
 
-    final localeButton = OverlayOptionsButton(
-      initialValue: AppController.instance.locale,
-      items: AppController.instance.supportedLocales,
-      onChanged: (value) => AppController.instance.locale = value,
-      itemBuilder: (context, index, value, select) {
-        final assetName = switch (value.languageCode) {
-          'pt' => PortfolioIcons.pt,
-          'en' => PortfolioIcons.en,
-          _ => PortfolioIcons.pt,
-        };
+    final brightnessSwitch = Tooltip(
+      message: ModularLocalization.localizations.modules.home.homeView.brightnessSwitchTooltip,
+      child: PortfolioBrightnessSwitch(
+        onPressed: () => AppController.instance.toggleThemeMode(),
+      ),
+    );
 
-        return IconButton(
-          onPressed: () => select(),
-          icon: SizedBox.square(
-            dimension: 24.0,
-            child: ClipOval(
-              child: SvgPicture.asset(
-                assetName,
-                fit: BoxFit.cover,
+    final localeButton = Tooltip(
+      message: ModularLocalization.localizations.modules.home.homeView.localeButtonTooltip,
+      child: OverlayOptionsButton(
+        initialValue: AppController.instance.locale,
+        items: AppController.instance.supportedLocales,
+        onChanged: (value) => AppController.instance.locale = value,
+        itemBuilder: (context, index, value, select) {
+          final assetName = switch (value.languageCode) {
+            'pt' => PortfolioIcons.pt,
+            'en' => PortfolioIcons.en,
+            _ => PortfolioIcons.pt,
+          };
+
+          return IconButton(
+            onPressed: () => select(),
+            icon: SizedBox.square(
+              dimension: 24.0,
+              child: ClipOval(
+                child: SvgPicture.asset(
+                  assetName,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
 
     final style = TextTheme.of(context).bodyMedium;
@@ -274,6 +292,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   child: Row(
                     children: [
+                      homeButton,
                       brightnessSwitch,
                       localeButton,
                     ],

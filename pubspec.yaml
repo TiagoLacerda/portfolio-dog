@@ -49,6 +49,7 @@ dependencies:
   flutter_soloud: ^3.3.0
   flutter_svg: ^2.2.3
   go_router: ^14.8.1
+  url_launcher: ^6.3.2
   web: ^1.1.1
 
 dev_dependencies:

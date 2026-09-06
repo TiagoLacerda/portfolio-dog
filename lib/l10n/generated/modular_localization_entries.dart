@@ -25,133 +25,148 @@ abstract class ModularLocalizationEntries {
     return string;
   }
 
+  /// `en`: **"Dark/light mode"**
+  ///
+  /// `pt`: **"Modo claro/escuro"**
+  String get entry0;
+
+  /// `en`: **"Homepage"**
+  ///
+  /// `pt`: **"Página inicial"**
+  String get entry1;
+
+  /// `en`: **"Language"**
+  ///
+  /// `pt`: **"Idioma"**
+  String get entry2;
+
   /// `en`: **"The "**
   ///
   /// `pt`: **"A "**
-  String get entry0;
+  String get entry3;
 
   /// `en`: **"Flow-Based Difference of Gaussians (FDoG)"**
   ///
   /// `pt`: **"Diferença de Gaussianas Baseada em Fluxo (FDoG)"**
-  String get entry1;
+  String get entry4;
 
   /// `en`: **" is an image processing technique that enables a wide range of stylizations, like pencil, cross-hatching, watercolor, charcoal sketch and stipple-brush effects."**
   ///
   /// `pt`: **" é uma técnica de processamento de imagens que possibilita uma ampla variedade de estilizações, como efeitos de lápis, hachura cruzada, aquarela, desenho a carvão e pontilhismo com pincel."**
-  String get entry2;
+  String get entry5;
 
   /// `en`: **"\n\nProposed by "**
   ///
   /// `pt`: **"\n\nProposta por "**
-  String get entry3;
+  String get entry6;
 
   /// `en`: **"Holger Winnemöller and his team"**
   ///
   /// `pt`: **"Holger Winnemöller e sua equipe"**
-  String get entry4;
+  String get entry7;
 
   /// `en`: **", it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features."**
   ///
   /// `pt`: **", ela amplia a técnica tradicional de Diferença de Gaussianas (DoG) ao aproximar o tensor de estrutura da imagem usando o operador de Sobel e, em seguida, orientar o processo de filtragem para que o desfoque e o realce de bordas ocorram ao longo do fluxo natural das características da imagem."**
-  String get entry5;
+  String get entry8;
 
   /// `en`: **"Change image"**
   ///
   /// `pt`: **"Alterar imagem"**
-  String get entry6;
+  String get entry9;
 
   /// `en`: **"Decrease"**
   ///
   /// `pt`: **"Diminuir"**
-  String get entry7;
+  String get entry10;
 
   /// `en`: **"Download image"**
   ///
   /// `pt`: **"Baixar imagem"**
-  String get entry8;
+  String get entry11;
 
   /// `en`: **"Generate palette"**
   ///
   /// `pt`: **"Gerar paleta"**
-  String get entry9;
+  String get entry12;
 
   /// `en`: **"Import palette"**
   ///
   /// `pt`: **"Importar paleta"**
-  String get entry10;
+  String get entry13;
 
   /// `en`: **"Increase"**
   ///
   /// `pt`: **"Aumentar"**
-  String get entry11;
+  String get entry14;
 
   /// `en`: **"Accept"**
   ///
   /// `pt`: **"Confirmar"**
-  String get entry12;
+  String get entry15;
 
   /// `en`: **"Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors."**
   ///
   /// `pt`: **"Gere uma paleta no espaço de cores Oklab, com luminosidade percebida aumentando de forma constante. Use os sliders para ajustar o equilíbrio entre verde e vermelho e entre azul e amarelo."**
-  String get entry13;
+  String get entry16;
 
   /// `en`: **"However, since there are many more robust palette generators available, you may prefer using the import tool instead."**
   ///
   /// `pt`: **"No entanto, como existem geradores de paletas muito mais robustos disponíveis, você pode preferir usar a ferramenta de importação."**
-  String get entry14;
+  String get entry17;
 
   /// `en`: **"Close"**
   ///
   /// `pt`: **"Fechar"**
-  String get entry15;
+  String get entry18;
 
   /// `en`: **"Decrease"**
   ///
   /// `pt`: **"Diminuir"**
-  String get entry16;
+  String get entry19;
 
   /// `en`: **"Increase"**
   ///
   /// `pt`: **"Aumentar"**
-  String get entry17;
+  String get entry20;
 
   /// `en`: **"Random"**
   ///
   /// `pt`: **"Aleatório"**
-  String get entry18;
+  String get entry21;
 
   /// `en`: **"Generate Palette"**
   ///
   /// `pt`: **"Gerar Paleta"**
-  String get entry19;
+  String get entry22;
 
   /// `en`: **"Accept"**
   ///
   /// `pt`: **"Confirmar"**
-  String get entry20;
+  String get entry23;
 
   /// `en`: **"Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette."**
   ///
   /// `pt`: **"Importe uma paleta personalizada inserindo valores de cor hexadecimais, um por linha. Você deve fornecer pelo menos duas cores para uma paleta válida."**
-  String get entry21;
+  String get entry24;
 
   /// `en`: **"Close"**
   ///
   /// `pt`: **"Fechar"**
-  String get entry22;
+  String get entry25;
 
   /// `en`: **"Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
   ///
   /// `pt`: **"Insira uma lista de valores hexadecimais, um por linha, p. ex.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
-  String get entry23;
+  String get entry26;
 
   /// `en`: **"Import Palette"**
   ///
   /// `pt`: **"Importar Paleta"**
-  String get entry24;
+  String get entry27;
 
   /// `en`: **"Toggle music"**
   ///
   /// `pt`: **"Ligar/desligar música"**
-  String get entry25;
+  String get entry28;
 }
