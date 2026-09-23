@@ -270,7 +270,7 @@ class _HomeViewState extends State<HomeView> {
                 child: controls,
               ),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: canvas,
               ),
             ],
@@ -309,14 +309,11 @@ class _HomeViewState extends State<HomeView> {
           return SingleChildScrollView(
             physics: isHovering.value ? NeverScrollableScrollPhysics() : null,
             child: Center(
-              child: PortfolioResponsiveBox(
-                widthAtViewportEnd: widthAtViewportEnd,
-                child: Padding(
-                  padding: EdgeInsets.all(
-                    widget.spacing,
-                  ),
-                  child: child,
+              child: Padding(
+                padding: EdgeInsets.all(
+                  widget.spacing,
                 ),
+                child: child,
               ),
             ),
           );
