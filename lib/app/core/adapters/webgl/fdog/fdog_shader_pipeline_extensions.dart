@@ -196,12 +196,11 @@ extension ShaderCallers on FDoGShaderPipeline {
 
   void useDifferenceOfGaussiansProgram({
     required (int, int) resolution,
-    required int radius,
+    required int radiusSmall,
+    required int radiusLarge,
     required double sigma,
     required double k,
     required double tau,
-    required double epsilon,
-    required double phi,
     required web.WebGLTexture sourceTexture,
     required web.WebGLTexture vectorTexture,
     web.WebGLTexture? targetTexture,
@@ -230,8 +229,12 @@ extension ShaderCallers on FDoGShaderPipeline {
       resolution.$2,
     );
     gl.uniform1i(
-      gl.getUniformLocation(orthogonalDog, 'u_radius'),
-      radius,
+      gl.getUniformLocation(orthogonalDog, 'u_radius_small'),
+      radiusSmall,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(orthogonalDog, 'u_radius_large'),
+      radiusLarge,
     );
     gl.uniform1f(
       gl.getUniformLocation(orthogonalDog, 'u_sigma'),
@@ -244,14 +247,6 @@ extension ShaderCallers on FDoGShaderPipeline {
     gl.uniform1f(
       gl.getUniformLocation(orthogonalDog, 'u_tau'),
       tau,
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(orthogonalDog, 'u_epsilon'),
-      epsilon,
-    );
-    gl.uniform1f(
-      gl.getUniformLocation(orthogonalDog, 'u_phi'),
-      phi,
     );
     gl.uniform1i(
       gl.getUniformLocation(orthogonalDog, 'u_sampler'),
@@ -311,6 +306,50 @@ extension ShaderCallers on FDoGShaderPipeline {
     gl.uniform1i(
       gl.getUniformLocation(tangentBlur, 'u_flow'),
       1,
+    );
+
+    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+  }
+
+  void useThresholdProgram({
+    required (int, int) resolution,
+    required double epsilon,
+    required double phi,
+    required web.WebGLTexture sourceTexture,
+    web.WebGLTexture? targetTexture,
+  }) {
+    if (targetTexture == null) {
+      gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
+    } else {
+      gl.framebufferTexture2D(
+        web.WebGL2RenderingContext.FRAMEBUFFER,
+        web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        targetTexture,
+        0,
+      );
+    }
+
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, sourceTexture);
+
+    gl.useProgram(threshold);
+    gl.uniform2f(
+      gl.getUniformLocation(threshold, 'u_resolution'),
+      resolution.$1,
+      resolution.$2,
+    );
+    gl.uniform1f(
+      gl.getUniformLocation(threshold, 'u_epsilon'),
+      epsilon,
+    );
+    gl.uniform1f(
+      gl.getUniformLocation(threshold, 'u_phi'),
+      phi,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(threshold, 'u_sampler'),
+      0,
     );
 
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);

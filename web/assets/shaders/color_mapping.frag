@@ -1,5 +1,6 @@
 #version 300 es
-precision mediump float;
+precision highp float;
+precision highp sampler2D;
 
 out vec4 outColor;
 

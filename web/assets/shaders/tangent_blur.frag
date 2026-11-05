@@ -1,5 +1,6 @@
 #version 300 es
-precision mediump float;
+precision highp float;
+precision highp sampler2D;
 
 #define ERR 1e-4f
 
@@ -29,13 +30,13 @@ vec3 LIC(
     vec3 value = texture(sampler, uv).rgb;
 
     vec2 st = uv;
-    vec2 oldTangent = texture(flow, st).zw * 2.0f - 1.0f;
+    vec2 oldTangent = texture(flow, st).zw;
 
     if(dot(oldTangent, oldTangent) < ERR)
         return texture(sampler, uv).rgb;
 
     for(int i = 1; i <= radius; ++i) {
-        vec2 tangent = texture(flow, st).zw * 2.0f - 1.0f;
+        vec2 tangent = texture(flow, st).zw;
 
         if(dot(tangent, tangent) < ERR)
             break;
@@ -54,10 +55,10 @@ vec3 LIC(
     }
 
     st = uv;
-    oldTangent = texture(flow, st).zw * 2.0f - 1.0f;
+    oldTangent = texture(flow, st).zw;
 
     for(int i = 1; i <= radius; ++i) {
-        vec2 tangent = texture(flow, st).zw * 2.0f - 1.0f;
+        vec2 tangent = texture(flow, st).zw;
 
         if(dot(tangent, tangent) < ERR)
             break;

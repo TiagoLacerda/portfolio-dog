@@ -1,4 +1,5 @@
 import 'dart:js_interop';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -20,6 +21,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
   late web.WebGLProgram flow;
   late web.WebGLProgram orthogonalDog;
   late web.WebGLProgram tangentBlur;
+  late web.WebGLProgram threshold;
   late web.WebGLProgram colorMapping;
   late web.WebGLProgram blend;
 
@@ -32,9 +34,13 @@ class FDoGShaderPipeline extends ShaderPipeline {
   late web.WebGLTexture texture6;
   late web.WebGLTexture texture7;
   late web.WebGLTexture texture8;
+  late web.WebGLTexture texture9;
   late web.WebGLTexture colorMap;
 
   late web.WebGLFramebuffer framebuffer;
+
+  /// Upper bound for kernel radii, which keeps extreme σ values from stalling the GPU.
+  static const maxKernelRadius = 32;
 
   double scale = 1.0;
 
@@ -50,6 +56,31 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
   int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
 
+  /// Radius of a Gaussian kernel that extends [extent] standard deviations from its center.
+  int kernelRadius(double sigma, {double extent = 2.0}) => min((sigma * extent).ceil(), maxKernelRadius);
+
+  /// Intermediate textures holding values in the [0, 1] range.
+  List<web.WebGLTexture> get _byteTextures => [texture1, texture7, texture8, texture9];
+
+  /// Intermediate textures holding signed or unbounded values: the structure tensor, the flow field and the DoG response.
+  List<web.WebGLTexture> get _floatTextures => [texture2, texture3, texture4, texture5, texture6];
+
+  void _resizeIntermediateTextures(int width, int height) {
+    for (var texture in _byteTextures) {
+      updateTextureWithSize(texture, width: width, height: height);
+    }
+
+    for (var texture in _floatTextures) {
+      updateTextureWithSize(
+        texture,
+        width: width,
+        height: height,
+        internalFormat: web.WebGL2RenderingContext.RGBA16F,
+        type: web.WebGL2RenderingContext.HALF_FLOAT,
+      );
+    }
+  }
+
   void setScale(double scale) {
     this.scale = scale;
 
@@ -61,31 +92,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
     canvas.style.width = '${w}px';
     canvas.style.height = '${h}px';
 
-    final textures = [
-      texture1,
-      texture2,
-      texture3,
-      texture4,
-      texture5,
-      texture6,
-      texture7,
-      texture8,
-    ];
-
-    for (var texture in textures) {
-      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture);
-      gl.texImage2D(
-        web.WebGL2RenderingContext.TEXTURE_2D,
-        0,
-        web.WebGL2RenderingContext.RGBA,
-        w.toJS,
-        h.toJS,
-        0.toJS,
-        web.WebGL2RenderingContext.RGBA,
-        web.WebGL2RenderingContext.UNSIGNED_BYTE,
-        null,
-      );
-    }
+    _resizeIntermediateTextures(w, h);
   }
 
   Future<void> setImage(Image image) async {
@@ -107,20 +114,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     await updateTextureWithImage(texture0, image);
 
-    final textures = [
-      texture1,
-      texture2,
-      texture3,
-      texture4,
-      texture5,
-      texture6,
-      texture7,
-      texture8,
-    ];
-
-    for (var texture in textures) {
-      updateTextureWithSize(texture, width: w, height: h);
-    }
+    _resizeIntermediateTextures(w, h);
   }
 
   void setColorMap(List<Color> colors) {
@@ -153,6 +147,8 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
   /// Load and compile shaders and textures, intermediate frame buffer and fullscreen quad VBO.
   Future<void> initialize() async {
+    enableFloatRenderTargets();
+
     final vertSource = await rootBundle.loadString('shaders/vert.vert');
     final grayscaleSource = await rootBundle.loadString('shaders/grayscale.frag');
     final sobelSource = await rootBundle.loadString('shaders/sobel.frag');
@@ -160,6 +156,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
     final flowSource = await rootBundle.loadString('shaders/flow.frag');
     final orthogonalDogSource = await rootBundle.loadString('shaders/orthogonal_dog.frag');
     final tangentBlurSource = await rootBundle.loadString('shaders/tangent_blur.frag');
+    final thresholdSource = await rootBundle.loadString('shaders/threshold.frag');
     final colorMappingSource = await rootBundle.loadString('shaders/color_mapping.frag');
     final blendSource = await rootBundle.loadString('shaders/blend.frag');
 
@@ -169,18 +166,38 @@ class FDoGShaderPipeline extends ShaderPipeline {
     flow = createShaderProgram(vertSource, flowSource);
     orthogonalDog = createShaderProgram(vertSource, orthogonalDogSource);
     tangentBlur = createShaderProgram(vertSource, tangentBlurSource);
+    threshold = createShaderProgram(vertSource, thresholdSource);
     colorMapping = createShaderProgram(vertSource, colorMappingSource);
     blend = createShaderProgram(vertSource, blendSource);
 
+    web.WebGLTexture createByteTexture({bool linear = false}) => createTexture(
+      canvas.width,
+      canvas.height,
+      textureMinFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
+      textureMagFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
+    );
+
+    web.WebGLTexture createFloatTexture({bool linear = false}) => createTexture(
+      canvas.width,
+      canvas.height,
+      internalFormat: web.WebGL2RenderingContext.RGBA16F,
+      type: web.WebGL2RenderingContext.HALF_FLOAT,
+      textureMinFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
+      textureMagFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
+    );
+
+    // Textures read at fractional offsets by the DoG and LIC passes are linearly filtered. The flow field isn't,
+    // as interpolating between eigenvectors of opposite orientations would cancel them out.
     texture0 = createTexture(canvas.width, canvas.height);
-    texture1 = createTexture(canvas.width, canvas.height);
-    texture2 = createTexture(canvas.width, canvas.height);
-    texture3 = createTexture(canvas.width, canvas.height);
-    texture4 = createTexture(canvas.width, canvas.height);
-    texture5 = createTexture(canvas.width, canvas.height);
-    texture6 = createTexture(canvas.width, canvas.height);
-    texture7 = createTexture(canvas.width, canvas.height);
-    texture8 = createTexture(canvas.width, canvas.height);
+    texture1 = createByteTexture(linear: true);
+    texture2 = createFloatTexture();
+    texture3 = createFloatTexture();
+    texture4 = createFloatTexture();
+    texture5 = createFloatTexture(linear: true);
+    texture6 = createFloatTexture();
+    texture7 = createByteTexture(linear: true);
+    texture8 = createByteTexture(linear: true);
+    texture9 = createByteTexture();
     colorMap = createTexture(colorMapSize, 1);
 
     framebuffer = createFrameBuffer(texture1);
@@ -209,7 +226,6 @@ class FDoGShaderPipeline extends ShaderPipeline {
   }
 
   void draw(
-    int radius,
     double sigmaC,
     double sigmaE,
     double sigmaM,
@@ -248,7 +264,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     useGaussianBlurProgram(
       resolution: (width, height),
-      radius: radius,
+      radius: kernelRadius(sigmaC, extent: 2.45),
       sigma: sigmaC,
       sourceTexture: texture2,
       bufferTexture: texture4,
@@ -267,12 +283,11 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     useDifferenceOfGaussiansProgram(
       resolution: (width, height),
-      radius: radius,
+      radiusSmall: kernelRadius(sigmaE),
+      radiusLarge: kernelRadius(sigmaE * k),
       sigma: sigmaE,
       k: k,
       tau: tau,
-      epsilon: epsilon,
-      phi: phi,
       sourceTexture: texture1,
       vectorTexture: texture4,
       targetTexture: texture5,
@@ -282,42 +297,52 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
     useLineIntegralConvolutionProgram(
       resolution: (width, height),
-      radius: radius,
+      radius: kernelRadius(sigmaM),
       sigma: sigmaM,
       sourceTexture: texture5,
       vectorTexture: texture4,
       targetTexture: texture6,
     );
 
-    // Pass 7 - Color-quantization and color-mapping
+    // Pass 7 - Thresholding
+
+    useThresholdProgram(
+      resolution: (width, height),
+      epsilon: epsilon,
+      phi: phi,
+      sourceTexture: texture6,
+      targetTexture: texture7,
+    );
+
+    // Pass 8 - Color-quantization and color-mapping
 
     if (useColorQuantization) {
       useColorQuantizationProgram(
         resolution: (width, height),
         numColors: numColors,
-        sourceTexture: texture6,
-        targetTexture: texture7,
+        sourceTexture: texture7,
+        targetTexture: texture8,
       );
     }
 
-    // Pass 8 - Anti-aliasing LIC
+    // Pass 9 - Anti-aliasing LIC
 
     useLineIntegralConvolutionProgram(
       resolution: (width, height),
-      radius: radius,
+      radius: kernelRadius(sigmaA),
       sigma: sigmaA,
-      sourceTexture: useColorQuantization ? texture7 : texture6,
+      sourceTexture: useColorQuantization ? texture8 : texture7,
       vectorTexture: texture4,
-      targetTexture: useColorBlending ? texture8 : null,
+      targetTexture: useColorBlending ? texture9 : null,
     );
 
-    // Pass 9 - Color-blending
+    // Pass 10 - Color-blending
 
     if (useColorBlending) {
       useColorBlendingProgram(
         resolution: (width, height),
         sourceTextureA: texture0,
-        sourceTextureB: texture8,
+        sourceTextureB: texture9,
         targetTexture: null,
       );
     }

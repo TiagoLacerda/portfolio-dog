@@ -36,6 +36,15 @@ abstract class ShaderPipeline {
     gl = context;
   }
 
+  /// Allows rendering to 16-bit float textures, which core WebGL2 doesn't.
+  void enableFloatRenderTargets() {
+    final extension = gl.getExtension('EXT_color_buffer_float') ?? gl.getExtension('EXT_color_buffer_half_float');
+
+    if (extension == null) {
+      throw WebglNotSupportedException('Float render targets are not supported');
+    }
+  }
+
   web.WebGLShader compileShader(
     int type,
     String source,

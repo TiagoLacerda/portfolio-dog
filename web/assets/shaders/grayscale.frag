@@ -1,5 +1,6 @@
 #version 300 es
-precision mediump float;
+precision highp float;
+precision highp sampler2D;
 
 out vec4 outColor;
 
@@ -8,7 +9,7 @@ uniform vec2 u_resolution;
 uniform sampler2D u_sampler;
 
 float luminance(vec3 color) {
-    return max(0.00001f, dot(color, vec3(0.2127f, 0.7152f, 0.0722f)));
+    return max(0.00001f, dot(color, vec3(0.2126f, 0.7152f, 0.0722f)));
 }
 
 void main() {

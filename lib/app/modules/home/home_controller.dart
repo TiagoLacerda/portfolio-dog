@@ -41,7 +41,6 @@ class HomeController extends ChangeNotifier {
       pipeline.setColorMap(colors);
       pipeline.setScale(settings.scale);
       pipeline.draw(
-        settings.radius,
         settings.sigmaC,
         settings.sigmaE,
         settings.sigmaM,
@@ -68,6 +67,8 @@ class HomeController extends ChangeNotifier {
     if (image == null) return;
 
     await pipeline.setImage(image!);
+
+    pipeline.setScale(settings.scale);
 
     draw();
 
@@ -106,7 +107,6 @@ class HomeController extends ChangeNotifier {
 
   void draw() {
     pipeline.draw(
-      settings.radius,
       settings.sigmaC,
       settings.sigmaE,
       settings.sigmaM,

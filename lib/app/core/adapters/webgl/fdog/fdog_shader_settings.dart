@@ -1,10 +1,6 @@
 import 'package:flutter/painting.dart' show Color;
 
 class FDoGShaderSettings {
-  int radius;
-  int radiusMin;
-  int radiusMax;
-
   double sigmaC;
   double sigmaCMin;
   double sigmaCMax;
@@ -50,9 +46,6 @@ class FDoGShaderSettings {
   List<Color> colors;
 
   FDoGShaderSettings({
-    required this.radius,
-    required this.radiusMin,
-    required this.radiusMax,
     required this.sigmaC,
     required this.sigmaCMin,
     required this.sigmaCMax,
@@ -89,12 +82,8 @@ class FDoGShaderSettings {
 
   FDoGShaderSettings lerp(FDoGShaderSettings other, double t) {
     double lerpDouble(double a, double b) => a + (b - a) * t;
-    int lerpInt(int a, int b) => lerpDouble(a.toDouble(), b.toDouble()).toInt();
 
     return FDoGShaderSettings(
-      radius: lerpInt(radius, other.radius),
-      radiusMin: lerpInt(radiusMin, other.radiusMin),
-      radiusMax: lerpInt(radiusMax, other.radiusMax),
       sigmaC: lerpDouble(sigmaC, other.sigmaC),
       sigmaCMin: lerpDouble(sigmaCMin, other.sigmaCMin),
       sigmaCMax: lerpDouble(sigmaCMax, other.sigmaCMax),
@@ -131,9 +120,6 @@ class FDoGShaderSettings {
   }
 
   void setFrom(FDoGShaderSettings other) {
-    radius = other.radius;
-    radiusMin = other.radiusMin;
-    radiusMax = other.radiusMax;
     sigmaC = other.sigmaC;
     sigmaCMin = other.sigmaCMin;
     sigmaCMax = other.sigmaCMax;

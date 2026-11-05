@@ -1,5 +1,6 @@
 #version 300 es
-precision mediump float;
+precision highp float;
+precision highp sampler2D;
 
 out vec4 outColor;
 
@@ -22,7 +23,7 @@ void main() {
     vec3 color = texture(u_sampler, uv).rgb;
     float sum = 1.0f;
 
-    for(int i = 1; i < u_radius; ++i) {
+    for(int i = 1; i <= u_radius; ++i) {
         float k = float(i);
         float w = gaussian(k, u_sigma);
         color += texture(u_sampler, uv + d * k).rgb * w;
