@@ -20,6 +20,7 @@ class FDoGShaderControls extends StatefulWidget {
   final void Function() onSetScale;
   final void Function() onSetUseColorQuantization;
   final void Function() onSetUseColorMapping;
+  final void Function() onSetUseCrossHatching;
   final void Function() onSetUseColorBlending;
   final void Function() onSetUsePaperTexture;
   final void Function(List<Color> colors) onSetColorMap;
@@ -33,6 +34,7 @@ class FDoGShaderControls extends StatefulWidget {
     required this.onSetScale,
     required this.onSetUseColorQuantization,
     required this.onSetUseColorMapping,
+    required this.onSetUseCrossHatching,
     required this.onSetUseColorBlending,
     required this.onSetUsePaperTexture,
     required this.onSetColorMap,
@@ -43,6 +45,8 @@ class FDoGShaderControls extends StatefulWidget {
 }
 
 class FDoGShaderControlsState extends State<FDoGShaderControls> {
+  bool isCrossHatchingExpanded = false;
+
   List<Color> get grayscale => List.generate(
     widget.settings.numColors,
     (i) {
@@ -202,6 +206,182 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       onChanged: (value) {
         widget.settings.scale = value;
         widget.onSetScale();
+        widget.draw();
+      },
+    );
+
+    final checkboxCrossHatching = ShaderCheckbox(
+      subtitle: 'Cross-hatching',
+      initialValue: widget.settings.useCrossHatching,
+      onChanged: (value) {
+        setState(() {
+          widget.settings.useCrossHatching = value;
+        });
+
+        widget.onSetUseCrossHatching();
+      },
+      trailing: Expanded(
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: IconButton(
+            onPressed: () => setState(() => isCrossHatchingExpanded = !isCrossHatchingExpanded),
+            icon: Icon(
+              isCrossHatchingExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final sliderCrossHatchingScale = ShaderSlider(
+      title: 'scale',
+      subtitle: 'Hatching texture scale',
+      value: widget.settings.crossHatchingScale,
+      min: widget.settings.crossHatchingScaleMin,
+      max: widget.settings.crossHatchingScaleMax,
+      enabled: widget.settings.useCrossHatching,
+      onChangedRange: (min, max) {
+        widget.settings.crossHatchingScaleMin = min;
+        widget.settings.crossHatchingScaleMax = max;
+      },
+      onChanged: (value) {
+        widget.settings.crossHatchingScale = value;
+        widget.draw();
+      },
+    );
+
+    final sliderCrossHatchingAngle1 = ShaderSlider(
+      title: 'θ 1',
+      subtitle: 'Hatching layer 1 angle',
+      value: widget.settings.crossHatchingAngle1,
+      min: widget.settings.crossHatchingAngle1Min,
+      max: widget.settings.crossHatchingAngle1Max,
+      enabled: widget.settings.useCrossHatching,
+      onChangedRange: (min, max) {
+        widget.settings.crossHatchingAngle1Min = min;
+        widget.settings.crossHatchingAngle1Max = max;
+      },
+      onChanged: (value) {
+        widget.settings.crossHatchingAngle1 = value;
+        widget.draw();
+      },
+    );
+
+    final sliderCrossHatchingThreshold1 = ShaderSlider(
+      title: 'ℓ 1',
+      subtitle: 'Hatching layer 1 threshold',
+      value: widget.settings.crossHatchingThreshold1,
+      min: widget.settings.crossHatchingThreshold1Min,
+      max: widget.settings.crossHatchingThreshold1Max,
+      enabled: widget.settings.useCrossHatching,
+      onChangedRange: (min, max) {
+        widget.settings.crossHatchingThreshold1Min = min;
+        widget.settings.crossHatchingThreshold1Max = max;
+      },
+      onChanged: (value) {
+        widget.settings.crossHatchingThreshold1 = value;
+        widget.draw();
+      },
+    );
+
+    final sliderCrossHatchingAngle2 = ShaderSlider(
+      title: 'θ 2',
+      subtitle: 'Hatching layer 2 angle',
+      value: widget.settings.crossHatchingAngle2,
+      min: widget.settings.crossHatchingAngle2Min,
+      max: widget.settings.crossHatchingAngle2Max,
+      enabled: widget.settings.useCrossHatching,
+      onChangedRange: (min, max) {
+        widget.settings.crossHatchingAngle2Min = min;
+        widget.settings.crossHatchingAngle2Max = max;
+      },
+      onChanged: (value) {
+        widget.settings.crossHatchingAngle2 = value;
+        widget.draw();
+      },
+    );
+
+    final sliderCrossHatchingThreshold2 = ShaderSlider(
+      title: 'ℓ 2',
+      subtitle: 'Hatching layer 2 threshold',
+      value: widget.settings.crossHatchingThreshold2,
+      min: widget.settings.crossHatchingThreshold2Min,
+      max: widget.settings.crossHatchingThreshold2Max,
+      enabled: widget.settings.useCrossHatching,
+      onChangedRange: (min, max) {
+        widget.settings.crossHatchingThreshold2Min = min;
+        widget.settings.crossHatchingThreshold2Max = max;
+      },
+      onChanged: (value) {
+        widget.settings.crossHatchingThreshold2 = value;
+        widget.draw();
+      },
+    );
+
+    final sliderCrossHatchingAngle3 = ShaderSlider(
+      title: 'θ 3',
+      subtitle: 'Hatching layer 3 angle',
+      value: widget.settings.crossHatchingAngle3,
+      min: widget.settings.crossHatchingAngle3Min,
+      max: widget.settings.crossHatchingAngle3Max,
+      enabled: widget.settings.useCrossHatching,
+      onChangedRange: (min, max) {
+        widget.settings.crossHatchingAngle3Min = min;
+        widget.settings.crossHatchingAngle3Max = max;
+      },
+      onChanged: (value) {
+        widget.settings.crossHatchingAngle3 = value;
+        widget.draw();
+      },
+    );
+
+    final sliderCrossHatchingThreshold3 = ShaderSlider(
+      title: 'ℓ 3',
+      subtitle: 'Hatching layer 3 threshold',
+      value: widget.settings.crossHatchingThreshold3,
+      min: widget.settings.crossHatchingThreshold3Min,
+      max: widget.settings.crossHatchingThreshold3Max,
+      enabled: widget.settings.useCrossHatching,
+      onChangedRange: (min, max) {
+        widget.settings.crossHatchingThreshold3Min = min;
+        widget.settings.crossHatchingThreshold3Max = max;
+      },
+      onChanged: (value) {
+        widget.settings.crossHatchingThreshold3 = value;
+        widget.draw();
+      },
+    );
+
+    final sliderCrossHatchingAngle4 = ShaderSlider(
+      title: 'θ 4',
+      subtitle: 'Hatching layer 4 angle',
+      value: widget.settings.crossHatchingAngle4,
+      min: widget.settings.crossHatchingAngle4Min,
+      max: widget.settings.crossHatchingAngle4Max,
+      enabled: widget.settings.useCrossHatching,
+      onChangedRange: (min, max) {
+        widget.settings.crossHatchingAngle4Min = min;
+        widget.settings.crossHatchingAngle4Max = max;
+      },
+      onChanged: (value) {
+        widget.settings.crossHatchingAngle4 = value;
+        widget.draw();
+      },
+    );
+
+    final sliderCrossHatchingThreshold4 = ShaderSlider(
+      title: 'ℓ 4',
+      subtitle: 'Hatching layer 4 threshold',
+      value: widget.settings.crossHatchingThreshold4,
+      min: widget.settings.crossHatchingThreshold4Min,
+      max: widget.settings.crossHatchingThreshold4Max,
+      enabled: widget.settings.useCrossHatching,
+      onChangedRange: (min, max) {
+        widget.settings.crossHatchingThreshold4Min = min;
+        widget.settings.crossHatchingThreshold4Max = max;
+      },
+      onChanged: (value) {
+        widget.settings.crossHatchingThreshold4 = value;
         widget.draw();
       },
     );
@@ -474,6 +654,27 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
               ],
             );
           },
+        ),
+        checkboxCrossHatching,
+        AnimatedSize(
+          duration: const Duration(milliseconds: 200),
+          alignment: Alignment.topCenter,
+          child: isCrossHatchingExpanded
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    sliderCrossHatchingScale,
+                    sliderCrossHatchingAngle1,
+                    sliderCrossHatchingThreshold1,
+                    sliderCrossHatchingAngle2,
+                    sliderCrossHatchingThreshold2,
+                    sliderCrossHatchingAngle3,
+                    sliderCrossHatchingThreshold3,
+                    sliderCrossHatchingAngle4,
+                    sliderCrossHatchingThreshold4,
+                  ],
+                )
+              : const SizedBox(width: double.infinity),
         ),
         checkboxColorBlending,
         checkboxPaperTexture,

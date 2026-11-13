@@ -43,6 +43,7 @@ final class HomeController extends ChangeNotifier {
 
       pipeline.useColorQuantization = settings.useColorQuantization;
       pipeline.useColorMapping = settings.useColorMapping;
+      pipeline.useCrossHatching = settings.useCrossHatching;
       pipeline.colorBlending = _colorBlending;
       pipeline.usePaperTexture = settings.usePaperTexture;
       pipeline.setColorMap(colors);
@@ -57,6 +58,19 @@ final class HomeController extends ChangeNotifier {
         settings.epsilon,
         settings.phi,
         settings.numColors,
+        (
+          settings.crossHatchingAngle1,
+          settings.crossHatchingAngle2,
+          settings.crossHatchingAngle3,
+          settings.crossHatchingAngle4,
+        ),
+        (
+          settings.crossHatchingThreshold1,
+          settings.crossHatchingThreshold2,
+          settings.crossHatchingThreshold3,
+          settings.crossHatchingThreshold4,
+        ),
+        settings.crossHatchingScale,
       );
     } catch (e) {
       log(e.toString());
@@ -119,6 +133,11 @@ final class HomeController extends ChangeNotifier {
     draw();
   }
 
+  void onSetUseCrossHatching() {
+    pipeline.useCrossHatching = settings.useCrossHatching;
+    draw();
+  }
+
   void onSetUseColorBlending() {
     pipeline.colorBlending = _colorBlending;
     draw();
@@ -140,6 +159,19 @@ final class HomeController extends ChangeNotifier {
       settings.epsilon,
       settings.phi,
       settings.numColors,
+      (
+        settings.crossHatchingAngle1,
+        settings.crossHatchingAngle2,
+        settings.crossHatchingAngle3,
+        settings.crossHatchingAngle4,
+      ),
+      (
+        settings.crossHatchingThreshold1,
+        settings.crossHatchingThreshold2,
+        settings.crossHatchingThreshold3,
+        settings.crossHatchingThreshold4,
+      ),
+      settings.crossHatchingScale,
     );
   }
 
@@ -172,6 +204,7 @@ final class HomeController extends ChangeNotifier {
 
       pipeline.useColorQuantization = settings.useColorQuantization;
       pipeline.useColorMapping = settings.useColorMapping;
+      pipeline.useCrossHatching = settings.useCrossHatching;
       pipeline.colorBlending = _colorBlending;
       pipeline.usePaperTexture = settings.usePaperTexture;
 

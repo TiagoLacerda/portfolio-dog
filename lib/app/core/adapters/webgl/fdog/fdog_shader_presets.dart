@@ -30,13 +30,41 @@ abstract final class FdogShaderPresets {
     phiMin: 0.0,
     phiMax: 10.0,
     scale: 1.0,
-    scaleMin: 0.0,
+    scaleMin: 0.001,
     scaleMax: 1.0,
+    crossHatchingAngle1: 0.0,
+    crossHatchingAngle1Min: 0.0,
+    crossHatchingAngle1Max: 180.0,
+    crossHatchingThreshold1: 0.8,
+    crossHatchingThreshold1Min: 0.0,
+    crossHatchingThreshold1Max: 1.0,
+    crossHatchingAngle2: 0.0,
+    crossHatchingAngle2Min: 0.0,
+    crossHatchingAngle2Max: 180.0,
+    crossHatchingThreshold2: 0.6,
+    crossHatchingThreshold2Min: 0.0,
+    crossHatchingThreshold2Max: 1.0,
+    crossHatchingAngle3: 0.0,
+    crossHatchingAngle3Min: 0.0,
+    crossHatchingAngle3Max: 180.0,
+    crossHatchingThreshold3: 0.4,
+    crossHatchingThreshold3Min: 0.0,
+    crossHatchingThreshold3Max: 1.0,
+    crossHatchingAngle4: 0.0,
+    crossHatchingAngle4Min: 0.0,
+    crossHatchingAngle4Max: 180.0,
+    crossHatchingThreshold4: 0.2,
+    crossHatchingThreshold4Min: 0.0,
+    crossHatchingThreshold4Max: 1.0,
+    crossHatchingScale: 0.5,
+    crossHatchingScaleMin: 0.1,
+    crossHatchingScaleMax: 2.0,
     useColorQuantization: false,
     useColorMapping: false,
     useColorBlending: false,
     colorBlending: ColorBlending.linear,
     usePaperTexture: false,
+    useCrossHatching: false,
     numColors: 8,
     colors: const [
       Color(0xFF0E3738),
@@ -59,7 +87,7 @@ abstract final class FdogShaderPresets {
     tau: 30.0,
     epsilon: 0.75,
     phi: 1.75,
-    scale: 2.0
+    scale: 2.0,
   );
 
   static FDoGShaderSettings get charcoal => baseline.copyWith(
@@ -100,5 +128,23 @@ abstract final class FdogShaderPresets {
 
   static FDoGShaderSettings get stippleBrush => baseline;
 
-  static FDoGShaderSettings get crossHatching => baseline;
+  static FDoGShaderSettings get crossHatching => baseline.copyWith(
+    sigmaC: 0.1,
+    sigmaE: 1.0,
+    sigmaM: 3.0,
+    sigmaA: 1.0,
+    k: 1.6,
+    tau: 20.0,
+    epsilon: 0.4,
+    phi: 5.0,
+    usePaperTexture: true,
+    useCrossHatching: true,
+    scale: 2.0,
+    scaleMin: 0.001,
+    scaleMax: 2.0,
+    crossHatchingThreshold1: 0.6,
+    crossHatchingThreshold2: 0.5,
+    crossHatchingThreshold3: 0.6,
+    crossHatchingThreshold4: 0.4,
+  );
 }

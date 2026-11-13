@@ -406,6 +406,87 @@ extension ShaderCallers on FDoGShaderPipeline {
     gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
   }
 
+  void useCrossHatchingProgram({
+    required (int, int) resolution,
+    required Size hatchSize,
+    required (double, double, double, double) angles,
+    required (double, double, double, double) thresholds,
+    required double phi,
+    required web.WebGLTexture sourceTexture,
+    required web.WebGLTexture edgesTexture,
+    required List<web.WebGLTexture> hatchTextures,
+    web.WebGLTexture? targetTexture,
+  }) {
+    if (targetTexture == null) {
+      gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
+    } else {
+      gl.framebufferTexture2D(
+        web.WebGL2RenderingContext.FRAMEBUFFER,
+        web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        targetTexture,
+        0,
+      );
+    }
+
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, sourceTexture);
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, edgesTexture);
+
+    for (var i = 0; i < hatchTextures.length; ++i) {
+      gl.activeTexture(web.WebGL2RenderingContext.TEXTURE2 + i);
+      gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, hatchTextures[i]);
+    }
+
+    gl.useProgram(crossHatching);
+    gl.uniform2f(
+      gl.getUniformLocation(crossHatching, 'u_resolution'),
+      resolution.$1,
+      resolution.$2,
+    );
+    gl.uniform2f(
+      gl.getUniformLocation(crossHatching, 'u_hatch_size'),
+      hatchSize.width,
+      hatchSize.height,
+    );
+    gl.uniform4f(
+      gl.getUniformLocation(crossHatching, 'u_angles'),
+      angles.$1 * pi / 180.0,
+      angles.$2 * pi / 180.0,
+      angles.$3 * pi / 180.0,
+      angles.$4 * pi / 180.0,
+    );
+    gl.uniform4f(
+      gl.getUniformLocation(crossHatching, 'u_thresholds'),
+      thresholds.$1,
+      thresholds.$2,
+      thresholds.$3,
+      thresholds.$4,
+    );
+    gl.uniform1f(
+      gl.getUniformLocation(crossHatching, 'u_phi'),
+      phi,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(crossHatching, 'u_sampler'),
+      0,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(crossHatching, 'u_edges'),
+      1,
+    );
+
+    for (var i = 0; i < hatchTextures.length; ++i) {
+      gl.uniform1i(
+        gl.getUniformLocation(crossHatching, 'u_hatch_${i + 1}'),
+        2 + i,
+      );
+    }
+
+    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+  }
+
   void useColorBlendingProgram({
     required (int, int) resolution,
     required ColorBlending mode,

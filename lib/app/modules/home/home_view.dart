@@ -179,10 +179,9 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 TextSpan(
                   text: l10n.effects.crossHatching,
-                  // TODO: Restore once the cross-hatching effect is implemented.
-                  // recognizer: crossHatchingRecognizer,
-                  // style: styleEffect,
-                  // mouseCursor: SystemMouseCursors.click,
+                  recognizer: crossHatchingRecognizer,
+                  style: styleEffect,
+                  mouseCursor: SystemMouseCursors.click,
                 ),
                 TextSpan(
                   text: l10n.text3,
@@ -222,6 +221,7 @@ class _HomeViewState extends State<HomeView> {
             onSetScale: () => widget.controller.onSetScale(),
             onSetUseColorQuantization: () => widget.controller.onSetUseColorQuantization(),
             onSetUseColorMapping: () => widget.controller.onSetUseColorMapping(),
+            onSetUseCrossHatching: () => widget.controller.onSetUseCrossHatching(),
             onSetUseColorBlending: () => widget.controller.onSetUseColorBlending(),
             onSetUsePaperTexture: () => widget.controller.onSetUsePaperTexture(),
             onSetColorMap: (colors) => widget.controller.onSetColorMap(colors),

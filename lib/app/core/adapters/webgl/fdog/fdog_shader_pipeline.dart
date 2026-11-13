@@ -25,6 +25,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
   late web.WebGLProgram tangentBlur;
   late web.WebGLProgram threshold;
   late web.WebGLProgram colorMapping;
+  late web.WebGLProgram crossHatching;
   late web.WebGLProgram blend;
   late web.WebGLProgram paper;
 
@@ -41,6 +42,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
   late web.WebGLTexture texture10;
   late web.WebGLTexture colorMap;
   late web.WebGLTexture paperTexture;
+  late List<web.WebGLTexture> crossHatchingTextures;
 
   late web.WebGLFramebuffer framebuffer;
 
@@ -57,8 +59,11 @@ class FDoGShaderPipeline extends ShaderPipeline {
 
   Size paperSize = Size.zero;
 
+  Size crossHatchingSize = Size.zero;
+
   bool useColorQuantization = false;
   bool useColorMapping = false;
+  bool useCrossHatching = false;
   ColorBlending colorBlending = ColorBlending.none;
   bool usePaperTexture = false;
 
@@ -166,6 +171,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
     final tangentBlurSource = await rootBundle.loadString('shaders/tangent_blur.frag');
     final thresholdSource = await rootBundle.loadString('shaders/threshold.frag');
     final colorMappingSource = await rootBundle.loadString('shaders/color_mapping.frag');
+    final crossHatchingSource = await rootBundle.loadString('shaders/cross_hatching.frag');
     final blendSource = await rootBundle.loadString('shaders/blend.frag');
     final paperSource = await rootBundle.loadString('shaders/paper.frag');
 
@@ -177,6 +183,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
     tangentBlur = createShaderProgram(vertSource, tangentBlurSource);
     threshold = createShaderProgram(vertSource, thresholdSource);
     colorMapping = createShaderProgram(vertSource, colorMappingSource);
+    crossHatching = createShaderProgram(vertSource, crossHatchingSource);
     blend = createShaderProgram(vertSource, blendSource);
     paper = createShaderProgram(vertSource, paperSource);
 
@@ -221,6 +228,29 @@ class FDoGShaderPipeline extends ShaderPipeline {
       paperImage.dispose();
     }
 
+    crossHatchingTextures = [];
+
+    for (var i = 1; i <= 4; ++i) {
+      final texture = createTexture(
+        1,
+        1,
+        textureMinFilter: web.WebGL2RenderingContext.LINEAR,
+        textureMagFilter: web.WebGL2RenderingContext.LINEAR,
+        textureWrapS: web.WebGL2RenderingContext.REPEAT,
+        textureWrapT: web.WebGL2RenderingContext.REPEAT,
+      );
+
+      final image = await Utils.loadImageFromAsset('images/cross-hatching-$i.png');
+
+      if (image != null) {
+        crossHatchingSize = Size(image.width.toDouble(), image.height.toDouble());
+        await updateTextureWithImage(texture, image);
+        image.dispose();
+      }
+
+      crossHatchingTextures.add(texture);
+    }
+
     framebuffer = createFrameBuffer(texture1);
 
     // Fullscreen quad
@@ -256,6 +286,9 @@ class FDoGShaderPipeline extends ShaderPipeline {
     double epsilon,
     double phi,
     int numColors,
+    (double, double, double, double) crossHatchingAngles,
+    (double, double, double, double) crossHatchingThresholds,
+    double crossHatchingScale,
   ) {
     final width = (imageSize.width * scale).toInt();
     final height = (imageSize.height * scale).toInt();
@@ -325,7 +358,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
       targetTexture: texture6,
     );
 
-    // Pass 7 - Thresholding
+    // Pass 7 - Thresholding, which also provides the edge layer for cross-hatching
 
     useThresholdProgram(
       resolution: (width, height),
@@ -335,9 +368,21 @@ class FDoGShaderPipeline extends ShaderPipeline {
       targetTexture: texture7,
     );
 
-    // Pass 8 - Color-quantization and color-mapping
+    // Pass 8 - Cross-hatching, or color-quantization and color-mapping
 
-    if (useColorQuantization) {
+    if (useCrossHatching) {
+      useCrossHatchingProgram(
+        resolution: (width, height),
+        hatchSize: crossHatchingSize * crossHatchingScale,
+        angles: crossHatchingAngles,
+        thresholds: crossHatchingThresholds,
+        phi: phi,
+        sourceTexture: texture6,
+        edgesTexture: texture7,
+        hatchTextures: crossHatchingTextures,
+        targetTexture: texture8,
+      );
+    } else if (useColorQuantization) {
       useColorQuantizationProgram(
         resolution: (width, height),
         numColors: numColors,
@@ -346,42 +391,57 @@ class FDoGShaderPipeline extends ShaderPipeline {
       );
     }
 
+    // Optional steps after pass 9 ping-pong between texture9 and texture10, and the last one draws to the canvas.
+
+    var remainingSteps = [
+      colorBlending != ColorBlending.none,
+      usePaperTexture,
+    ].where((enabled) => enabled).length;
+
+    var output = texture10;
+
+    web.WebGLTexture? nextTarget() {
+      if (remainingSteps-- == 0) return null;
+      output = output == texture9 ? texture10 : texture9;
+      return output;
+    }
+
     // Pass 9 - Anti-aliasing LIC
 
     useLineIntegralConvolutionProgram(
       resolution: (width, height),
       radius: kernelRadius(sigmaA),
       sigma: sigmaA,
-      sourceTexture: useColorQuantization ? texture8 : texture7,
+      sourceTexture: useCrossHatching || useColorQuantization ? texture8 : texture7,
       vectorTexture: texture4,
-      targetTexture: colorBlending != ColorBlending.none
-          ? texture9
-          : usePaperTexture
-          ? texture10
-          : null,
+      targetTexture: nextTarget(),
     );
 
     // Pass 10 - Color-blending
 
     if (colorBlending != ColorBlending.none) {
+      final source = output;
+
       useColorBlendingProgram(
         resolution: (width, height),
         mode: colorBlending,
         sourceTextureA: texture0,
-        sourceTextureB: texture9,
-        targetTexture: usePaperTexture ? texture10 : null,
+        sourceTextureB: source,
+        targetTexture: nextTarget(),
       );
     }
 
     // Pass 11 - Paper texture
 
     if (usePaperTexture) {
+      final source = output;
+
       usePaperTextureProgram(
         resolution: (width, height),
         paperSize: paperSize,
-        sourceTexture: texture10,
+        sourceTexture: source,
         paperTexture: paperTexture,
-        targetTexture: null,
+        targetTexture: nextTarget(),
       );
     }
   }
