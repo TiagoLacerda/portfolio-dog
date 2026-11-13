@@ -7,10 +7,21 @@
                 "localeButtonTooltip": "Idioma",
                 "text0": "A ",
                 "text1": "Diferença de Gaussianas Baseada em Fluxo (FDoG)",
-                "text2": " é uma técnica de processamento de imagens que possibilita uma ampla variedade de estilizações, como efeitos de lápis, hachura cruzada, aquarela, desenho a carvão e pontilhismo com pincel.",
-                "text3": "\n\nProposta por ",
-                "text4": "Holger Winnemöller e sua equipe",
-                "text5": ", ela amplia a técnica tradicional de Diferença de Gaussianas (DoG) ao aproximar o tensor de estrutura da imagem usando o operador de Sobel e, em seguida, orientar o processo de filtragem para que o desfoque e o realce de bordas ocorram ao longo do fluxo natural das características da imagem."
+                "text2": " é uma técnica de processamento de imagens que possibilita uma ampla variedade de estilizações, como efeitos de ",
+                "effects": {
+                    "pencil": "lápis",
+                    "charcoal": "carvão",
+                    "woodblock": "xilogravura",
+                    "watercolor": "aquarela",
+                    "stippleBrush": "pontilhismo com pincel",
+                    "crossHatching": "hachura cruzada",
+                    "separator": ", ",
+                    "lastSeparator": " e "
+                },
+                "text3": ".",
+                "text4": "\n\nProposta por ",
+                "text5": "Holger Winnemöller e sua equipe",
+                "text6": ", ela amplia a técnica tradicional de Diferença de Gaussianas (DoG) ao aproximar o tensor de estrutura da imagem usando o operador de Sobel e, em seguida, orientar o processo de filtragem para que o desfoque e o realce de bordas ocorram ao longo do fluxo natural das características da imagem."
             },
             "widgets": {
                 "fdogShaderControls": {

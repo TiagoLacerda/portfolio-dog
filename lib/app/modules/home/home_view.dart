@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:overlay_options_button/overlay_options_button.dart';
@@ -30,11 +31,24 @@ class _HomeViewState extends State<HomeView> {
 
   final isHovering = ValueNotifier<bool>(false);
 
+  late final pencilRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapPencilPreset;
+  late final charcoalRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapCharcoalPreset;
+  late final woodblockRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapWoodblockPreset;
+  late final watercolorRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapWatercolorPreset;
+  late final stippleBrushRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapStippleBrushPreset;
+  late final crossHatchingRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapCrossHatchingPreset;
+
   @override
   void dispose() {
     scrollController.dispose();
     transformationController.dispose();
     isHovering.dispose();
+    pencilRecognizer.dispose();
+    charcoalRecognizer.dispose();
+    woodblockRecognizer.dispose();
+    watercolorRecognizer.dispose();
+    stippleBrushRecognizer.dispose();
+    crossHatchingRecognizer.dispose();
     super.dispose();
   }
 
@@ -93,6 +107,12 @@ class _HomeViewState extends State<HomeView> {
       fontWeight: FontWeight.bold,
     );
 
+    final styleEffect = styleBold?.copyWith(
+      color: ColorScheme.of(context).primary,
+    );
+
+    final l10n = ModularLocalization.localizations.modules.home.homeView;
+
     final text = SelectionArea(
       child: Text.rich(
         textAlign: TextAlign.justify,
@@ -102,24 +122,80 @@ class _HomeViewState extends State<HomeView> {
               style: style,
               children: [
                 TextSpan(
-                  text: ModularLocalization.localizations.modules.home.homeView.text0,
+                  text: l10n.text0,
                 ),
                 TextSpan(
-                  text: ModularLocalization.localizations.modules.home.homeView.text1,
+                  text: l10n.text1,
                   style: styleBold,
                 ),
                 TextSpan(
-                  text: ModularLocalization.localizations.modules.home.homeView.text2,
+                  text: l10n.text2,
                 ),
                 TextSpan(
-                  text: ModularLocalization.localizations.modules.home.homeView.text3,
+                  text: l10n.effects.pencil,
+                  recognizer: pencilRecognizer,
+                  style: styleEffect,
+                  mouseCursor: SystemMouseCursors.click,
                 ),
                 TextSpan(
-                  text: ModularLocalization.localizations.modules.home.homeView.text4,
+                  text: l10n.effects.separator,
+                ),
+                TextSpan(
+                  text: l10n.effects.charcoal,
+                  recognizer: charcoalRecognizer,
+                  style: styleEffect,
+                  mouseCursor: SystemMouseCursors.click,
+                ),
+                TextSpan(
+                  text: l10n.effects.separator,
+                ),
+                TextSpan(
+                  text: l10n.effects.woodblock,
+                  recognizer: woodblockRecognizer,
+                  style: styleEffect,
+                  mouseCursor: SystemMouseCursors.click,
+                ),
+                TextSpan(
+                  text: l10n.effects.separator,
+                ),
+                TextSpan(
+                  text: l10n.effects.watercolor,
+                  recognizer: watercolorRecognizer,
+                  style: styleEffect,
+                  mouseCursor: SystemMouseCursors.click,
+                ),
+                TextSpan(
+                  text: l10n.effects.separator,
+                ),
+                TextSpan(
+                  text: l10n.effects.stippleBrush,
+                  // TODO: Restore once the stipple-brush effect is implemented.
+                  // recognizer: stippleBrushRecognizer,
+                  // style: styleEffect,
+                  // mouseCursor: SystemMouseCursors.click,
+                ),
+                TextSpan(
+                  text: l10n.effects.lastSeparator,
+                ),
+                TextSpan(
+                  text: l10n.effects.crossHatching,
+                  // TODO: Restore once the cross-hatching effect is implemented.
+                  // recognizer: crossHatchingRecognizer,
+                  // style: styleEffect,
+                  // mouseCursor: SystemMouseCursors.click,
+                ),
+                TextSpan(
+                  text: l10n.text3,
+                ),
+                TextSpan(
+                  text: l10n.text4,
+                ),
+                TextSpan(
+                  text: l10n.text5,
                   style: styleBold,
                 ),
                 TextSpan(
-                  text: ModularLocalization.localizations.modules.home.homeView.text5,
+                  text: l10n.text6,
                 ),
               ],
             ),
@@ -136,16 +212,20 @@ class _HomeViewState extends State<HomeView> {
           vertical: 24.0,
           horizontal: 32.0,
         ),
-        child: FDoGShaderControls(
-          settings: widget.controller.settings,
-          uploadImage: () => widget.controller.uploadImage(),
-          downloadImage: () => widget.controller.downloadImage(),
-          draw: () => widget.controller.draw(),
-          onSetScale: () => widget.controller.onSetScale(),
-          onSetUseColorQuantization: () => widget.controller.onSetUseColorQuantization(),
-          onSetUseColorMapping: () => widget.controller.onSetUseColorMapping(),
-          onSetUseColorBlending: () => widget.controller.onSetUseColorBlending(),
-          onSetColorMap: (colors) => widget.controller.onSetColorMap(colors),
+        child: ListenableBuilder(
+          listenable: widget.controller,
+          builder: (_, _) => FDoGShaderControls(
+            settings: widget.controller.settings,
+            uploadImage: () => widget.controller.uploadImage(),
+            downloadImage: () => widget.controller.downloadImage(),
+            draw: () => widget.controller.draw(),
+            onSetScale: () => widget.controller.onSetScale(),
+            onSetUseColorQuantization: () => widget.controller.onSetUseColorQuantization(),
+            onSetUseColorMapping: () => widget.controller.onSetUseColorMapping(),
+            onSetUseColorBlending: () => widget.controller.onSetUseColorBlending(),
+            onSetUsePaperTexture: () => widget.controller.onSetUsePaperTexture(),
+            onSetColorMap: (colors) => widget.controller.onSetColorMap(colors),
+          ),
         ),
       ),
     );

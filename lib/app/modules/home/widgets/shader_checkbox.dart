@@ -42,9 +42,18 @@ class _ShaderCheckboxState extends State<ShaderCheckbox> {
   }
 
   @override
+  void didUpdateWidget(ShaderCheckbox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    value = widget.initialValue ?? value;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final style = TextTheme.of(context).bodyMedium?.copyWith(
-      color: TextTheme.of(context).bodyMedium?.color?.withValues(
+    final textTheme = TextTheme.of(context);
+
+    final style = textTheme.bodyMedium?.copyWith(
+      color: textTheme.bodyMedium?.color?.withValues(
         alpha: widget.enabled ? 1.0 : 0.5,
       ),
     );
@@ -63,8 +72,8 @@ class _ShaderCheckboxState extends State<ShaderCheckbox> {
             children: [
               Text(
                 widget.subtitle,
-                style: TextTheme.of(context).bodyMedium?.copyWith(
-                  color: TextTheme.of(context).bodyMedium?.color?.withValues(alpha: 0.5),
+                style: textTheme.bodyMedium?.copyWith(
+                  color: textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
                   fontSize: 10.0,
                   fontWeight: FontWeight.w100,
                   fontStyle: FontStyle.italic,

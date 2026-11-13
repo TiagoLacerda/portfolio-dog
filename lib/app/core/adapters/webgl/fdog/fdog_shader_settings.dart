@@ -1,5 +1,7 @@
 import 'package:flutter/painting.dart' show Color;
 
+import 'enums/color_blending.dart';
+
 class FDoGShaderSettings {
   double sigmaC;
   double sigmaCMin;
@@ -40,6 +42,9 @@ class FDoGShaderSettings {
   bool useColorQuantization;
   bool useColorMapping;
   bool useColorBlending;
+  bool usePaperTexture;
+
+  ColorBlending colorBlending;
 
   int numColors;
 
@@ -76,9 +81,85 @@ class FDoGShaderSettings {
     required this.useColorQuantization,
     required this.useColorMapping,
     required this.useColorBlending,
+    required this.colorBlending,
+    required this.usePaperTexture,
     required this.numColors,
     required this.colors,
   });
+
+  FDoGShaderSettings copyWith({
+    double? sigmaC,
+    double? sigmaCMin,
+    double? sigmaCMax,
+    double? sigmaE,
+    double? sigmaEMin,
+    double? sigmaEMax,
+    double? sigmaM,
+    double? sigmaMMin,
+    double? sigmaMMax,
+    double? sigmaA,
+    double? sigmaAMin,
+    double? sigmaAMax,
+    double? k,
+    double? kMin,
+    double? kMax,
+    double? tau,
+    double? tauMin,
+    double? tauMax,
+    double? epsilon,
+    double? epsilonMin,
+    double? epsilonMax,
+    double? phi,
+    double? phiMin,
+    double? phiMax,
+    double? scale,
+    double? scaleMin,
+    double? scaleMax,
+    bool? useColorQuantization,
+    bool? useColorMapping,
+    bool? useColorBlending,
+    ColorBlending? colorBlending,
+    bool? usePaperTexture,
+    int? numColors,
+    List<Color>? colors,
+  }) {
+    return FDoGShaderSettings(
+      sigmaC: sigmaC ?? this.sigmaC,
+      sigmaCMin: sigmaCMin ?? this.sigmaCMin,
+      sigmaCMax: sigmaCMax ?? this.sigmaCMax,
+      sigmaE: sigmaE ?? this.sigmaE,
+      sigmaEMin: sigmaEMin ?? this.sigmaEMin,
+      sigmaEMax: sigmaEMax ?? this.sigmaEMax,
+      sigmaM: sigmaM ?? this.sigmaM,
+      sigmaMMin: sigmaMMin ?? this.sigmaMMin,
+      sigmaMMax: sigmaMMax ?? this.sigmaMMax,
+      sigmaA: sigmaA ?? this.sigmaA,
+      sigmaAMin: sigmaAMin ?? this.sigmaAMin,
+      sigmaAMax: sigmaAMax ?? this.sigmaAMax,
+      k: k ?? this.k,
+      kMin: kMin ?? this.kMin,
+      kMax: kMax ?? this.kMax,
+      tau: tau ?? this.tau,
+      tauMin: tauMin ?? this.tauMin,
+      tauMax: tauMax ?? this.tauMax,
+      epsilon: epsilon ?? this.epsilon,
+      epsilonMin: epsilonMin ?? this.epsilonMin,
+      epsilonMax: epsilonMax ?? this.epsilonMax,
+      phi: phi ?? this.phi,
+      phiMin: phiMin ?? this.phiMin,
+      phiMax: phiMax ?? this.phiMax,
+      scale: scale ?? this.scale,
+      scaleMin: scaleMin ?? this.scaleMin,
+      scaleMax: scaleMax ?? this.scaleMax,
+      useColorQuantization: useColorQuantization ?? this.useColorQuantization,
+      useColorMapping: useColorMapping ?? this.useColorMapping,
+      useColorBlending: useColorBlending ?? this.useColorBlending,
+      colorBlending: colorBlending ?? this.colorBlending,
+      usePaperTexture: usePaperTexture ?? this.usePaperTexture,
+      numColors: numColors ?? this.numColors,
+      colors: colors ?? this.colors,
+    );
+  }
 
   FDoGShaderSettings lerp(FDoGShaderSettings other, double t) {
     double lerpDouble(double a, double b) => a + (b - a) * t;
@@ -114,6 +195,8 @@ class FDoGShaderSettings {
       useColorQuantization: t < 0.5 ? useColorQuantization : other.useColorQuantization,
       useColorMapping: t < 0.5 ? useColorMapping : other.useColorMapping,
       useColorBlending: t < 0.5 ? useColorBlending : other.useColorBlending,
+      colorBlending: t < 0.5 ? colorBlending : other.colorBlending,
+      usePaperTexture: t < 0.5 ? usePaperTexture : other.usePaperTexture,
       numColors: t < 0.5 ? numColors : other.numColors,
       colors: t < 0.5 ? colors : other.colors,
     );
@@ -150,6 +233,8 @@ class FDoGShaderSettings {
     useColorQuantization = other.useColorQuantization;
     useColorMapping = other.useColorMapping;
     useColorBlending = other.useColorBlending;
+    colorBlending = other.colorBlending;
+    usePaperTexture = other.usePaperTexture;
     numColors = other.numColors;
     colors = other.colors;
   }

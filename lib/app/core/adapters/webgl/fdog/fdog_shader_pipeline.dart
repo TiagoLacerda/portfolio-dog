@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:web/web.dart' as web;
 
+import '../../../utils/utils.dart';
+import 'enums/color_blending.dart';
 import 'fdog_shader_pipeline_extensions.dart';
 import '../shader_pipeline.dart';
 
@@ -24,6 +26,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
   late web.WebGLProgram threshold;
   late web.WebGLProgram colorMapping;
   late web.WebGLProgram blend;
+  late web.WebGLProgram paper;
 
   late web.WebGLTexture texture0;
   late web.WebGLTexture texture1;
@@ -35,7 +38,9 @@ class FDoGShaderPipeline extends ShaderPipeline {
   late web.WebGLTexture texture7;
   late web.WebGLTexture texture8;
   late web.WebGLTexture texture9;
+  late web.WebGLTexture texture10;
   late web.WebGLTexture colorMap;
+  late web.WebGLTexture paperTexture;
 
   late web.WebGLFramebuffer framebuffer;
 
@@ -50,9 +55,12 @@ class FDoGShaderPipeline extends ShaderPipeline {
   /// Width of the [colorMap] texture.
   int colorMapSize = 0;
 
+  Size paperSize = Size.zero;
+
   bool useColorQuantization = false;
   bool useColorMapping = false;
-  bool useColorBlending = false;
+  ColorBlending colorBlending = ColorBlending.none;
+  bool usePaperTexture = false;
 
   int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
 
@@ -60,7 +68,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
   int kernelRadius(double sigma, {double extent = 2.0}) => min((sigma * extent).ceil(), maxKernelRadius);
 
   /// Intermediate textures holding values in the [0, 1] range.
-  List<web.WebGLTexture> get _byteTextures => [texture1, texture7, texture8, texture9];
+  List<web.WebGLTexture> get _byteTextures => [texture1, texture7, texture8, texture9, texture10];
 
   /// Intermediate textures holding signed or unbounded values: the structure tensor, the flow field and the DoG response.
   List<web.WebGLTexture> get _floatTextures => [texture2, texture3, texture4, texture5, texture6];
@@ -159,6 +167,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
     final thresholdSource = await rootBundle.loadString('shaders/threshold.frag');
     final colorMappingSource = await rootBundle.loadString('shaders/color_mapping.frag');
     final blendSource = await rootBundle.loadString('shaders/blend.frag');
+    final paperSource = await rootBundle.loadString('shaders/paper.frag');
 
     grayscale = createShaderProgram(vertSource, grayscaleSource);
     sobel = createShaderProgram(vertSource, sobelSource);
@@ -169,6 +178,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
     threshold = createShaderProgram(vertSource, thresholdSource);
     colorMapping = createShaderProgram(vertSource, colorMappingSource);
     blend = createShaderProgram(vertSource, blendSource);
+    paper = createShaderProgram(vertSource, paperSource);
 
     web.WebGLTexture createByteTexture({bool linear = false}) => createTexture(
       canvas.width,
@@ -198,7 +208,18 @@ class FDoGShaderPipeline extends ShaderPipeline {
     texture7 = createByteTexture(linear: true);
     texture8 = createByteTexture(linear: true);
     texture9 = createByteTexture();
+    texture10 = createByteTexture();
     colorMap = createTexture(colorMapSize, 1);
+
+    final paperImage = await Utils.loadImageFromAsset('images/paper.png');
+
+    paperTexture = createByteTexture(linear: true);
+
+    if (paperImage != null) {
+      paperSize = Size(paperImage.width.toDouble(), paperImage.height.toDouble());
+      await updateTextureWithImage(paperTexture, paperImage);
+      paperImage.dispose();
+    }
 
     framebuffer = createFrameBuffer(texture1);
 
@@ -333,16 +354,33 @@ class FDoGShaderPipeline extends ShaderPipeline {
       sigma: sigmaA,
       sourceTexture: useColorQuantization ? texture8 : texture7,
       vectorTexture: texture4,
-      targetTexture: useColorBlending ? texture9 : null,
+      targetTexture: colorBlending != ColorBlending.none
+          ? texture9
+          : usePaperTexture
+          ? texture10
+          : null,
     );
 
     // Pass 10 - Color-blending
 
-    if (useColorBlending) {
+    if (colorBlending != ColorBlending.none) {
       useColorBlendingProgram(
         resolution: (width, height),
+        mode: colorBlending,
         sourceTextureA: texture0,
         sourceTextureB: texture9,
+        targetTexture: usePaperTexture ? texture10 : null,
+      );
+    }
+
+    // Pass 11 - Paper texture
+
+    if (usePaperTexture) {
+      usePaperTextureProgram(
+        resolution: (width, height),
+        paperSize: paperSize,
+        sourceTexture: texture10,
+        paperTexture: paperTexture,
         targetTexture: null,
       );
     }

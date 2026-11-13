@@ -1,7 +1,9 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:web/web.dart' as web;
 
+import 'enums/color_blending.dart';
 import 'fdog_shader_pipeline.dart';
 
 extension ShaderCallers on FDoGShaderPipeline {
@@ -406,6 +408,7 @@ extension ShaderCallers on FDoGShaderPipeline {
 
   void useColorBlendingProgram({
     required (int, int) resolution,
+    required ColorBlending mode,
     required web.WebGLTexture sourceTextureA,
     required web.WebGLTexture sourceTextureB,
     web.WebGLTexture? targetTexture,
@@ -434,11 +437,62 @@ extension ShaderCallers on FDoGShaderPipeline {
       resolution.$2,
     );
     gl.uniform1i(
+      gl.getUniformLocation(blend, 'u_mode'),
+      mode.shaderValue,
+    );
+    gl.uniform1i(
       gl.getUniformLocation(blend, 'u_a'),
       0,
     );
     gl.uniform1i(
       gl.getUniformLocation(blend, 'u_b'),
+      1,
+    );
+
+    gl.drawArrays(web.WebGL2RenderingContext.TRIANGLES, 0, 6);
+  }
+
+  void usePaperTextureProgram({
+    required (int, int) resolution,
+    required Size paperSize,
+    required web.WebGLTexture sourceTexture,
+    required web.WebGLTexture paperTexture,
+    web.WebGLTexture? targetTexture,
+  }) {
+    if (targetTexture == null) {
+      gl.bindFramebuffer(web.WebGL2RenderingContext.FRAMEBUFFER, null);
+    } else {
+      gl.framebufferTexture2D(
+        web.WebGL2RenderingContext.FRAMEBUFFER,
+        web.WebGL2RenderingContext.COLOR_ATTACHMENT0,
+        web.WebGL2RenderingContext.TEXTURE_2D,
+        targetTexture,
+        0,
+      );
+    }
+
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE0);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, sourceTexture);
+    gl.activeTexture(web.WebGL2RenderingContext.TEXTURE1);
+    gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, paperTexture);
+
+    gl.useProgram(paper);
+    gl.uniform2f(
+      gl.getUniformLocation(paper, 'u_resolution'),
+      resolution.$1,
+      resolution.$2,
+    );
+    gl.uniform2f(
+      gl.getUniformLocation(paper, 'u_paper_size'),
+      paperSize.width,
+      paperSize.height,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(paper, 'u_sampler'),
+      0,
+    );
+    gl.uniform1i(
+      gl.getUniformLocation(paper, 'u_paper'),
       1,
     );
 

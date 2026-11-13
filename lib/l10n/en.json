@@ -7,10 +7,21 @@
                 "localeButtonTooltip": "Language",
                 "text0": "The ",
                 "text1": "Flow-Based Difference of Gaussians (FDoG)",
-                "text2": " is an image processing technique that enables a wide range of stylizations, like pencil, cross-hatching, watercolor, charcoal sketch and stipple-brush effects.",
-                "text3": "\n\nProposed by ",
-                "text4": "Holger Winnemöller and his team",
-                "text5": ", it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features."
+                "text2": " is an image processing technique that enables a wide range of stylizations, like ",
+                "effects": {
+                    "pencil": "pencil",
+                    "charcoal": "charcoal",
+                    "woodblock": "woodblock",
+                    "watercolor": "watercolor",
+                    "stippleBrush": "stipple-brush",
+                    "crossHatching": "cross-hatching",
+                    "separator": ", ",
+                    "lastSeparator": " and "
+                },
+                "text3": " effects.",
+                "text4": "\n\nProposed by ",
+                "text5": "Holger Winnemöller and his team",
+                "text6": ", it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features."
             },
             "widgets": {
                 "fdogShaderControls": {

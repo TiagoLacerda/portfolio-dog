@@ -14,6 +14,7 @@ class ShaderSlider<T extends num> extends StatefulWidget {
   final int decimals;
   final bool enabled;
   final void Function(T)? onChanged;
+  final void Function(T min, T max)? onChangedRange;
 
   const ShaderSlider({
     super.key,
@@ -26,6 +27,7 @@ class ShaderSlider<T extends num> extends StatefulWidget {
     this.decimals = 3,
     this.enabled = true,
     this.onChanged,
+    this.onChangedRange,
   });
 
   static int? _getDivisions(_, _) => null;
@@ -79,7 +81,6 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
         setState(() {
           value = number;
           textEditingController0.text = value.toStringAsFixed(widget.decimals);
-          widget.onChanged?.call(value);
 
           if (min > value) {
             min = value;
@@ -90,6 +91,9 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
             max = value;
             textEditingController2.text = max.toStringAsFixed(widget.decimals);
           }
+
+          widget.onChangedRange?.call(min, max);
+          widget.onChanged?.call(value);
         });
       }
     }
@@ -112,15 +116,17 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
           min = number;
           textEditingController1.text = min.toStringAsFixed(widget.decimals);
 
+          if (max < min) {
+            max = min;
+            textEditingController2.text = max.toStringAsFixed(widget.decimals);
+          }
+
+          widget.onChangedRange?.call(min, max);
+
           if (value < min) {
             value = min;
             textEditingController0.text = value.toStringAsFixed(widget.decimals);
             widget.onChanged?.call(value);
-          }
-
-          if (max < min) {
-            max = min;
-            textEditingController2.text = max.toStringAsFixed(widget.decimals);
           }
         });
       }
@@ -144,15 +150,17 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
           max = number;
           textEditingController2.text = max.toStringAsFixed(widget.decimals);
 
+          if (max < min) {
+            min = max;
+            textEditingController1.text = min.toStringAsFixed(widget.decimals);
+          }
+
+          widget.onChangedRange?.call(min, max);
+
           if (value > max) {
             value = max;
             textEditingController0.text = value.toStringAsFixed(widget.decimals);
             widget.onChanged?.call(value);
-          }
-
-          if (max < min) {
-            min = max;
-            textEditingController1.text = min.toStringAsFixed(widget.decimals);
           }
         });
       }
@@ -167,10 +175,9 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
     min = widget.min;
     max = widget.max;
 
-    if (value < min) value = min;
-    if (value > max) value = max;
-    if (min > max) min = max;
-    if (max < min) max = min;
+    if (value < min) min = value;
+    if (value > max) max = value;
+    if (min != widget.min || max != widget.max) widget.onChangedRange?.call(min, max);
 
     textEditingController0.text = value.toStringAsFixed(widget.decimals);
     textEditingController1.text = min.toStringAsFixed(widget.decimals);
@@ -189,10 +196,9 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
     min = widget.min;
     max = widget.max;
 
-    if (value < min) value = min;
-    if (value > max) value = max;
-    if (min > max) min = max;
-    if (max < min) max = min;
+    if (value < min) min = value;
+    if (value > max) max = value;
+    if (min != widget.min || max != widget.max) widget.onChangedRange?.call(min, max);
 
     textEditingController0.text = value.toStringAsFixed(widget.decimals);
     textEditingController1.text = min.toStringAsFixed(widget.decimals);

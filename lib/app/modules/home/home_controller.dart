@@ -4,20 +4,26 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart' hide Image;
 
+import '../../core/adapters/webgl/fdog/enums/color_blending.dart';
 import '../../core/adapters/webgl/fdog/fdog_shader_pipeline.dart';
-import '../../core/utils/utils.dart';
 import '../../core/adapters/webgl/fdog/fdog_shader_presets.dart';
 import '../../core/adapters/webgl/fdog/fdog_shader_settings.dart';
+import '../../core/utils/utils.dart';
 
-class HomeController extends ChangeNotifier {
-  final settings = FdogShaderPresets.preset;
+final class HomeController extends ChangeNotifier {
+  final settings = FdogShaderPresets.baseline;
 
   final pipeline = FDoGShaderPipeline();
 
   Image? image;
 
+  Timer? _presetAnimation;
+
+  ColorBlending get _colorBlending => settings.useColorBlending ? settings.colorBlending : ColorBlending.none;
+
   @override
   void dispose() {
+    _presetAnimation?.cancel();
     image?.dispose();
 
     super.dispose();
@@ -27,7 +33,7 @@ class HomeController extends ChangeNotifier {
     try {
       await pipeline.initialize();
 
-      image = await Utils.loadImageFromAsset('images/samia.png');
+      image = await Utils.loadImageFromAsset('images/lena-forsen.png');
 
       if (image == null) return;
 
@@ -37,7 +43,8 @@ class HomeController extends ChangeNotifier {
 
       pipeline.useColorQuantization = settings.useColorQuantization;
       pipeline.useColorMapping = settings.useColorMapping;
-      pipeline.useColorBlending = settings.useColorBlending;
+      pipeline.colorBlending = _colorBlending;
+      pipeline.usePaperTexture = settings.usePaperTexture;
       pipeline.setColorMap(colors);
       pipeline.setScale(settings.scale);
       pipeline.draw(
@@ -75,6 +82,18 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> onTapPencilPreset() => _applyPreset(FdogShaderPresets.pencil);
+
+  Future<void> onTapCharcoalPreset() => _applyPreset(FdogShaderPresets.charcoal);
+
+  Future<void> onTapWoodblockPreset() => _applyPreset(FdogShaderPresets.woodblock);
+
+  Future<void> onTapWatercolorPreset() => _applyPreset(FdogShaderPresets.watercolor);
+
+  Future<void> onTapStippleBrushPreset() => _applyPreset(FdogShaderPresets.stippleBrush);
+
+  Future<void> onTapCrossHatchingPreset() => _applyPreset(FdogShaderPresets.crossHatching);
+
   Future<void> downloadImage() async {
     await pipeline.saveImage('download.png');
   }
@@ -101,7 +120,12 @@ class HomeController extends ChangeNotifier {
   }
 
   void onSetUseColorBlending() {
-    pipeline.useColorBlending = settings.useColorBlending;
+    pipeline.colorBlending = _colorBlending;
+    draw();
+  }
+
+  void onSetUsePaperTexture() {
+    pipeline.usePaperTexture = settings.usePaperTexture;
     draw();
   }
 
@@ -119,55 +143,64 @@ class HomeController extends ChangeNotifier {
     );
   }
 
-  /// Interpolates change from current to [newSettings]. Make sure to signal UI refreshes with [onChangedSettings].
-  // ignore: unused_element
   void _animateToShaderSettings(FDoGShaderSettings newSettings, VoidCallback onChangedSettings) {
-    final from = settings;
+    _presetAnimation?.cancel();
+
+    final from = settings.copyWith();
     final to = newSettings;
 
     const duration = Duration(milliseconds: 250);
     final start = DateTime.now();
 
-    var oldSettings = settings;
-
-    Timer.periodic(const Duration(milliseconds: 16), (timer) {
+    _presetAnimation = Timer.periodic(Duration(milliseconds: (1000 / 144).floor()), (timer) {
       final t = (DateTime.now().difference(start).inMilliseconds / duration.inMilliseconds).clamp(0.0, 1.0);
 
-      settings.setFrom(from.lerp(to, t));
+      final next = from.lerp(to, t);
+
+      final scaleChanged = next.scale != settings.scale;
+      final colorMapChanged = next.colors != settings.colors || next.useColorMapping != settings.useColorMapping;
+
+      settings.setFrom(next);
 
       onChangedSettings();
 
-      if (settings.scale != oldSettings.scale) {
+      if (scaleChanged) {
         pipeline.setScale(
           settings.scale,
         );
       }
 
-      if (settings.useColorQuantization != oldSettings.useColorQuantization) {
-        pipeline.useColorQuantization = settings.useColorQuantization;
-      }
+      pipeline.useColorQuantization = settings.useColorQuantization;
+      pipeline.useColorMapping = settings.useColorMapping;
+      pipeline.colorBlending = _colorBlending;
+      pipeline.usePaperTexture = settings.usePaperTexture;
 
-      if (settings.useColorMapping != oldSettings.useColorMapping) {
-        pipeline.useColorMapping = settings.useColorMapping;
-      }
-
-      if (settings.useColorBlending != oldSettings.useColorBlending) {
-        pipeline.useColorBlending = settings.useColorBlending;
-      }
-
-      if (settings.colors != oldSettings.colors) {
+      if (colorMapChanged) {
         pipeline.setColorMap(
-          settings.colors,
+          settings.useColorMapping ? settings.colors : <Color>[],
         );
       }
 
       draw();
 
-      oldSettings = settings;
-
       if (t >= 1.0) {
         timer.cancel();
       }
     });
+  }
+
+  Future<void> _applyPreset(FDoGShaderSettings preset) async {
+    image?.dispose();
+    image = null;
+
+    image = await Utils.loadImageFromAsset('images/lena-forsen.png');
+
+    if (image == null) return;
+
+    await pipeline.setImage(image!);
+
+    pipeline.setScale(settings.scale);
+
+    _animateToShaderSettings(preset, notifyListeners);
   }
 }
