@@ -54,6 +54,12 @@ class ModularLocalizationInternalClass2 implements ModularLocalization {
   ///
   /// `pt`: **"Idioma"**
   ///
+  /// **.paper**
+  ///
+  /// `en`: **"XDoG: An eXtended difference-of-Gaussians compendium including advanced image stylization"**
+  ///
+  /// `pt`: **"XDoG: An eXtended difference-of-Gaussians compendium including advanced image stylization"**
+  ///
   /// **.text0**
   ///
   /// `en`: **"The "**
@@ -62,39 +68,39 @@ class ModularLocalizationInternalClass2 implements ModularLocalization {
   ///
   /// **.text1**
   ///
-  /// `en`: **"Flow-Based Difference of Gaussians (FDoG)"**
+  /// `en`: **"Flow-based eXtended Difference of Gaussians (XDoG)"**
   ///
-  /// `pt`: **"Diferença de Gaussianas Baseada em Fluxo (FDoG)"**
+  /// `pt`: **"Diferença de Gaussianas Estendida Baseada em Fluxo (XDoG)"**
   ///
   /// **.text2**
   ///
-  /// `en`: **" is an image processing technique that enables a wide range of stylizations, like "**
+  /// `en`: **" is an image stylization pipeline by "**
   ///
-  /// `pt`: **" é uma técnica de processamento de imagens que possibilita uma ampla variedade de estilizações, como efeitos de "**
+  /// `pt`: **" é um pipeline de estilização de imagens de "**
   ///
   /// **.text3**
+  ///
+  /// `en`: **"Holger Winnemöller, Jan Eric Kyprianidis and Sven C. Olsen"**
+  ///
+  /// `pt`: **"Holger Winnemöller, Jan Eric Kyprianidis e Sven C. Olsen"**
+  ///
+  /// **.text4**
+  ///
+  /// `en`: **", described in their paper "**
+  ///
+  /// `pt`: **", descrito no artigo "**
+  ///
+  /// **.text5**
+  ///
+  /// `en`: **" (Computers & Graphics, 2012).\n\nIt starts by measuring how brightness changes around each pixel with the Sobel operator, and from those gradients builds a smoothed structure tensor, whose eigenvectors describe the local flow of edges in the image. Guided by that flow, it blurs across edges with a difference of Gaussians to find and enhance them, then blurs along edges so the resulting lines come out smooth and coherent. Thresholding and texturing the result yields stylizations like "**
+  ///
+  /// `pt`: **" (Computers & Graphics, 2012).\n\nEle começa medindo como o brilho varia ao redor de cada pixel com o operador de Sobel e, a partir desses gradientes, constrói um tensor de estrutura suavizado, cujos autovetores descrevem o fluxo local das bordas na imagem. Guiado por esse fluxo, ele desfoca transversalmente às bordas com uma diferença de Gaussianas para encontrá-las e realçá-las, e depois desfoca ao longo delas para que as linhas resultantes fiquem suaves e coerentes. Limiarizar e texturizar o resultado gera estilizações como efeitos de "**
+  ///
+  /// **.text6**
   ///
   /// `en`: **" effects."**
   ///
   /// `pt`: **"."**
-  ///
-  /// **.text4**
-  ///
-  /// `en`: **"\n\nProposed by "**
-  ///
-  /// `pt`: **"\n\nProposta por "**
-  ///
-  /// **.text5**
-  ///
-  /// `en`: **"Holger Winnemöller and his team"**
-  ///
-  /// `pt`: **"Holger Winnemöller e sua equipe"**
-  ///
-  /// **.text6**
-  ///
-  /// `en`: **", it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features."**
-  ///
-  /// `pt`: **", ela amplia a técnica tradicional de Diferença de Gaussianas (DoG) ao aproximar o tensor de estrutura da imagem usando o operador de Sobel e, em seguida, orientar o processo de filtragem para que o desfoque e o realce de bordas ocorram ao longo do fluxo natural das características da imagem."**
   ///
   /// **.effects**: `...`
   ///
@@ -131,47 +137,53 @@ class ModularLocalizationInternalClass3 implements ModularLocalization {
   ///
   String get localeButtonTooltip => ModularLocalization.entries.entry2;
 
+  /// `en`: **"XDoG: An eXtended difference-of-Gaussians compendium including advanced image stylization"**
+  ///
+  /// `pt`: **"XDoG: An eXtended difference-of-Gaussians compendium including advanced image stylization"**
+  ///
+  String get paper => ModularLocalization.entries.entry3;
+
   /// `en`: **"The "**
   ///
   /// `pt`: **"A "**
   ///
-  String get text0 => ModularLocalization.entries.entry3;
+  String get text0 => ModularLocalization.entries.entry4;
 
-  /// `en`: **"Flow-Based Difference of Gaussians (FDoG)"**
+  /// `en`: **"Flow-based eXtended Difference of Gaussians (XDoG)"**
   ///
-  /// `pt`: **"Diferença de Gaussianas Baseada em Fluxo (FDoG)"**
+  /// `pt`: **"Diferença de Gaussianas Estendida Baseada em Fluxo (XDoG)"**
   ///
-  String get text1 => ModularLocalization.entries.entry4;
+  String get text1 => ModularLocalization.entries.entry5;
 
-  /// `en`: **" is an image processing technique that enables a wide range of stylizations, like "**
+  /// `en`: **" is an image stylization pipeline by "**
   ///
-  /// `pt`: **" é uma técnica de processamento de imagens que possibilita uma ampla variedade de estilizações, como efeitos de "**
+  /// `pt`: **" é um pipeline de estilização de imagens de "**
   ///
-  String get text2 => ModularLocalization.entries.entry5;
+  String get text2 => ModularLocalization.entries.entry6;
+
+  /// `en`: **"Holger Winnemöller, Jan Eric Kyprianidis and Sven C. Olsen"**
+  ///
+  /// `pt`: **"Holger Winnemöller, Jan Eric Kyprianidis e Sven C. Olsen"**
+  ///
+  String get text3 => ModularLocalization.entries.entry7;
+
+  /// `en`: **", described in their paper "**
+  ///
+  /// `pt`: **", descrito no artigo "**
+  ///
+  String get text4 => ModularLocalization.entries.entry8;
+
+  /// `en`: **" (Computers & Graphics, 2012).\n\nIt starts by measuring how brightness changes around each pixel with the Sobel operator, and from those gradients builds a smoothed structure tensor, whose eigenvectors describe the local flow of edges in the image. Guided by that flow, it blurs across edges with a difference of Gaussians to find and enhance them, then blurs along edges so the resulting lines come out smooth and coherent. Thresholding and texturing the result yields stylizations like "**
+  ///
+  /// `pt`: **" (Computers & Graphics, 2012).\n\nEle começa medindo como o brilho varia ao redor de cada pixel com o operador de Sobel e, a partir desses gradientes, constrói um tensor de estrutura suavizado, cujos autovetores descrevem o fluxo local das bordas na imagem. Guiado por esse fluxo, ele desfoca transversalmente às bordas com uma diferença de Gaussianas para encontrá-las e realçá-las, e depois desfoca ao longo delas para que as linhas resultantes fiquem suaves e coerentes. Limiarizar e texturizar o resultado gera estilizações como efeitos de "**
+  ///
+  String get text5 => ModularLocalization.entries.entry9;
 
   /// `en`: **" effects."**
   ///
   /// `pt`: **"."**
   ///
-  String get text3 => ModularLocalization.entries.entry6;
-
-  /// `en`: **"\n\nProposed by "**
-  ///
-  /// `pt`: **"\n\nProposta por "**
-  ///
-  String get text4 => ModularLocalization.entries.entry7;
-
-  /// `en`: **"Holger Winnemöller and his team"**
-  ///
-  /// `pt`: **"Holger Winnemöller e sua equipe"**
-  ///
-  String get text5 => ModularLocalization.entries.entry8;
-
-  /// `en`: **", it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features."**
-  ///
-  /// `pt`: **", ela amplia a técnica tradicional de Diferença de Gaussianas (DoG) ao aproximar o tensor de estrutura da imagem usando o operador de Sobel e, em seguida, orientar o processo de filtragem para que o desfoque e o realce de bordas ocorram ao longo do fluxo natural das características da imagem."**
-  ///
-  String get text6 => ModularLocalization.entries.entry9;
+  String get text6 => ModularLocalization.entries.entry10;
 
   /// **.charcoal**
   ///
@@ -231,49 +243,49 @@ class ModularLocalizationInternalClass4 implements ModularLocalization {
   ///
   /// `pt`: **"carvão"**
   ///
-  String get charcoal => ModularLocalization.entries.entry10;
+  String get charcoal => ModularLocalization.entries.entry11;
 
   /// `en`: **"cross-hatching"**
   ///
   /// `pt`: **"hachura cruzada"**
   ///
-  String get crossHatching => ModularLocalization.entries.entry11;
+  String get crossHatching => ModularLocalization.entries.entry12;
 
   /// `en`: **" and "**
   ///
   /// `pt`: **" e "**
   ///
-  String get lastSeparator => ModularLocalization.entries.entry12;
+  String get lastSeparator => ModularLocalization.entries.entry13;
 
   /// `en`: **"pencil"**
   ///
   /// `pt`: **"lápis"**
   ///
-  String get pencil => ModularLocalization.entries.entry13;
+  String get pencil => ModularLocalization.entries.entry14;
 
   /// `en`: **", "**
   ///
   /// `pt`: **", "**
   ///
-  String get separator => ModularLocalization.entries.entry14;
+  String get separator => ModularLocalization.entries.entry15;
 
   /// `en`: **"stipple-brush"**
   ///
   /// `pt`: **"pontilhismo com pincel"**
   ///
-  String get stippleBrush => ModularLocalization.entries.entry15;
+  String get stippleBrush => ModularLocalization.entries.entry16;
 
   /// `en`: **"watercolor"**
   ///
   /// `pt`: **"aquarela"**
   ///
-  String get watercolor => ModularLocalization.entries.entry16;
+  String get watercolor => ModularLocalization.entries.entry17;
 
   /// `en`: **"woodblock"**
   ///
   /// `pt`: **"xilogravura"**
   ///
-  String get woodblock => ModularLocalization.entries.entry17;
+  String get woodblock => ModularLocalization.entries.entry18;
 
 }
 
@@ -413,37 +425,37 @@ class ModularLocalizationInternalClass6 implements ModularLocalization {
   ///
   /// `pt`: **"Alterar imagem"**
   ///
-  String get changeImage => ModularLocalization.entries.entry18;
+  String get changeImage => ModularLocalization.entries.entry19;
 
   /// `en`: **"Decrease"**
   ///
   /// `pt`: **"Diminuir"**
   ///
-  String get decrease => ModularLocalization.entries.entry19;
+  String get decrease => ModularLocalization.entries.entry20;
 
   /// `en`: **"Download image"**
   ///
   /// `pt`: **"Baixar imagem"**
   ///
-  String get downloadImage => ModularLocalization.entries.entry20;
+  String get downloadImage => ModularLocalization.entries.entry21;
 
   /// `en`: **"Generate palette"**
   ///
   /// `pt`: **"Gerar paleta"**
   ///
-  String get generatePalette => ModularLocalization.entries.entry21;
+  String get generatePalette => ModularLocalization.entries.entry22;
 
   /// `en`: **"Import palette"**
   ///
   /// `pt`: **"Importar paleta"**
   ///
-  String get importPalette => ModularLocalization.entries.entry22;
+  String get importPalette => ModularLocalization.entries.entry23;
 
   /// `en`: **"Increase"**
   ///
   /// `pt`: **"Aumentar"**
   ///
-  String get increase => ModularLocalization.entries.entry23;
+  String get increase => ModularLocalization.entries.entry24;
 
 }
 
@@ -454,49 +466,49 @@ class ModularLocalizationInternalClass7 implements ModularLocalization {
   ///
   /// `pt`: **"Confirmar"**
   ///
-  String get accept => ModularLocalization.entries.entry24;
+  String get accept => ModularLocalization.entries.entry25;
 
   /// `en`: **"Generate a palette in the Oklab color space, with steadily increasing perceived lightness. Use the sliders to adjust the green–red and blue–yellow balance of the colors."**
   ///
   /// `pt`: **"Gere uma paleta no espaço de cores Oklab, com luminosidade percebida aumentando de forma constante. Use os sliders para ajustar o equilíbrio entre verde e vermelho e entre azul e amarelo."**
   ///
-  String get body0 => ModularLocalization.entries.entry25;
+  String get body0 => ModularLocalization.entries.entry26;
 
   /// `en`: **"However, since there are many more robust palette generators available, you may prefer using the import tool instead."**
   ///
   /// `pt`: **"No entanto, como existem geradores de paletas muito mais robustos disponíveis, você pode preferir usar a ferramenta de importação."**
   ///
-  String get body1 => ModularLocalization.entries.entry26;
+  String get body1 => ModularLocalization.entries.entry27;
 
   /// `en`: **"Close"**
   ///
   /// `pt`: **"Fechar"**
   ///
-  String get close => ModularLocalization.entries.entry27;
+  String get close => ModularLocalization.entries.entry28;
 
   /// `en`: **"Decrease"**
   ///
   /// `pt`: **"Diminuir"**
   ///
-  String get decrease => ModularLocalization.entries.entry28;
+  String get decrease => ModularLocalization.entries.entry29;
 
   /// `en`: **"Increase"**
   ///
   /// `pt`: **"Aumentar"**
   ///
-  String get increase => ModularLocalization.entries.entry29;
+  String get increase => ModularLocalization.entries.entry30;
 
   /// `en`: **"Random"**
   ///
   /// `pt`: **"Aleatório"**
   ///
-  String get random => ModularLocalization.entries.entry30;
+  String get random => ModularLocalization.entries.entry31;
 
   /// `en`: **"Generate Palette"**
   ///
   /// `pt`: **"Gerar Paleta"**
   ///
-  String get title => ModularLocalization.entries.entry31;
+  String get title => ModularLocalization.entries.entry32;
 
 }
 
@@ -507,31 +519,31 @@ class ModularLocalizationInternalClass8 implements ModularLocalization {
   ///
   /// `pt`: **"Confirmar"**
   ///
-  String get accept => ModularLocalization.entries.entry32;
+  String get accept => ModularLocalization.entries.entry33;
 
   /// `en`: **"Import a custom palette by entering hex color values, one per line. You must provide at least two colors for a valid palette."**
   ///
   /// `pt`: **"Importe uma paleta personalizada inserindo valores de cor hexadecimais, um por linha. Você deve fornecer pelo menos duas cores para uma paleta válida."**
   ///
-  String get body => ModularLocalization.entries.entry33;
+  String get body => ModularLocalization.entries.entry34;
 
   /// `en`: **"Close"**
   ///
   /// `pt`: **"Fechar"**
   ///
-  String get close => ModularLocalization.entries.entry34;
+  String get close => ModularLocalization.entries.entry35;
 
   /// `en`: **"Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
   ///
   /// `pt`: **"Insira uma lista de valores hexadecimais, um por linha, p. ex.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF"**
   ///
-  String get hint => ModularLocalization.entries.entry35;
+  String get hint => ModularLocalization.entries.entry36;
 
   /// `en`: **"Import Palette"**
   ///
   /// `pt`: **"Importar Paleta"**
   ///
-  String get title => ModularLocalization.entries.entry36;
+  String get title => ModularLocalization.entries.entry37;
 
 }
 
@@ -542,7 +554,7 @@ class ModularLocalizationInternalClass9 implements ModularLocalization {
   ///
   /// `pt`: **"Ligar/desligar música"**
   ///
-  String get toggleMusic => ModularLocalization.entries.entry37;
+  String get toggleMusic => ModularLocalization.entries.entry38;
 
 }
 

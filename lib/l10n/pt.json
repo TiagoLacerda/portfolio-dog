@@ -6,8 +6,12 @@
                 "brightnessSwitchTooltip": "Modo claro/escuro",
                 "localeButtonTooltip": "Idioma",
                 "text0": "A ",
-                "text1": "Diferença de Gaussianas Baseada em Fluxo (FDoG)",
-                "text2": " é uma técnica de processamento de imagens que possibilita uma ampla variedade de estilizações, como efeitos de ",
+                "text1": "Diferença de Gaussianas Estendida Baseada em Fluxo (XDoG)",
+                "text2": " é um pipeline de estilização de imagens de ",
+                "text3": "Holger Winnemöller, Jan Eric Kyprianidis e Sven C. Olsen",
+                "text4": ", descrito no artigo ",
+                "paper": "XDoG: An eXtended difference-of-Gaussians compendium including advanced image stylization",
+                "text5": " (Computers & Graphics, 2012).\n\nEle começa medindo como o brilho varia ao redor de cada pixel com o operador de Sobel e, a partir desses gradientes, constrói um tensor de estrutura suavizado, cujos autovetores descrevem o fluxo local das bordas na imagem. Guiado por esse fluxo, ele desfoca transversalmente às bordas com uma diferença de Gaussianas para encontrá-las e realçá-las, e depois desfoca ao longo delas para que as linhas resultantes fiquem suaves e coerentes. Limiarizar e texturizar o resultado gera estilizações como efeitos de ",
                 "effects": {
                     "pencil": "lápis",
                     "charcoal": "carvão",
@@ -18,10 +22,7 @@
                     "separator": ", ",
                     "lastSeparator": " e "
                 },
-                "text3": ".",
-                "text4": "\n\nProposta por ",
-                "text5": "Holger Winnemöller e sua equipe",
-                "text6": ", ela amplia a técnica tradicional de Diferença de Gaussianas (DoG) ao aproximar o tensor de estrutura da imagem usando o operador de Sobel e, em seguida, orientar o processo de filtragem para que o desfoque e o realce de bordas ocorram ao longo do fluxo natural das características da imagem."
+                "text6": "."
             },
             "widgets": {
                 "fdogShaderControls": {

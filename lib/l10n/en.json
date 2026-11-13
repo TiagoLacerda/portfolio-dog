@@ -6,8 +6,12 @@
                 "brightnessSwitchTooltip": "Dark/light mode",
                 "localeButtonTooltip": "Language",
                 "text0": "The ",
-                "text1": "Flow-Based Difference of Gaussians (FDoG)",
-                "text2": " is an image processing technique that enables a wide range of stylizations, like ",
+                "text1": "Flow-based eXtended Difference of Gaussians (XDoG)",
+                "text2": " is an image stylization pipeline by ",
+                "text3": "Holger Winnemöller, Jan Eric Kyprianidis and Sven C. Olsen",
+                "text4": ", described in their paper ",
+                "paper": "XDoG: An eXtended difference-of-Gaussians compendium including advanced image stylization",
+                "text5": " (Computers & Graphics, 2012).\n\nIt starts by measuring how brightness changes around each pixel with the Sobel operator, and from those gradients builds a smoothed structure tensor, whose eigenvectors describe the local flow of edges in the image. Guided by that flow, it blurs across edges with a difference of Gaussians to find and enhance them, then blurs along edges so the resulting lines come out smooth and coherent. Thresholding and texturing the result yields stylizations like ",
                 "effects": {
                     "pencil": "pencil",
                     "charcoal": "charcoal",
@@ -18,10 +22,7 @@
                     "separator": ", ",
                     "lastSeparator": " and "
                 },
-                "text3": " effects.",
-                "text4": "\n\nProposed by ",
-                "text5": "Holger Winnemöller and his team",
-                "text6": ", it extends the traditional Difference of Gaussians (DoG) by approximating the structure tensor of the image using the Sobel operator, then guiding the filtering process so that blurring and edge enhancement occur along the natural flow of the image's features."
+                "text6": " effects."
             },
             "widgets": {
                 "fdogShaderControls": {

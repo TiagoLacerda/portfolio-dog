@@ -37,6 +37,8 @@ class _HomeViewState extends State<HomeView> {
   late final watercolorRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapWatercolorPreset;
   late final stippleBrushRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapStippleBrushPreset;
   late final crossHatchingRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapCrossHatchingPreset;
+  late final paperRecognizer = TapGestureRecognizer()
+    ..onTap = () => launchUrl(Uri.parse('https://doi.org/10.1016/j.cag.2012.03.004'));
 
   @override
   void dispose() {
@@ -49,6 +51,7 @@ class _HomeViewState extends State<HomeView> {
     watercolorRecognizer.dispose();
     stippleBrushRecognizer.dispose();
     crossHatchingRecognizer.dispose();
+    paperRecognizer.dispose();
     super.dispose();
   }
 
@@ -111,6 +114,11 @@ class _HomeViewState extends State<HomeView> {
       color: ColorScheme.of(context).primary,
     );
 
+    final styleLink = style?.copyWith(
+      color: ColorScheme.of(context).primary,
+      fontStyle: FontStyle.italic,
+    );
+
     final l10n = ModularLocalization.localizations.modules.home.homeView;
 
     final text = SelectionArea(
@@ -130,6 +138,22 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 TextSpan(
                   text: l10n.text2,
+                ),
+                TextSpan(
+                  text: l10n.text3,
+                  style: styleBold,
+                ),
+                TextSpan(
+                  text: l10n.text4,
+                ),
+                TextSpan(
+                  text: l10n.paper,
+                  recognizer: paperRecognizer,
+                  style: styleLink,
+                  mouseCursor: SystemMouseCursors.click,
+                ),
+                TextSpan(
+                  text: l10n.text5,
                 ),
                 TextSpan(
                   text: l10n.effects.pencil,
@@ -182,16 +206,6 @@ class _HomeViewState extends State<HomeView> {
                   recognizer: crossHatchingRecognizer,
                   style: styleEffect,
                   mouseCursor: SystemMouseCursors.click,
-                ),
-                TextSpan(
-                  text: l10n.text3,
-                ),
-                TextSpan(
-                  text: l10n.text4,
-                ),
-                TextSpan(
-                  text: l10n.text5,
-                  style: styleBold,
                 ),
                 TextSpan(
                   text: l10n.text6,
