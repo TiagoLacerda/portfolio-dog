@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 
@@ -125,7 +125,9 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
 
           if (value < min) {
             value = min;
-            textEditingController0.text = value.toStringAsFixed(widget.decimals);
+            textEditingController0.text = value.toStringAsFixed(
+              widget.decimals,
+            );
             widget.onChanged?.call(value);
           }
         });
@@ -159,7 +161,9 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
 
           if (value > max) {
             value = max;
-            textEditingController0.text = value.toStringAsFixed(widget.decimals);
+            textEditingController0.text = value.toStringAsFixed(
+              widget.decimals,
+            );
             widget.onChanged?.call(value);
           }
         });
@@ -177,7 +181,8 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
 
     if (value < min) min = value;
     if (value > max) max = value;
-    if (min != widget.min || max != widget.max) widget.onChangedRange?.call(min, max);
+    if (min != widget.min || max != widget.max)
+      widget.onChangedRange?.call(min, max);
 
     textEditingController0.text = value.toStringAsFixed(widget.decimals);
     textEditingController1.text = min.toStringAsFixed(widget.decimals);
@@ -198,7 +203,8 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
 
     if (value < min) min = value;
     if (value > max) max = value;
-    if (min != widget.min || max != widget.max) widget.onChangedRange?.call(min, max);
+    if (min != widget.min || max != widget.max)
+      widget.onChangedRange?.call(min, max);
 
     textEditingController0.text = value.toStringAsFixed(widget.decimals);
     textEditingController1.text = min.toStringAsFixed(widget.decimals);
@@ -306,7 +312,9 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
                 this.value = t;
               });
 
-              textEditingController0.text = value.toStringAsFixed(widget.decimals);
+              textEditingController0.text = value.toStringAsFixed(
+                widget.decimals,
+              );
               throttler.throttle(
                 duration: const Duration(milliseconds: 1),
                 onThrottle: () {

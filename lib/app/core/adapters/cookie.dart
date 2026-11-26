@@ -33,7 +33,8 @@ abstract class Cookie {
     String value, {
     String? domain,
   }) {
-    var cookie = '${Uri.encodeComponent(key)}=${Uri.encodeComponent(value)}; Path=/; SameSite=Lax';
+    var cookie =
+        '${Uri.encodeComponent(key)}=${Uri.encodeComponent(value)}; Path=/; SameSite=Lax';
 
     if (domain != null) cookie += '; Domain=$domain';
 

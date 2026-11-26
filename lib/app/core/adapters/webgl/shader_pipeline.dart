@@ -12,8 +12,8 @@ abstract class ShaderPipeline {
   final String viewType;
 
   ShaderPipeline({
-    width = 800,
-    height = 600,
+    int width = 800,
+    int height = 600,
     this.viewType = 'webgl-canvas',
   }) {
     canvas = web.HTMLCanvasElement()
@@ -27,7 +27,8 @@ abstract class ShaderPipeline {
     );
 
     final options = {'preserveDrawingBuffer': true}.jsify();
-    final context = canvas.getContext('webgl2', options) as web.WebGL2RenderingContext?;
+    final context =
+        canvas.getContext('webgl2', options) as web.WebGL2RenderingContext?;
 
     if (context == null) {
       throw WebglNotSupportedException();
@@ -38,10 +39,14 @@ abstract class ShaderPipeline {
 
   /// Allows rendering to 16-bit float textures, which core WebGL2 doesn't.
   void enableFloatRenderTargets() {
-    final extension = gl.getExtension('EXT_color_buffer_float') ?? gl.getExtension('EXT_color_buffer_half_float');
+    final extension =
+        gl.getExtension('EXT_color_buffer_float') ??
+        gl.getExtension('EXT_color_buffer_half_float');
 
     if (extension == null) {
-      throw WebglNotSupportedException('Float render targets are not supported');
+      throw WebglNotSupportedException(
+        'Float render targets are not supported',
+      );
     }
   }
 
@@ -54,7 +59,9 @@ abstract class ShaderPipeline {
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
 
-    final success = gl.getShaderParameter(shader, web.WebGL2RenderingContext.COMPILE_STATUS).dartify();
+    final success = gl
+        .getShaderParameter(shader, web.WebGL2RenderingContext.COMPILE_STATUS)
+        .dartify();
 
     if (success != true) {
       final e = gl.getShaderInfoLog(shader);
@@ -83,7 +90,9 @@ abstract class ShaderPipeline {
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
 
-    final success = gl.getProgramParameter(program, web.WebGL2RenderingContext.LINK_STATUS).dartify();
+    final success = gl
+        .getProgramParameter(program, web.WebGL2RenderingContext.LINK_STATUS)
+        .dartify();
 
     if (success != true) {
       final e = gl.getProgramInfoLog(program);
@@ -202,11 +211,13 @@ abstract class ShaderPipeline {
     int? textureWrapS,
     int? textureWrapT,
   }) async {
-
     final pixels = (await image.toByteData())!.buffer.asUint8List().toJS;
 
     gl.bindTexture(web.WebGL2RenderingContext.TEXTURE_2D, texture);
-    gl.pixelStorei(web.WebGL2RenderingContext.UNPACK_FLIP_Y_WEBGL, flipY ? 1 : 0);
+    gl.pixelStorei(
+      web.WebGL2RenderingContext.UNPACK_FLIP_Y_WEBGL,
+      flipY ? 1 : 0,
+    );
     gl.texImage2D(
       web.WebGL2RenderingContext.TEXTURE_2D,
       0,

@@ -70,13 +70,26 @@ class FDoGShaderPipeline extends ShaderPipeline {
   int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
 
   /// Radius of a Gaussian kernel that extends [extent] standard deviations from its center.
-  int kernelRadius(double sigma, {double extent = 2.0}) => min((sigma * extent).ceil(), maxKernelRadius);
+  int kernelRadius(double sigma, {double extent = 2.0}) =>
+      min((sigma * extent).ceil(), maxKernelRadius);
 
   /// Intermediate textures holding values in the [0, 1] range.
-  List<web.WebGLTexture> get _byteTextures => [texture1, texture7, texture8, texture9, texture10];
+  List<web.WebGLTexture> get _byteTextures => [
+    texture1,
+    texture7,
+    texture8,
+    texture9,
+    texture10,
+  ];
 
   /// Intermediate textures holding signed or unbounded values: the structure tensor, the flow field and the DoG response.
-  List<web.WebGLTexture> get _floatTextures => [texture2, texture3, texture4, texture5, texture6];
+  List<web.WebGLTexture> get _floatTextures => [
+    texture2,
+    texture3,
+    texture4,
+    texture5,
+    texture6,
+  ];
 
   void _resizeIntermediateTextures(int width, int height) {
     for (var texture in _byteTextures) {
@@ -163,15 +176,29 @@ class FDoGShaderPipeline extends ShaderPipeline {
     enableFloatRenderTargets();
 
     final vertSource = await rootBundle.loadString('shaders/vert.vert');
-    final grayscaleSource = await rootBundle.loadString('shaders/grayscale.frag');
+    final grayscaleSource = await rootBundle.loadString(
+      'shaders/grayscale.frag',
+    );
     final sobelSource = await rootBundle.loadString('shaders/sobel.frag');
-    final blurSource = await rootBundle.loadString('shaders/gaussian_blur.frag');
+    final blurSource = await rootBundle.loadString(
+      'shaders/gaussian_blur.frag',
+    );
     final flowSource = await rootBundle.loadString('shaders/flow.frag');
-    final orthogonalDogSource = await rootBundle.loadString('shaders/orthogonal_dog.frag');
-    final tangentBlurSource = await rootBundle.loadString('shaders/tangent_blur.frag');
-    final thresholdSource = await rootBundle.loadString('shaders/threshold.frag');
-    final colorMappingSource = await rootBundle.loadString('shaders/color_mapping.frag');
-    final crossHatchingSource = await rootBundle.loadString('shaders/cross_hatching.frag');
+    final orthogonalDogSource = await rootBundle.loadString(
+      'shaders/orthogonal_dog.frag',
+    );
+    final tangentBlurSource = await rootBundle.loadString(
+      'shaders/tangent_blur.frag',
+    );
+    final thresholdSource = await rootBundle.loadString(
+      'shaders/threshold.frag',
+    );
+    final colorMappingSource = await rootBundle.loadString(
+      'shaders/color_mapping.frag',
+    );
+    final crossHatchingSource = await rootBundle.loadString(
+      'shaders/cross_hatching.frag',
+    );
     final blendSource = await rootBundle.loadString('shaders/blend.frag');
     final paperSource = await rootBundle.loadString('shaders/paper.frag');
 
@@ -190,8 +217,12 @@ class FDoGShaderPipeline extends ShaderPipeline {
     web.WebGLTexture createByteTexture({bool linear = false}) => createTexture(
       canvas.width,
       canvas.height,
-      textureMinFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
-      textureMagFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
+      textureMinFilter: linear
+          ? web.WebGL2RenderingContext.LINEAR
+          : web.WebGL2RenderingContext.NEAREST,
+      textureMagFilter: linear
+          ? web.WebGL2RenderingContext.LINEAR
+          : web.WebGL2RenderingContext.NEAREST,
     );
 
     web.WebGLTexture createFloatTexture({bool linear = false}) => createTexture(
@@ -199,8 +230,12 @@ class FDoGShaderPipeline extends ShaderPipeline {
       canvas.height,
       internalFormat: web.WebGL2RenderingContext.RGBA16F,
       type: web.WebGL2RenderingContext.HALF_FLOAT,
-      textureMinFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
-      textureMagFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
+      textureMinFilter: linear
+          ? web.WebGL2RenderingContext.LINEAR
+          : web.WebGL2RenderingContext.NEAREST,
+      textureMagFilter: linear
+          ? web.WebGL2RenderingContext.LINEAR
+          : web.WebGL2RenderingContext.NEAREST,
     );
 
     // Textures read at fractional offsets by the DoG and LIC passes are linearly filtered. The flow field isn't,
@@ -223,7 +258,10 @@ class FDoGShaderPipeline extends ShaderPipeline {
     paperTexture = createByteTexture(linear: true);
 
     if (paperImage != null) {
-      paperSize = Size(paperImage.width.toDouble(), paperImage.height.toDouble());
+      paperSize = Size(
+        paperImage.width.toDouble(),
+        paperImage.height.toDouble(),
+      );
       await updateTextureWithImage(paperTexture, paperImage);
       paperImage.dispose();
     }
@@ -240,10 +278,15 @@ class FDoGShaderPipeline extends ShaderPipeline {
         textureWrapT: web.WebGL2RenderingContext.REPEAT,
       );
 
-      final image = await Utils.loadImageFromAsset('images/cross-hatching-$i.png');
+      final image = await Utils.loadImageFromAsset(
+        'images/cross-hatching-$i.png',
+      );
 
       if (image != null) {
-        crossHatchingSize = Size(image.width.toDouble(), image.height.toDouble());
+        crossHatchingSize = Size(
+          image.width.toDouble(),
+          image.height.toDouble(),
+        );
         await updateTextureWithImage(texture, image);
         image.dispose();
       }
@@ -254,7 +297,20 @@ class FDoGShaderPipeline extends ShaderPipeline {
     framebuffer = createFrameBuffer(texture1);
 
     // Fullscreen quad
-    final vertices = [-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0];
+    final vertices = [
+      -1.0,
+      -1.0,
+      1.0,
+      -1.0,
+      -1.0,
+      1.0,
+      -1.0,
+      1.0,
+      1.0,
+      -1.0,
+      1.0,
+      1.0,
+    ];
 
     final vbo = gl.createBuffer();
     gl.bindBuffer(web.WebGL2RenderingContext.ARRAY_BUFFER, vbo);
@@ -412,7 +468,9 @@ class FDoGShaderPipeline extends ShaderPipeline {
       resolution: (width, height),
       radius: kernelRadius(sigmaA),
       sigma: sigmaA,
-      sourceTexture: useCrossHatching || useColorQuantization ? texture8 : texture7,
+      sourceTexture: useCrossHatching || useColorQuantization
+          ? texture8
+          : texture7,
       vectorTexture: texture4,
       targetTexture: nextTarget(),
     );

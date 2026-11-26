@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 
 import '../../../../l10n/generated/modular_localization.dart';
@@ -29,7 +29,7 @@ class _SoundButtonState extends State<SoundButton> {
       await soloud.init();
 
       source = await soloud.loadAsset('sounds/afternoon_break.mp3');
-      handle = await soloud.play(source, looping: true, paused: true);
+      handle = soloud.play(source, looping: true, paused: true);
 
       setState(() {
         this.source = source;
@@ -71,7 +71,13 @@ class _SoundButtonState extends State<SoundButton> {
         if (!soloud.isInitialized) return;
         setState(() => soloud.setPause(handle!, playing));
       },
-      tooltip: ModularLocalization.localizations.modules.home.widgets.soundButton.toggleMusic,
+      tooltip: ModularLocalization
+          .localizations
+          .modules
+          .home
+          .widgets
+          .soundButton
+          .toggleMusic,
       style: IconButton.styleFrom(
         backgroundColor: ColorScheme.of(context).primary,
         foregroundColor: ColorScheme.of(context).surface,

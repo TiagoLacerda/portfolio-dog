@@ -1,5 +1,5 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:overlay_options_button/overlay_options_button.dart';
 import 'package:portfolio_design_system/portfolio_design_system.dart';
@@ -31,14 +31,21 @@ class _HomeViewState extends State<HomeView> {
 
   final isHovering = ValueNotifier<bool>(false);
 
-  late final pencilRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapPencilPreset;
-  late final charcoalRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapCharcoalPreset;
-  late final woodblockRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapWoodblockPreset;
-  late final watercolorRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapWatercolorPreset;
-  late final stippleBrushRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapStippleBrushPreset;
-  late final crossHatchingRecognizer = TapGestureRecognizer()..onTap = widget.controller.onTapCrossHatchingPreset;
+  late final pencilRecognizer = TapGestureRecognizer()
+    ..onTap = widget.controller.onTapPencilPreset;
+  late final charcoalRecognizer = TapGestureRecognizer()
+    ..onTap = widget.controller.onTapCharcoalPreset;
+  late final woodblockRecognizer = TapGestureRecognizer()
+    ..onTap = widget.controller.onTapWoodblockPreset;
+  late final watercolorRecognizer = TapGestureRecognizer()
+    ..onTap = widget.controller.onTapWatercolorPreset;
+  late final stippleBrushRecognizer = TapGestureRecognizer()
+    ..onTap = widget.controller.onTapStippleBrushPreset;
+  late final crossHatchingRecognizer = TapGestureRecognizer()
+    ..onTap = widget.controller.onTapCrossHatchingPreset;
   late final paperRecognizer = TapGestureRecognizer()
-    ..onTap = () => launchUrl(Uri.parse('https://doi.org/10.1016/j.cag.2012.03.004'));
+    ..onTap = () =>
+        launchUrl(Uri.parse('https://doi.org/10.1016/j.cag.2012.03.004'));
 
   @override
   void dispose() {
@@ -62,21 +69,36 @@ class _HomeViewState extends State<HomeView> {
         Uri.parse('https://tiagomlbrasil.com'),
         webOnlyWindowName: '_self',
       ),
-      tooltip: ModularLocalization.localizations.modules.home.homeView.homeButtonTooltip,
+      tooltip: ModularLocalization
+          .localizations
+          .modules
+          .home
+          .homeView
+          .homeButtonTooltip,
       icon: Icon(
         Icons.arrow_back_rounded,
       ),
     );
 
     final brightnessSwitch = Tooltip(
-      message: ModularLocalization.localizations.modules.home.homeView.brightnessSwitchTooltip,
+      message: ModularLocalization
+          .localizations
+          .modules
+          .home
+          .homeView
+          .brightnessSwitchTooltip,
       child: PortfolioBrightnessSwitch(
         onPressed: () => AppController.instance.toggleThemeMode(),
       ),
     );
 
     final localeButton = Tooltip(
-      message: ModularLocalization.localizations.modules.home.homeView.localeButtonTooltip,
+      message: ModularLocalization
+          .localizations
+          .modules
+          .home
+          .homeView
+          .localeButtonTooltip,
       child: OverlayOptionsButton(
         initialValue: AppController.instance.locale,
         items: AppController.instance.supportedLocales,
@@ -233,11 +255,16 @@ class _HomeViewState extends State<HomeView> {
             downloadImage: () => widget.controller.downloadImage(),
             draw: () => widget.controller.draw(),
             onSetScale: () => widget.controller.onSetScale(),
-            onSetUseColorQuantization: () => widget.controller.onSetUseColorQuantization(),
-            onSetUseColorMapping: () => widget.controller.onSetUseColorMapping(),
-            onSetUseCrossHatching: () => widget.controller.onSetUseCrossHatching(),
-            onSetUseColorBlending: () => widget.controller.onSetUseColorBlending(),
-            onSetUsePaperTexture: () => widget.controller.onSetUsePaperTexture(),
+            onSetUseColorQuantization: () =>
+                widget.controller.onSetUseColorQuantization(),
+            onSetUseColorMapping: () =>
+                widget.controller.onSetUseColorMapping(),
+            onSetUseCrossHatching: () =>
+                widget.controller.onSetUseCrossHatching(),
+            onSetUseColorBlending: () =>
+                widget.controller.onSetUseColorBlending(),
+            onSetUsePaperTexture: () =>
+                widget.controller.onSetUsePaperTexture(),
             onSetColorMap: (colors) => widget.controller.onSetColorMap(colors),
           ),
         ),
@@ -256,7 +283,8 @@ class _HomeViewState extends State<HomeView> {
         }
 
         final canvasWidth = widget.controller.pipeline.canvas.width.toDouble();
-        final canvasHeight = widget.controller.pipeline.canvas.height.toDouble();
+        final canvasHeight = widget.controller.pipeline.canvas.height
+            .toDouble();
 
         final minScale = 0.01;
         final maxScale = 100.0;

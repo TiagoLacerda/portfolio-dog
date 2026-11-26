@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../l10n/generated/modular_localization.dart';
@@ -32,10 +32,26 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
   }
 
   String srgb2hex(Color color) {
-    String a = (color.a * 255.0).toInt().toRadixString(16).padLeft(2, '0').toUpperCase();
-    String r = (color.r * 255.0).toInt().toRadixString(16).padLeft(2, '0').toUpperCase();
-    String g = (color.g * 255.0).toInt().toRadixString(16).padLeft(2, '0').toUpperCase();
-    String b = (color.b * 255.0).toInt().toRadixString(16).padLeft(2, '0').toUpperCase();
+    String a = (color.a * 255.0)
+        .toInt()
+        .toRadixString(16)
+        .padLeft(2, '0')
+        .toUpperCase();
+    String r = (color.r * 255.0)
+        .toInt()
+        .toRadixString(16)
+        .padLeft(2, '0')
+        .toUpperCase();
+    String g = (color.g * 255.0)
+        .toInt()
+        .toRadixString(16)
+        .padLeft(2, '0')
+        .toUpperCase();
+    String b = (color.b * 255.0)
+        .toInt()
+        .toRadixString(16)
+        .padLeft(2, '0')
+        .toUpperCase();
     return color.a == 1.0 ? '#$r$g$b' : '#$a$r$g$b';
   }
 
@@ -124,10 +140,17 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                         children: [
                           Expanded(
                             child: Text(
-                              ModularLocalization.localizations.modules.home.widgets.paletteImportDialog.title,
-                              style: TextTheme.of(context).titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              ModularLocalization
+                                  .localizations
+                                  .modules
+                                  .home
+                                  .widgets
+                                  .paletteImportDialog
+                                  .title,
+                              style: TextTheme.of(context).titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ),
                           SizedBox(
@@ -135,7 +158,13 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                           ),
                           IconButton(
                             onPressed: () => context.pop(),
-                            tooltip: ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.close,
+                            tooltip: ModularLocalization
+                                .localizations
+                                .modules
+                                .home
+                                .widgets
+                                .paletteGenerateDialog
+                                .close,
                             icon: Icon(
                               Icons.close_rounded,
                             ),
@@ -146,7 +175,13 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                         height: 16.0,
                       ),
                       Text(
-                        ModularLocalization.localizations.modules.home.widgets.paletteImportDialog.body,
+                        ModularLocalization
+                            .localizations
+                            .modules
+                            .home
+                            .widgets
+                            .paletteImportDialog
+                            .body,
                         style: TextTheme.of(context).bodyMedium,
                       ),
                       SizedBox(
@@ -168,7 +203,13 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                         minLines: 4,
                         keyboardType: TextInputType.multiline,
                         decoration: InputDecoration(
-                          hintText: ModularLocalization.localizations.modules.home.widgets.paletteImportDialog.hint,
+                          hintText: ModularLocalization
+                              .localizations
+                              .modules
+                              .home
+                              .widgets
+                              .paletteImportDialog
+                              .hint,
                           hintStyle: hintStyle,
                           alignLabelWithHint: true,
                           border: OutlineInputBorder(),
@@ -181,9 +222,16 @@ class _PaletteImportDialogState extends State<PaletteImportDialog> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           IconButton(
-                            onPressed: colors.length < 2 ? null : () => context.pop(colors),
-                            tooltip:
-                                ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.accept,
+                            onPressed: colors.length < 2
+                                ? null
+                                : () => context.pop(colors),
+                            tooltip: ModularLocalization
+                                .localizations
+                                .modules
+                                .home
+                                .widgets
+                                .paletteGenerateDialog
+                                .accept,
                             icon: Icon(
                               Icons.check_circle_outline_outlined,
                             ),

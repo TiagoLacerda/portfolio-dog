@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:flutter/material.dart' hide Image;
+import 'package:material_ui/material_ui.dart' hide Image;
 
 import '../../core/adapters/webgl/fdog/enums/color_blending.dart';
 import '../../core/adapters/webgl/fdog/fdog_shader_pipeline.dart';
@@ -19,7 +19,8 @@ final class HomeController extends ChangeNotifier {
 
   Timer? _presetAnimation;
 
-  ColorBlending get _colorBlending => settings.useColorBlending ? settings.colorBlending : ColorBlending.none;
+  ColorBlending get _colorBlending =>
+      settings.useColorBlending ? settings.colorBlending : ColorBlending.none;
 
   @override
   void dispose() {
@@ -98,15 +99,20 @@ final class HomeController extends ChangeNotifier {
 
   Future<void> onTapPencilPreset() => _applyPreset(FdogShaderPresets.pencil);
 
-  Future<void> onTapCharcoalPreset() => _applyPreset(FdogShaderPresets.charcoal);
+  Future<void> onTapCharcoalPreset() =>
+      _applyPreset(FdogShaderPresets.charcoal);
 
-  Future<void> onTapWoodblockPreset() => _applyPreset(FdogShaderPresets.woodblock);
+  Future<void> onTapWoodblockPreset() =>
+      _applyPreset(FdogShaderPresets.woodblock);
 
-  Future<void> onTapWatercolorPreset() => _applyPreset(FdogShaderPresets.watercolor);
+  Future<void> onTapWatercolorPreset() =>
+      _applyPreset(FdogShaderPresets.watercolor);
 
-  Future<void> onTapStippleBrushPreset() => _applyPreset(FdogShaderPresets.stippleBrush);
+  Future<void> onTapStippleBrushPreset() =>
+      _applyPreset(FdogShaderPresets.stippleBrush);
 
-  Future<void> onTapCrossHatchingPreset() => _applyPreset(FdogShaderPresets.crossHatching);
+  Future<void> onTapCrossHatchingPreset() =>
+      _applyPreset(FdogShaderPresets.crossHatching);
 
   Future<void> downloadImage() async {
     await pipeline.saveImage('download.png');
@@ -175,7 +181,10 @@ final class HomeController extends ChangeNotifier {
     );
   }
 
-  void _animateToShaderSettings(FDoGShaderSettings newSettings, VoidCallback onChangedSettings) {
+  void _animateToShaderSettings(
+    FDoGShaderSettings newSettings,
+    VoidCallback onChangedSettings,
+  ) {
     _presetAnimation?.cancel();
 
     final from = settings.copyWith();
@@ -184,42 +193,50 @@ final class HomeController extends ChangeNotifier {
     const duration = Duration(milliseconds: 250);
     final start = DateTime.now();
 
-    _presetAnimation = Timer.periodic(Duration(milliseconds: (1000 / 144).floor()), (timer) {
-      final t = (DateTime.now().difference(start).inMilliseconds / duration.inMilliseconds).clamp(0.0, 1.0);
+    _presetAnimation = Timer.periodic(
+      Duration(milliseconds: (1000 / 144).floor()),
+      (timer) {
+        final t =
+            (DateTime.now().difference(start).inMilliseconds /
+                    duration.inMilliseconds)
+                .clamp(0.0, 1.0);
 
-      final next = from.lerp(to, t);
+        final next = from.lerp(to, t);
 
-      final scaleChanged = next.scale != settings.scale;
-      final colorMapChanged = next.colors != settings.colors || next.useColorMapping != settings.useColorMapping;
+        final scaleChanged = next.scale != settings.scale;
+        final colorMapChanged =
+            next.colors != settings.colors ||
+            next.useColorMapping != settings.useColorMapping;
 
-      settings.setFrom(next);
+        settings.setFrom(next);
 
-      onChangedSettings();
+        onChangedSettings();
 
-      if (scaleChanged) {
-        pipeline.setScale(
-          settings.scale,
-        );
-      }
+        if (scaleChanged) {
+          pipeline.setScale(
+            settings.scale,
+          );
+        }
 
-      pipeline.useColorQuantization = settings.useColorQuantization;
-      pipeline.useColorMapping = settings.useColorMapping;
-      pipeline.useCrossHatching = settings.useCrossHatching;
-      pipeline.colorBlending = _colorBlending;
-      pipeline.usePaperTexture = settings.usePaperTexture;
+        pipeline.useColorQuantization = settings.useColorQuantization;
+        pipeline.useColorMapping = settings.useColorMapping;
+        pipeline.useCrossHatching = settings.useCrossHatching;
+        pipeline.colorBlending = _colorBlending;
+        pipeline.usePaperTexture = settings.usePaperTexture;
 
-      if (colorMapChanged) {
-        pipeline.setColorMap(
-          settings.useColorMapping ? settings.colors : <Color>[],
-        );
-      }
+        if (colorMapChanged) {
+          pipeline.setColorMap(
+            settings.useColorMapping ? settings.colors : <Color>[],
+          );
+        }
 
-      draw();
+        draw();
 
-      if (t >= 1.0) {
-        timer.cancel();
-      }
-    });
+        if (t >= 1.0) {
+          timer.cancel();
+        }
+      },
+    );
   }
 
   Future<void> _applyPreset(FDoGShaderSettings preset) async {

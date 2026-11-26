@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ComparisonSlider extends StatefulWidget {
   final double width;
@@ -41,7 +41,10 @@ class _ComparisonSliderState extends State<ComparisonSlider> {
         behavior: HitTestBehavior.opaque,
         onHorizontalDragUpdate: (details) {
           setState(() {
-            _position = (_position + details.delta.dx / widget.width).clamp(0.0, 1.0);
+            _position = (_position + details.delta.dx / widget.width).clamp(
+              0.0,
+              1.0,
+            );
           });
         },
         child: Stack(

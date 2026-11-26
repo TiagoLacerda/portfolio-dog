@@ -6,14 +6,13 @@ import 'package:flutter/services.dart';
 
 abstract final class Utils {
   static Future<Image?> pickImage() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    final file = await FilePicker.pickFile(
       type: FileType.image,
-      withData: true,
     );
 
-    if (result == null || result.files.single.bytes == null) return null;
+    if (file == null) return null;
 
-    final data = result.files.single.bytes!;
+    final data = await file.readAsBytes();
     final completer = Completer<Image>();
     decodeImageFromList(data, completer.complete);
     final image = await completer.future;

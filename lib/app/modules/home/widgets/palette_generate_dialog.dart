@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../l10n/generated/modular_localization.dart';
@@ -81,10 +81,17 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                         children: [
                           Expanded(
                             child: Text(
-                              ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.title,
-                              style: TextTheme.of(context).titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              ModularLocalization
+                                  .localizations
+                                  .modules
+                                  .home
+                                  .widgets
+                                  .paletteGenerateDialog
+                                  .title,
+                              style: TextTheme.of(context).titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ),
                           SizedBox(
@@ -92,7 +99,13 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                           ),
                           IconButton(
                             onPressed: () => context.pop(),
-                            tooltip: ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.close,
+                            tooltip: ModularLocalization
+                                .localizations
+                                .modules
+                                .home
+                                .widgets
+                                .paletteGenerateDialog
+                                .close,
                             icon: Icon(
                               Icons.close_rounded,
                             ),
@@ -103,14 +116,26 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                         height: 16.0,
                       ),
                       Text(
-                        ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.body0,
+                        ModularLocalization
+                            .localizations
+                            .modules
+                            .home
+                            .widgets
+                            .paletteGenerateDialog
+                            .body0,
                         style: TextTheme.of(context).bodyMedium,
                       ),
                       SizedBox(
                         height: 16.0,
                       ),
                       Text(
-                        ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.body1,
+                        ModularLocalization
+                            .localizations
+                            .modules
+                            .home
+                            .widgets
+                            .paletteGenerateDialog
+                            .body1,
                         style: TextTheme.of(context).bodyMedium,
                       ),
                       SizedBox(
@@ -195,8 +220,13 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                               b = rng.nextDouble() - 0.5;
                               refresh();
                             },
-                            tooltip:
-                                ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.random,
+                            tooltip: ModularLocalization
+                                .localizations
+                                .modules
+                                .home
+                                .widgets
+                                .paletteGenerateDialog
+                                .random,
                             icon: Icon(
                               Icons.shuffle_rounded,
                             ),
@@ -208,8 +238,13 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                                     colors.removeLast();
                                     refresh();
                                   },
-                            tooltip:
-                                ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.decrease,
+                            tooltip: ModularLocalization
+                                .localizations
+                                .modules
+                                .home
+                                .widgets
+                                .paletteGenerateDialog
+                                .decrease,
                             icon: Icon(
                               Icons.remove_circle_outline_rounded,
                             ),
@@ -219,16 +254,26 @@ class _PaletteGenerateDialogState extends State<PaletteGenerateDialog> {
                               colors.add(Colors.white);
                               refresh();
                             },
-                            tooltip:
-                                ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.increase,
+                            tooltip: ModularLocalization
+                                .localizations
+                                .modules
+                                .home
+                                .widgets
+                                .paletteGenerateDialog
+                                .increase,
                             icon: Icon(
                               Icons.add_circle_outline_rounded,
                             ),
                           ),
                           IconButton(
                             onPressed: () => context.pop(colors),
-                            tooltip:
-                                ModularLocalization.localizations.modules.home.widgets.paletteGenerateDialog.accept,
+                            tooltip: ModularLocalization
+                                .localizations
+                                .modules
+                                .home
+                                .widgets
+                                .paletteGenerateDialog
+                                .accept,
                             icon: Icon(
                               Icons.check_circle_outline_outlined,
                             ),

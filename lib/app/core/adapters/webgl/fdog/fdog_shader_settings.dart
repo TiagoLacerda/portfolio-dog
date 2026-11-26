@@ -245,32 +245,54 @@ class FDoGShaderSettings {
       scaleMin: scaleMin ?? this.scaleMin,
       scaleMax: scaleMax ?? this.scaleMax,
       crossHatchingAngle1: crossHatchingAngle1 ?? this.crossHatchingAngle1,
-      crossHatchingAngle1Min: crossHatchingAngle1Min ?? this.crossHatchingAngle1Min,
-      crossHatchingAngle1Max: crossHatchingAngle1Max ?? this.crossHatchingAngle1Max,
-      crossHatchingThreshold1: crossHatchingThreshold1 ?? this.crossHatchingThreshold1,
-      crossHatchingThreshold1Min: crossHatchingThreshold1Min ?? this.crossHatchingThreshold1Min,
-      crossHatchingThreshold1Max: crossHatchingThreshold1Max ?? this.crossHatchingThreshold1Max,
+      crossHatchingAngle1Min:
+          crossHatchingAngle1Min ?? this.crossHatchingAngle1Min,
+      crossHatchingAngle1Max:
+          crossHatchingAngle1Max ?? this.crossHatchingAngle1Max,
+      crossHatchingThreshold1:
+          crossHatchingThreshold1 ?? this.crossHatchingThreshold1,
+      crossHatchingThreshold1Min:
+          crossHatchingThreshold1Min ?? this.crossHatchingThreshold1Min,
+      crossHatchingThreshold1Max:
+          crossHatchingThreshold1Max ?? this.crossHatchingThreshold1Max,
       crossHatchingAngle2: crossHatchingAngle2 ?? this.crossHatchingAngle2,
-      crossHatchingAngle2Min: crossHatchingAngle2Min ?? this.crossHatchingAngle2Min,
-      crossHatchingAngle2Max: crossHatchingAngle2Max ?? this.crossHatchingAngle2Max,
-      crossHatchingThreshold2: crossHatchingThreshold2 ?? this.crossHatchingThreshold2,
-      crossHatchingThreshold2Min: crossHatchingThreshold2Min ?? this.crossHatchingThreshold2Min,
-      crossHatchingThreshold2Max: crossHatchingThreshold2Max ?? this.crossHatchingThreshold2Max,
+      crossHatchingAngle2Min:
+          crossHatchingAngle2Min ?? this.crossHatchingAngle2Min,
+      crossHatchingAngle2Max:
+          crossHatchingAngle2Max ?? this.crossHatchingAngle2Max,
+      crossHatchingThreshold2:
+          crossHatchingThreshold2 ?? this.crossHatchingThreshold2,
+      crossHatchingThreshold2Min:
+          crossHatchingThreshold2Min ?? this.crossHatchingThreshold2Min,
+      crossHatchingThreshold2Max:
+          crossHatchingThreshold2Max ?? this.crossHatchingThreshold2Max,
       crossHatchingAngle3: crossHatchingAngle3 ?? this.crossHatchingAngle3,
-      crossHatchingAngle3Min: crossHatchingAngle3Min ?? this.crossHatchingAngle3Min,
-      crossHatchingAngle3Max: crossHatchingAngle3Max ?? this.crossHatchingAngle3Max,
-      crossHatchingThreshold3: crossHatchingThreshold3 ?? this.crossHatchingThreshold3,
-      crossHatchingThreshold3Min: crossHatchingThreshold3Min ?? this.crossHatchingThreshold3Min,
-      crossHatchingThreshold3Max: crossHatchingThreshold3Max ?? this.crossHatchingThreshold3Max,
+      crossHatchingAngle3Min:
+          crossHatchingAngle3Min ?? this.crossHatchingAngle3Min,
+      crossHatchingAngle3Max:
+          crossHatchingAngle3Max ?? this.crossHatchingAngle3Max,
+      crossHatchingThreshold3:
+          crossHatchingThreshold3 ?? this.crossHatchingThreshold3,
+      crossHatchingThreshold3Min:
+          crossHatchingThreshold3Min ?? this.crossHatchingThreshold3Min,
+      crossHatchingThreshold3Max:
+          crossHatchingThreshold3Max ?? this.crossHatchingThreshold3Max,
       crossHatchingAngle4: crossHatchingAngle4 ?? this.crossHatchingAngle4,
-      crossHatchingAngle4Min: crossHatchingAngle4Min ?? this.crossHatchingAngle4Min,
-      crossHatchingAngle4Max: crossHatchingAngle4Max ?? this.crossHatchingAngle4Max,
-      crossHatchingThreshold4: crossHatchingThreshold4 ?? this.crossHatchingThreshold4,
-      crossHatchingThreshold4Min: crossHatchingThreshold4Min ?? this.crossHatchingThreshold4Min,
-      crossHatchingThreshold4Max: crossHatchingThreshold4Max ?? this.crossHatchingThreshold4Max,
+      crossHatchingAngle4Min:
+          crossHatchingAngle4Min ?? this.crossHatchingAngle4Min,
+      crossHatchingAngle4Max:
+          crossHatchingAngle4Max ?? this.crossHatchingAngle4Max,
+      crossHatchingThreshold4:
+          crossHatchingThreshold4 ?? this.crossHatchingThreshold4,
+      crossHatchingThreshold4Min:
+          crossHatchingThreshold4Min ?? this.crossHatchingThreshold4Min,
+      crossHatchingThreshold4Max:
+          crossHatchingThreshold4Max ?? this.crossHatchingThreshold4Max,
       crossHatchingScale: crossHatchingScale ?? this.crossHatchingScale,
-      crossHatchingScaleMin: crossHatchingScaleMin ?? this.crossHatchingScaleMin,
-      crossHatchingScaleMax: crossHatchingScaleMax ?? this.crossHatchingScaleMax,
+      crossHatchingScaleMin:
+          crossHatchingScaleMin ?? this.crossHatchingScaleMin,
+      crossHatchingScaleMax:
+          crossHatchingScaleMax ?? this.crossHatchingScaleMax,
       useColorQuantization: useColorQuantization ?? this.useColorQuantization,
       useColorMapping: useColorMapping ?? this.useColorMapping,
       useColorBlending: useColorBlending ?? this.useColorBlending,
@@ -313,34 +335,117 @@ class FDoGShaderSettings {
       scale: lerpDouble(scale, other.scale),
       scaleMin: lerpDouble(scaleMin, other.scaleMin),
       scaleMax: lerpDouble(scaleMax, other.scaleMax),
-      crossHatchingAngle1: lerpDouble(crossHatchingAngle1, other.crossHatchingAngle1),
-      crossHatchingAngle1Min: lerpDouble(crossHatchingAngle1Min, other.crossHatchingAngle1Min),
-      crossHatchingAngle1Max: lerpDouble(crossHatchingAngle1Max, other.crossHatchingAngle1Max),
-      crossHatchingThreshold1: lerpDouble(crossHatchingThreshold1, other.crossHatchingThreshold1),
-      crossHatchingThreshold1Min: lerpDouble(crossHatchingThreshold1Min, other.crossHatchingThreshold1Min),
-      crossHatchingThreshold1Max: lerpDouble(crossHatchingThreshold1Max, other.crossHatchingThreshold1Max),
-      crossHatchingAngle2: lerpDouble(crossHatchingAngle2, other.crossHatchingAngle2),
-      crossHatchingAngle2Min: lerpDouble(crossHatchingAngle2Min, other.crossHatchingAngle2Min),
-      crossHatchingAngle2Max: lerpDouble(crossHatchingAngle2Max, other.crossHatchingAngle2Max),
-      crossHatchingThreshold2: lerpDouble(crossHatchingThreshold2, other.crossHatchingThreshold2),
-      crossHatchingThreshold2Min: lerpDouble(crossHatchingThreshold2Min, other.crossHatchingThreshold2Min),
-      crossHatchingThreshold2Max: lerpDouble(crossHatchingThreshold2Max, other.crossHatchingThreshold2Max),
-      crossHatchingAngle3: lerpDouble(crossHatchingAngle3, other.crossHatchingAngle3),
-      crossHatchingAngle3Min: lerpDouble(crossHatchingAngle3Min, other.crossHatchingAngle3Min),
-      crossHatchingAngle3Max: lerpDouble(crossHatchingAngle3Max, other.crossHatchingAngle3Max),
-      crossHatchingThreshold3: lerpDouble(crossHatchingThreshold3, other.crossHatchingThreshold3),
-      crossHatchingThreshold3Min: lerpDouble(crossHatchingThreshold3Min, other.crossHatchingThreshold3Min),
-      crossHatchingThreshold3Max: lerpDouble(crossHatchingThreshold3Max, other.crossHatchingThreshold3Max),
-      crossHatchingAngle4: lerpDouble(crossHatchingAngle4, other.crossHatchingAngle4),
-      crossHatchingAngle4Min: lerpDouble(crossHatchingAngle4Min, other.crossHatchingAngle4Min),
-      crossHatchingAngle4Max: lerpDouble(crossHatchingAngle4Max, other.crossHatchingAngle4Max),
-      crossHatchingThreshold4: lerpDouble(crossHatchingThreshold4, other.crossHatchingThreshold4),
-      crossHatchingThreshold4Min: lerpDouble(crossHatchingThreshold4Min, other.crossHatchingThreshold4Min),
-      crossHatchingThreshold4Max: lerpDouble(crossHatchingThreshold4Max, other.crossHatchingThreshold4Max),
-      crossHatchingScale: lerpDouble(crossHatchingScale, other.crossHatchingScale),
-      crossHatchingScaleMin: lerpDouble(crossHatchingScaleMin, other.crossHatchingScaleMin),
-      crossHatchingScaleMax: lerpDouble(crossHatchingScaleMax, other.crossHatchingScaleMax),
-      useColorQuantization: t < 0.5 ? useColorQuantization : other.useColorQuantization,
+      crossHatchingAngle1: lerpDouble(
+        crossHatchingAngle1,
+        other.crossHatchingAngle1,
+      ),
+      crossHatchingAngle1Min: lerpDouble(
+        crossHatchingAngle1Min,
+        other.crossHatchingAngle1Min,
+      ),
+      crossHatchingAngle1Max: lerpDouble(
+        crossHatchingAngle1Max,
+        other.crossHatchingAngle1Max,
+      ),
+      crossHatchingThreshold1: lerpDouble(
+        crossHatchingThreshold1,
+        other.crossHatchingThreshold1,
+      ),
+      crossHatchingThreshold1Min: lerpDouble(
+        crossHatchingThreshold1Min,
+        other.crossHatchingThreshold1Min,
+      ),
+      crossHatchingThreshold1Max: lerpDouble(
+        crossHatchingThreshold1Max,
+        other.crossHatchingThreshold1Max,
+      ),
+      crossHatchingAngle2: lerpDouble(
+        crossHatchingAngle2,
+        other.crossHatchingAngle2,
+      ),
+      crossHatchingAngle2Min: lerpDouble(
+        crossHatchingAngle2Min,
+        other.crossHatchingAngle2Min,
+      ),
+      crossHatchingAngle2Max: lerpDouble(
+        crossHatchingAngle2Max,
+        other.crossHatchingAngle2Max,
+      ),
+      crossHatchingThreshold2: lerpDouble(
+        crossHatchingThreshold2,
+        other.crossHatchingThreshold2,
+      ),
+      crossHatchingThreshold2Min: lerpDouble(
+        crossHatchingThreshold2Min,
+        other.crossHatchingThreshold2Min,
+      ),
+      crossHatchingThreshold2Max: lerpDouble(
+        crossHatchingThreshold2Max,
+        other.crossHatchingThreshold2Max,
+      ),
+      crossHatchingAngle3: lerpDouble(
+        crossHatchingAngle3,
+        other.crossHatchingAngle3,
+      ),
+      crossHatchingAngle3Min: lerpDouble(
+        crossHatchingAngle3Min,
+        other.crossHatchingAngle3Min,
+      ),
+      crossHatchingAngle3Max: lerpDouble(
+        crossHatchingAngle3Max,
+        other.crossHatchingAngle3Max,
+      ),
+      crossHatchingThreshold3: lerpDouble(
+        crossHatchingThreshold3,
+        other.crossHatchingThreshold3,
+      ),
+      crossHatchingThreshold3Min: lerpDouble(
+        crossHatchingThreshold3Min,
+        other.crossHatchingThreshold3Min,
+      ),
+      crossHatchingThreshold3Max: lerpDouble(
+        crossHatchingThreshold3Max,
+        other.crossHatchingThreshold3Max,
+      ),
+      crossHatchingAngle4: lerpDouble(
+        crossHatchingAngle4,
+        other.crossHatchingAngle4,
+      ),
+      crossHatchingAngle4Min: lerpDouble(
+        crossHatchingAngle4Min,
+        other.crossHatchingAngle4Min,
+      ),
+      crossHatchingAngle4Max: lerpDouble(
+        crossHatchingAngle4Max,
+        other.crossHatchingAngle4Max,
+      ),
+      crossHatchingThreshold4: lerpDouble(
+        crossHatchingThreshold4,
+        other.crossHatchingThreshold4,
+      ),
+      crossHatchingThreshold4Min: lerpDouble(
+        crossHatchingThreshold4Min,
+        other.crossHatchingThreshold4Min,
+      ),
+      crossHatchingThreshold4Max: lerpDouble(
+        crossHatchingThreshold4Max,
+        other.crossHatchingThreshold4Max,
+      ),
+      crossHatchingScale: lerpDouble(
+        crossHatchingScale,
+        other.crossHatchingScale,
+      ),
+      crossHatchingScaleMin: lerpDouble(
+        crossHatchingScaleMin,
+        other.crossHatchingScaleMin,
+      ),
+      crossHatchingScaleMax: lerpDouble(
+        crossHatchingScaleMax,
+        other.crossHatchingScaleMax,
+      ),
+      useColorQuantization: t < 0.5
+          ? useColorQuantization
+          : other.useColorQuantization,
       useColorMapping: t < 0.5 ? useColorMapping : other.useColorMapping,
       useColorBlending: t < 0.5 ? useColorBlending : other.useColorBlending,
       colorBlending: t < 0.5 ? colorBlending : other.colorBlending,
