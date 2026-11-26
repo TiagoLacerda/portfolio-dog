@@ -1,11 +1,11 @@
 {
-    "name": "portfolio_dog",
-    "short_name": "portfolio_dog",
+    "name": "portfolio-dog",
+    "short_name": "portfolio-dog",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#F0F0F0",
+    "theme_color": "#2FB5B7",
+    "description": "Uma implementação interativa da Diferença de Gaussianas, uma técnica de processamento de imagens proposta por Holger Winnemoeller, que possibilita uma ampla variedade de estilizações, como efeitos de lápis, hachura cruzada, aquarela, desenho a carvão e pontilhismo com pincel.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

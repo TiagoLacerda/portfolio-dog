@@ -17,7 +17,8 @@ class AppView extends StatelessWidget {
       listenable: controller,
       builder: (_, _) => MaterialApp.router(
         key: ValueKey(controller.locale),
-        title: 'Tiago Lacerda',
+        onGenerateTitle: (context) =>
+            ModularLocalization.localizations.appView.title,
         debugShowCheckedModeBanner: false,
         theme: PortfolioTheme.light,
         darkTheme: PortfolioTheme.dark,

@@ -1,4 +1,7 @@
 {
+    "appView": {
+        "title": "Tiago Lacerda - Diferença de Gaussianas"
+    },
     "modules": {
         "home": {
             "homeView": {
