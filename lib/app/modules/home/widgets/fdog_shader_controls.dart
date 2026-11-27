@@ -228,9 +228,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
               () => isCrossHatchingExpanded = !isCrossHatchingExpanded,
             ),
             icon: Icon(
-              isCrossHatchingExpanded
-                  ? Icons.expand_less_rounded
-                  : Icons.expand_more_rounded,
+              isCrossHatchingExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
             ),
           ),
         ),
@@ -461,13 +459,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
 
     final changeImageButton = IconButton(
       onPressed: widget.uploadImage,
-      tooltip: ModularLocalization
-          .localizations
-          .modules
-          .home
-          .widgets
-          .fdogShaderControls
-          .changeImage,
+      tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.changeImage,
       style: IconButton.styleFrom(
         backgroundColor: ColorScheme.of(context).primary,
         foregroundColor: ColorScheme.of(context).surface,
@@ -479,13 +471,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
 
     final downloadImageButton = IconButton(
       onPressed: () => widget.downloadImage(),
-      tooltip: ModularLocalization
-          .localizations
-          .modules
-          .home
-          .widgets
-          .fdogShaderControls
-          .downloadImage,
+      tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.downloadImage,
       style: IconButton.styleFrom(
         backgroundColor: ColorScheme.of(context).primary,
         foregroundColor: ColorScheme.of(context).surface,
@@ -520,8 +506,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
                   widget.settings.numColors = numColors;
                 });
 
-                if (widget.settings.numColors <=
-                    widget.settings.colors.length) {
+                if (widget.settings.numColors <= widget.settings.colors.length) {
                   widget.onSetColorMap(
                     widget.settings.colors.sublist(
                       0,
@@ -535,13 +520,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
 
                 widget.draw();
               },
-              tooltip: ModularLocalization
-                  .localizations
-                  .modules
-                  .home
-                  .widgets
-                  .fdogShaderControls
-                  .decrease,
+              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.decrease,
               icon: Icon(
                 Icons.remove_circle_outline_rounded,
               ),
@@ -553,8 +532,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
                   widget.settings.numColors = widget.settings.numColors + 1;
                 });
 
-                if (widget.settings.numColors <=
-                    widget.settings.colors.length) {
+                if (widget.settings.numColors <= widget.settings.colors.length) {
                   widget.onSetColorMap(
                     widget.settings.colors.sublist(
                       0,
@@ -568,13 +546,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
 
                 widget.draw();
               },
-              tooltip: ModularLocalization
-                  .localizations
-                  .modules
-                  .home
-                  .widgets
-                  .fdogShaderControls
-                  .increase,
+              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.increase,
               icon: Icon(
                 Icons.add_circle_outline_rounded,
               ),
@@ -631,13 +603,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
                 widget.onSetColorMap(widget.settings.colors);
                 widget.draw();
               },
-              tooltip: ModularLocalization
-                  .localizations
-                  .modules
-                  .home
-                  .widgets
-                  .fdogShaderControls
-                  .generatePalette,
+              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.generatePalette,
               icon: Icon(
                 Icons.palette,
               ),
@@ -661,13 +627,7 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
                 widget.onSetColorMap(widget.settings.colors);
                 widget.draw();
               },
-              tooltip: ModularLocalization
-                  .localizations
-                  .modules
-                  .home
-                  .widgets
-                  .fdogShaderControls
-                  .importPalette,
+              tooltip: ModularLocalization.localizations.modules.home.widgets.fdogShaderControls.importPalette,
               icon: Icon(
                 Icons.paste_rounded,
               ),

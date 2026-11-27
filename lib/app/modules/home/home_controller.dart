@@ -19,8 +19,7 @@ final class HomeController extends ChangeNotifier {
 
   Timer? _presetAnimation;
 
-  ColorBlending get _colorBlending =>
-      settings.useColorBlending ? settings.colorBlending : ColorBlending.none;
+  ColorBlending get _colorBlending => settings.useColorBlending ? settings.colorBlending : ColorBlending.none;
 
   @override
   void dispose() {
@@ -99,20 +98,15 @@ final class HomeController extends ChangeNotifier {
 
   Future<void> onTapPencilPreset() => _applyPreset(FdogShaderPresets.pencil);
 
-  Future<void> onTapCharcoalPreset() =>
-      _applyPreset(FdogShaderPresets.charcoal);
+  Future<void> onTapCharcoalPreset() => _applyPreset(FdogShaderPresets.charcoal);
 
-  Future<void> onTapWoodblockPreset() =>
-      _applyPreset(FdogShaderPresets.woodblock);
+  Future<void> onTapWoodblockPreset() => _applyPreset(FdogShaderPresets.woodblock);
 
-  Future<void> onTapWatercolorPreset() =>
-      _applyPreset(FdogShaderPresets.watercolor);
+  Future<void> onTapWatercolorPreset() => _applyPreset(FdogShaderPresets.watercolor);
 
-  Future<void> onTapStippleBrushPreset() =>
-      _applyPreset(FdogShaderPresets.stippleBrush);
+  Future<void> onTapStippleBrushPreset() => _applyPreset(FdogShaderPresets.stippleBrush);
 
-  Future<void> onTapCrossHatchingPreset() =>
-      _applyPreset(FdogShaderPresets.crossHatching);
+  Future<void> onTapCrossHatchingPreset() => _applyPreset(FdogShaderPresets.crossHatching);
 
   Future<void> downloadImage() async {
     await pipeline.saveImage('download.png');
@@ -196,17 +190,12 @@ final class HomeController extends ChangeNotifier {
     _presetAnimation = Timer.periodic(
       Duration(milliseconds: (1000 / 144).floor()),
       (timer) {
-        final t =
-            (DateTime.now().difference(start).inMilliseconds /
-                    duration.inMilliseconds)
-                .clamp(0.0, 1.0);
+        final t = (DateTime.now().difference(start).inMilliseconds / duration.inMilliseconds).clamp(0.0, 1.0);
 
         final next = from.lerp(to, t);
 
         final scaleChanged = next.scale != settings.scale;
-        final colorMapChanged =
-            next.colors != settings.colors ||
-            next.useColorMapping != settings.useColorMapping;
+        final colorMapChanged = next.colors != settings.colors || next.useColorMapping != settings.useColorMapping;
 
         settings.setFrom(next);
 

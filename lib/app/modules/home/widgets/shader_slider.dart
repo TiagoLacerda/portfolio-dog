@@ -181,8 +181,7 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
 
     if (value < min) min = value;
     if (value > max) max = value;
-    if (min != widget.min || max != widget.max)
-      widget.onChangedRange?.call(min, max);
+    if (min != widget.min || max != widget.max) widget.onChangedRange?.call(min, max);
 
     textEditingController0.text = value.toStringAsFixed(widget.decimals);
     textEditingController1.text = min.toStringAsFixed(widget.decimals);
@@ -203,8 +202,7 @@ class _ShaderSliderState<T extends num> extends State<ShaderSlider<T>> {
 
     if (value < min) min = value;
     if (value > max) max = value;
-    if (min != widget.min || max != widget.max)
-      widget.onChangedRange?.call(min, max);
+    if (min != widget.min || max != widget.max) widget.onChangedRange?.call(min, max);
 
     textEditingController0.text = value.toStringAsFixed(widget.decimals);
     textEditingController1.text = min.toStringAsFixed(widget.decimals);

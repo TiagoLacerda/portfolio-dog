@@ -70,8 +70,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
   int color2int(Color color) => (color.toARGB32() & 0x00FFFFFF);
 
   /// Radius of a Gaussian kernel that extends [extent] standard deviations from its center.
-  int kernelRadius(double sigma, {double extent = 2.0}) =>
-      min((sigma * extent).ceil(), maxKernelRadius);
+  int kernelRadius(double sigma, {double extent = 2.0}) => min((sigma * extent).ceil(), maxKernelRadius);
 
   /// Intermediate textures holding values in the [0, 1] range.
   List<web.WebGLTexture> get _byteTextures => [
@@ -217,12 +216,8 @@ class FDoGShaderPipeline extends ShaderPipeline {
     web.WebGLTexture createByteTexture({bool linear = false}) => createTexture(
       canvas.width,
       canvas.height,
-      textureMinFilter: linear
-          ? web.WebGL2RenderingContext.LINEAR
-          : web.WebGL2RenderingContext.NEAREST,
-      textureMagFilter: linear
-          ? web.WebGL2RenderingContext.LINEAR
-          : web.WebGL2RenderingContext.NEAREST,
+      textureMinFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
+      textureMagFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
     );
 
     web.WebGLTexture createFloatTexture({bool linear = false}) => createTexture(
@@ -230,12 +225,8 @@ class FDoGShaderPipeline extends ShaderPipeline {
       canvas.height,
       internalFormat: web.WebGL2RenderingContext.RGBA16F,
       type: web.WebGL2RenderingContext.HALF_FLOAT,
-      textureMinFilter: linear
-          ? web.WebGL2RenderingContext.LINEAR
-          : web.WebGL2RenderingContext.NEAREST,
-      textureMagFilter: linear
-          ? web.WebGL2RenderingContext.LINEAR
-          : web.WebGL2RenderingContext.NEAREST,
+      textureMinFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
+      textureMagFilter: linear ? web.WebGL2RenderingContext.LINEAR : web.WebGL2RenderingContext.NEAREST,
     );
 
     // Textures read at fractional offsets by the DoG and LIC passes are linearly filtered. The flow field isn't,
@@ -468,9 +459,7 @@ class FDoGShaderPipeline extends ShaderPipeline {
       resolution: (width, height),
       radius: kernelRadius(sigmaA),
       sigma: sigmaA,
-      sourceTexture: useCrossHatching || useColorQuantization
-          ? texture8
-          : texture7,
+      sourceTexture: useCrossHatching || useColorQuantization ? texture8 : texture7,
       vectorTexture: texture4,
       targetTexture: nextTarget(),
     );

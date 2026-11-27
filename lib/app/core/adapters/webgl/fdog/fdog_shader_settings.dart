@@ -245,54 +245,32 @@ class FDoGShaderSettings {
       scaleMin: scaleMin ?? this.scaleMin,
       scaleMax: scaleMax ?? this.scaleMax,
       crossHatchingAngle1: crossHatchingAngle1 ?? this.crossHatchingAngle1,
-      crossHatchingAngle1Min:
-          crossHatchingAngle1Min ?? this.crossHatchingAngle1Min,
-      crossHatchingAngle1Max:
-          crossHatchingAngle1Max ?? this.crossHatchingAngle1Max,
-      crossHatchingThreshold1:
-          crossHatchingThreshold1 ?? this.crossHatchingThreshold1,
-      crossHatchingThreshold1Min:
-          crossHatchingThreshold1Min ?? this.crossHatchingThreshold1Min,
-      crossHatchingThreshold1Max:
-          crossHatchingThreshold1Max ?? this.crossHatchingThreshold1Max,
+      crossHatchingAngle1Min: crossHatchingAngle1Min ?? this.crossHatchingAngle1Min,
+      crossHatchingAngle1Max: crossHatchingAngle1Max ?? this.crossHatchingAngle1Max,
+      crossHatchingThreshold1: crossHatchingThreshold1 ?? this.crossHatchingThreshold1,
+      crossHatchingThreshold1Min: crossHatchingThreshold1Min ?? this.crossHatchingThreshold1Min,
+      crossHatchingThreshold1Max: crossHatchingThreshold1Max ?? this.crossHatchingThreshold1Max,
       crossHatchingAngle2: crossHatchingAngle2 ?? this.crossHatchingAngle2,
-      crossHatchingAngle2Min:
-          crossHatchingAngle2Min ?? this.crossHatchingAngle2Min,
-      crossHatchingAngle2Max:
-          crossHatchingAngle2Max ?? this.crossHatchingAngle2Max,
-      crossHatchingThreshold2:
-          crossHatchingThreshold2 ?? this.crossHatchingThreshold2,
-      crossHatchingThreshold2Min:
-          crossHatchingThreshold2Min ?? this.crossHatchingThreshold2Min,
-      crossHatchingThreshold2Max:
-          crossHatchingThreshold2Max ?? this.crossHatchingThreshold2Max,
+      crossHatchingAngle2Min: crossHatchingAngle2Min ?? this.crossHatchingAngle2Min,
+      crossHatchingAngle2Max: crossHatchingAngle2Max ?? this.crossHatchingAngle2Max,
+      crossHatchingThreshold2: crossHatchingThreshold2 ?? this.crossHatchingThreshold2,
+      crossHatchingThreshold2Min: crossHatchingThreshold2Min ?? this.crossHatchingThreshold2Min,
+      crossHatchingThreshold2Max: crossHatchingThreshold2Max ?? this.crossHatchingThreshold2Max,
       crossHatchingAngle3: crossHatchingAngle3 ?? this.crossHatchingAngle3,
-      crossHatchingAngle3Min:
-          crossHatchingAngle3Min ?? this.crossHatchingAngle3Min,
-      crossHatchingAngle3Max:
-          crossHatchingAngle3Max ?? this.crossHatchingAngle3Max,
-      crossHatchingThreshold3:
-          crossHatchingThreshold3 ?? this.crossHatchingThreshold3,
-      crossHatchingThreshold3Min:
-          crossHatchingThreshold3Min ?? this.crossHatchingThreshold3Min,
-      crossHatchingThreshold3Max:
-          crossHatchingThreshold3Max ?? this.crossHatchingThreshold3Max,
+      crossHatchingAngle3Min: crossHatchingAngle3Min ?? this.crossHatchingAngle3Min,
+      crossHatchingAngle3Max: crossHatchingAngle3Max ?? this.crossHatchingAngle3Max,
+      crossHatchingThreshold3: crossHatchingThreshold3 ?? this.crossHatchingThreshold3,
+      crossHatchingThreshold3Min: crossHatchingThreshold3Min ?? this.crossHatchingThreshold3Min,
+      crossHatchingThreshold3Max: crossHatchingThreshold3Max ?? this.crossHatchingThreshold3Max,
       crossHatchingAngle4: crossHatchingAngle4 ?? this.crossHatchingAngle4,
-      crossHatchingAngle4Min:
-          crossHatchingAngle4Min ?? this.crossHatchingAngle4Min,
-      crossHatchingAngle4Max:
-          crossHatchingAngle4Max ?? this.crossHatchingAngle4Max,
-      crossHatchingThreshold4:
-          crossHatchingThreshold4 ?? this.crossHatchingThreshold4,
-      crossHatchingThreshold4Min:
-          crossHatchingThreshold4Min ?? this.crossHatchingThreshold4Min,
-      crossHatchingThreshold4Max:
-          crossHatchingThreshold4Max ?? this.crossHatchingThreshold4Max,
+      crossHatchingAngle4Min: crossHatchingAngle4Min ?? this.crossHatchingAngle4Min,
+      crossHatchingAngle4Max: crossHatchingAngle4Max ?? this.crossHatchingAngle4Max,
+      crossHatchingThreshold4: crossHatchingThreshold4 ?? this.crossHatchingThreshold4,
+      crossHatchingThreshold4Min: crossHatchingThreshold4Min ?? this.crossHatchingThreshold4Min,
+      crossHatchingThreshold4Max: crossHatchingThreshold4Max ?? this.crossHatchingThreshold4Max,
       crossHatchingScale: crossHatchingScale ?? this.crossHatchingScale,
-      crossHatchingScaleMin:
-          crossHatchingScaleMin ?? this.crossHatchingScaleMin,
-      crossHatchingScaleMax:
-          crossHatchingScaleMax ?? this.crossHatchingScaleMax,
+      crossHatchingScaleMin: crossHatchingScaleMin ?? this.crossHatchingScaleMin,
+      crossHatchingScaleMax: crossHatchingScaleMax ?? this.crossHatchingScaleMax,
       useColorQuantization: useColorQuantization ?? this.useColorQuantization,
       useColorMapping: useColorMapping ?? this.useColorMapping,
       useColorBlending: useColorBlending ?? this.useColorBlending,
@@ -443,9 +421,7 @@ class FDoGShaderSettings {
         crossHatchingScaleMax,
         other.crossHatchingScaleMax,
       ),
-      useColorQuantization: t < 0.5
-          ? useColorQuantization
-          : other.useColorQuantization,
+      useColorQuantization: t < 0.5 ? useColorQuantization : other.useColorQuantization,
       useColorMapping: t < 0.5 ? useColorMapping : other.useColorMapping,
       useColorBlending: t < 0.5 ? useColorBlending : other.useColorBlending,
       colorBlending: t < 0.5 ? colorBlending : other.colorBlending,

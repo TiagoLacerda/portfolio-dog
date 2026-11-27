@@ -27,8 +27,7 @@ abstract class ShaderPipeline {
     );
 
     final options = {'preserveDrawingBuffer': true}.jsify();
-    final context =
-        canvas.getContext('webgl2', options) as web.WebGL2RenderingContext?;
+    final context = canvas.getContext('webgl2', options) as web.WebGL2RenderingContext?;
 
     if (context == null) {
       throw WebglNotSupportedException();
@@ -39,9 +38,7 @@ abstract class ShaderPipeline {
 
   /// Allows rendering to 16-bit float textures, which core WebGL2 doesn't.
   void enableFloatRenderTargets() {
-    final extension =
-        gl.getExtension('EXT_color_buffer_float') ??
-        gl.getExtension('EXT_color_buffer_half_float');
+    final extension = gl.getExtension('EXT_color_buffer_float') ?? gl.getExtension('EXT_color_buffer_half_float');
 
     if (extension == null) {
       throw WebglNotSupportedException(
@@ -59,9 +56,7 @@ abstract class ShaderPipeline {
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
 
-    final success = gl
-        .getShaderParameter(shader, web.WebGL2RenderingContext.COMPILE_STATUS)
-        .dartify();
+    final success = gl.getShaderParameter(shader, web.WebGL2RenderingContext.COMPILE_STATUS).dartify();
 
     if (success != true) {
       final e = gl.getShaderInfoLog(shader);
@@ -90,9 +85,7 @@ abstract class ShaderPipeline {
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
 
-    final success = gl
-        .getProgramParameter(program, web.WebGL2RenderingContext.LINK_STATUS)
-        .dartify();
+    final success = gl.getProgramParameter(program, web.WebGL2RenderingContext.LINK_STATUS).dartify();
 
     if (success != true) {
       final e = gl.getProgramInfoLog(program);

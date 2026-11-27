@@ -71,13 +71,7 @@ class _SoundButtonState extends State<SoundButton> {
         if (!soloud.isInitialized) return;
         setState(() => soloud.setPause(handle!, playing));
       },
-      tooltip: ModularLocalization
-          .localizations
-          .modules
-          .home
-          .widgets
-          .soundButton
-          .toggleMusic,
+      tooltip: ModularLocalization.localizations.modules.home.widgets.soundButton.toggleMusic,
       style: IconButton.styleFrom(
         backgroundColor: ColorScheme.of(context).primary,
         foregroundColor: ColorScheme.of(context).surface,
