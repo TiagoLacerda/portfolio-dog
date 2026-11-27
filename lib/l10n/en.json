@@ -53,9 +53,6 @@
                     "hint": "Enter a list of hex values, one per line, e.g.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF",
                     "close": "Close",
                     "accept": "Accept"
-                },
-                "soundButton": {
-                    "toggleMusic": "Toggle music"
                 }
             }
         }

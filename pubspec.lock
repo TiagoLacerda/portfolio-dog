@@ -129,14 +129,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.2"
-  file:
-    dependency: transitive
-    description:
-      name: file
-      sha256: a3b4f84adafef897088c160faf7dfffb7696046cb13ae90b508c2cbc95d3b8d4
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.1"
   file_picker:
     dependency: "direct main"
     description:
@@ -203,14 +195,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_soloud:
-    dependency: "direct main"
-    description:
-      name: flutter_soloud
-      sha256: "5834bd4251d5c99752875e71f3561c3acaeef14efc203b92d732ee10b4ca5f17"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.4.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -229,14 +213,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  glob:
-    dependency: transitive
-    description:
-      name: glob
-      sha256: "218aeb56050c714f62a3182775320dfa04602b55074873e24e31bbd39bda96fb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.0"
   go_router:
     dependency: "direct main"
     description:
@@ -397,14 +373,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  native_toolchain_c:
-    dependency: transitive
-    description:
-      name: native_toolchain_c
-      sha256: "120b6fc66acd8a5ddeaeb1e59b78836bb3ec9919bd9d9dfb1e2401985710c2c0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.19.6"
   objective_c:
     dependency: transitive
     description:
@@ -534,14 +502,6 @@ packages:
       url: "https://github.com/TiagoLacerda/portfolio-design-system.git"
     source: git
     version: "1.1.0"
-  process:
-    dependency: transitive
-    description:
-      name: process
-      sha256: "4242ba3508d37e01808bdf71ad1d5bb93a8d671bf2e7450e6b1b353fb0808891"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.6"
   pub_semver:
     dependency: transitive
     description:

@@ -53,9 +53,6 @@
                     "hint": "Insira uma lista de valores hexadecimais, um por linha, p. ex.:\n#000000\n#555555\n#AAAAAA\n#FFFFFF",
                     "close": "Fechar",
                     "accept": "Confirmar"
-                },
-                "soundButton": {
-                    "toggleMusic": "Ligar/desligar música"
                 }
             }
         }

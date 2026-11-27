@@ -10,7 +10,6 @@ import 'palette_import_dialog.dart';
 import 'palette_widget.dart';
 import 'shader_checkbox.dart';
 import 'shader_slider.dart';
-import 'sound_button.dart';
 
 class FDoGShaderControls extends StatefulWidget {
   final FDoGShaderSettings settings;
@@ -481,8 +480,6 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
       ),
     );
 
-    final soundButton = SoundButton();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -706,7 +703,6 @@ class FDoGShaderControlsState extends State<FDoGShaderControls> {
           children: [
             changeImageButton,
             downloadImageButton,
-            soundButton,
           ],
         ),
       ],
