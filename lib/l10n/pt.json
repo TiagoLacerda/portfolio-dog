@@ -8,6 +8,7 @@
                 "homeButtonTooltip": "Página inicial",
                 "brightnessSwitchTooltip": "Modo claro/escuro",
                 "localeButtonTooltip": "Idioma",
+                "githubButtonTooltip": "Repositório no GitHub",
                 "text0": "A ",
                 "text1": "Diferença de Gaussianas Estendida Baseada em Fluxo (XDoG)",
                 "text2": " é um pipeline de estilização de imagens de ",
